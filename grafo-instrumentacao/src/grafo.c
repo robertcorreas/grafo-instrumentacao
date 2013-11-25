@@ -147,6 +147,10 @@ GRA_tpCondRet GRA_CriarGrafo(GRA_tppGrafo *ppGrafo,
 	LIS_CriarLista(&pGrafo->pOrigens, NULL, CompararVerticeENome);
 	LIS_CriarLista(&pGrafo->pVertices, DestruirVertice, CompararVerticeENome);
 
+   #ifdef _DEBUG
+      CED_DefinirTipoEspaco( pGrafo , GRA_TipoEspacoCabeca ) ;
+   #endif
+
 	*ppGrafo = (GRA_tppGrafo) pGrafo;
 
 	return GRA_CondRetOK;

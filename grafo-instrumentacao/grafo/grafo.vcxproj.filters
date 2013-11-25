@@ -16,6 +16,9 @@
     <Filter Include="Script Files">
       <UniqueIdentifier>{e5a3a581-a222-471a-a126-bf136f9c380e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tabelas">
+      <UniqueIdentifier>{914a9615-44a2-4799-b24f-f7aab1339fdf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\test_gra.c">
@@ -49,7 +52,16 @@
     <None Include="..\src\Grafo.count">
       <Filter>Script Files</Filter>
     </None>
-    <None Include="..\src\TesteContador.script">
+    <None Include="..\src\IdTiposEspaco.def">
+      <Filter>Tabelas</Filter>
+    </None>
+    <None Include="..\src\TiposEspacosGrafo.def">
+      <Filter>Tabelas</Filter>
+    </None>
+    <None Include="..\src\teste-contador.script">
+      <Filter>Script Files</Filter>
+    </None>
+    <None Include="..\src\teste-controle-espaco.script">
       <Filter>Script Files</Filter>
     </None>
   </ItemGroup>

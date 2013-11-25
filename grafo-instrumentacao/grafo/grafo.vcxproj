@@ -86,8 +86,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Grafo.count" />
-    <None Include="..\src\TesteContador.script" />
+    <None Include="..\src\IdTiposEspaco.def" />
+    <None Include="..\src\teste-contador.script" />
+    <None Include="..\src\teste-controle-espaco.script" />
     <None Include="..\src\teste_grafo.script" />
+    <None Include="..\src\TiposEspacosGrafo.def" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\src\ArcaboucoTeste.lib">
