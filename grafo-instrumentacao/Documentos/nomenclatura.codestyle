@@ -1,0 +1,23 @@
+=> Nomes de Variáveis: Camel case com a primeira letra minúscula
+Ex.: char * nomeGenerico;
+
+=> Nomes de Constantes: Upper case
+Ex.: #define OITO 8
+
+=> Nomes de Funções: Camel case com a primeira letra maiúscula
+Ex.: void FazAlgo();
+
+=> Nomes de Funções e tipos exportados: Começam com "<ABREVIACAO DO NOME MODULO>_"
+Ex.: LIS_CriarLista
+
+=> Nomes de variáveis ponteiros: Começam com "p"
+Ex.: void * pLista;
+
+=> Nomes de estruturas: Começam com "st" e o resto em Camel case
+Ex.: struct stNo;
+
+=> Nomes de tipos: Começam com "tp" e o resto em Camel case
+Ex.: typedef struct stNo tpNo;
+
+=> Nomes de arquivos: Snake case
+Ex.: test_lis.c

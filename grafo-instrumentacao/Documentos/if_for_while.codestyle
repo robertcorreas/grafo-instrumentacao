@@ -1,0 +1,19 @@
+* Espaçamento entre o "if", os parêntesis e a expressão.
+* Chave embaixo.
+* Mesmo com uma única instrução, botar as chaves.
+
+Exemplo:
+	|	if(idade >= 18)
+	|	{
+	|		Beber();
+	|		Cair();
+	|		Levantar();
+	|	}
+	|	else
+	|	{
+	|		TomarLeite();
+	|	}
+
+
+TODO: FOR
+TODO: WHILE

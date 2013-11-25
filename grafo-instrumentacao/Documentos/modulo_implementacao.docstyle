@@ -1,0 +1,65 @@
+===> No módulo de implementação:
+>> No topo
+/***************************************************************************
+*
+*  Módulo de implementação: <abreviação>  <estrutura manipulada pelo módulo>
+*
+*  Arquivo gerado:              <nome-do-arquivo>.c
+*  Letras identificadoras:      <abreviação>
+*
+*	Autores:
+*     - <nick>: <nome>
+*     - <nick>: <nome>
+*
+*  Histórico de evolução:
+*     Versão  Autor    Data        Observações
+*     1       <nick>   <data>      <observações>
+*
+***************************************************************************/
+
+
+
+>> Definição de tipos
+/***********************************************************************
+*  Tipo de dados: <abreviacao do modulo> <descricao do tipo>
+***********************************************************************/
+
+
+
+>> Antes das funções encapsuladas no módulo
+/***** Protótipos das funções encapuladas no módulo *****/
+
+
+
+>> Antes das funções exportadas do módulo
+/*****  Código das funções exportadas pelo módulo  *****/
+
+
+
+>> Cabeçalho das funções exportadas
+
+/***************************************************************************
+*  Função: <abreviacao> <nome da função por extenso>
+*  ****/
+
+
+
+>> Antes das funções encapsuladas no módulo
+/*****  Código das funções encapsuladas no módulo  *****/
+
+
+
+>> Cabeçalho das funções encapsuladas
+/***********************************************************************
+*
+*  Função: <abreviacao> <nome da função por extenso>
+*
+*  Descrição:
+*    <descrição da função>
+*
+***********************************************************************/
+
+
+
+>> No final do módulo
+/********** Fim do módulo de implementação: LIS Lista duplamente encadeada genérica **********/

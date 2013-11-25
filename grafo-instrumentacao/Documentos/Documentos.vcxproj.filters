@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="TODO">
+      <UniqueIdentifier>{6eab1c2b-7984-4748-baca-9cfd0838d259}</UniqueIdentifier>
+      <Extensions>todo</Extensions>
+    </Filter>
+    <Filter Include="Assertivas">
+      <UniqueIdentifier>{ea9cbf9f-25ca-47c1-8dd2-6245ec8fb170}</UniqueIdentifier>
+      <Extensions>assertivas</Extensions>
+    </Filter>
+    <Filter Include="Relatorios">
+      <UniqueIdentifier>{a56a435b-4263-4915-9bfe-dddfaf46de0d}</UniqueIdentifier>
+      <Extensions>relatorio</Extensions>
+    </Filter>
+    <Filter Include="Codestyle">
+      <UniqueIdentifier>{dba1af67-38f1-48d7-974f-3d4020315ceb}</UniqueIdentifier>
+      <Extensions>codestyle</Extensions>
+    </Filter>
+    <Filter Include="Docstyle">
+      <UniqueIdentifier>{88184510-4399-47a5-8289-5f98c32317c1}</UniqueIdentifier>
+      <Extensions>docstyle</Extensions>
+    </Filter>
+    <Filter Include="Prototipacao">
+      <UniqueIdentifier>{ec27d097-e0e7-4bdb-8c26-6d34f4788d45}</UniqueIdentifier>
+      <Extensions>prototipacao</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lista.assertivas">
+      <Filter>Assertivas</Filter>
+    </None>
+    <None Include="Hugo.todo">
+      <Filter>TODO</Filter>
+    </None>
+    <None Include="Robert.todo">
+      <Filter>TODO</Filter>
+    </None>
+    <None Include="hugo.relatorio">
+      <Filter>Relatorios</Filter>
+    </None>
+    <None Include="robert.relatorio">
+      <Filter>Relatorios</Filter>
+    </None>
+    <None Include="nomenclatura.codestyle">
+      <Filter>Codestyle</Filter>
+    </None>
+    <None Include="if_for_while.codestyle">
+      <Filter>Codestyle</Filter>
+    </None>
+    <None Include="struct.codestyle">
+      <Filter>Codestyle</Filter>
+    </None>
+    <None Include="grafo_direcionado.assertivas">
+      <Filter>Assertivas</Filter>
+    </None>
+    <None Include="modulo_definicao.docstyle">
+      <Filter>Docstyle</Filter>
+    </None>
+    <None Include="modulo_implementacao.docstyle">
+      <Filter>Docstyle</Filter>
+    </None>
+    <None Include="modulos.prototipacao">
+      <Filter>Prototipacao</Filter>
+    </None>
+  </ItemGroup>
+</Project>

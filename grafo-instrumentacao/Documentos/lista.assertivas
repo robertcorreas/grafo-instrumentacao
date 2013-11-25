@@ -1,0 +1,11 @@
+pNo1->pProx = pNo2  <=>  pNo2 = NULL  ou  pNo2->pAnt  = pNo1
+pNo1->pAnt  = pNo2  <=>  pNo2 = NULL  ou  pNo2->pProx = pNo1
+
+pCabeca->pOrigemLista != NULL  =>  pCabeca->pOrigemLista->pAnt = NULL
+pCabeca->pFimLista    != NULL  =>  pCabeca->pFimLista->pProx = NULL
+
+
+Com essas assertivas não pode ser:
+	- Lista com encadeamento simples
+	- Árvore binária
+	- Lista circular

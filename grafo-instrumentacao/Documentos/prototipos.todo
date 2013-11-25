@@ -1,0 +1,53 @@
+- estruturas e headers da aresta, vertice e grafo
+
+- criar grafo
+- destruir grafo
+
+- vertice e aresta
+
+
+Grafo (grafo.c/aresta.c/vertice.c)
+/* criar e destruir grafo */
+GRA_tpCondRet GRA_CriarGrafo(GRA_tppGrafo *ppGrafo,
+	void (*DestruirConteudo)(void *pConteudo))
+GRA_tpCondRet GRA_DestruirGrafo(GRA_tppGrafo *ppGrafo);
+
+
+
+/* Construir grafo */
+GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafo, char *pNomeVertice, CON_tppConteudoVertice pConteudo);
+/* Ao criar a aresta, lembrar de inserir a aresta entre os sucessores da origem, e o vertice entre os antecessores do destino */
+GRA_tpCondRet GRA_InserirArestaDoCorrentePara(GRA_tppGrafo pGrafo, char *nomeAresta, char *nomeVerticeDestino)
+
+
+
+/* Destruir grafo */
+GRA_tpCondRet GRA_DestruirVerticeCorrente(GRA_tppGrafo pGrafo)
+GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafo, char *pNomeAresta);
+
+
+
+/* Outros */
+GRA_tpCondRet GRA_TornarCorrenteUmaOrigem(GRA_tppGrafo pGrafo)
+
+
+
+/* Navegaçao */
+GRA_tpCondRet GRA_IrParaVerticeAdjacente(GRA_tppGrafo pGrafo, char *nomeVertice)
+GRA_tpCondRet GRA_SeguirPelaAresta(GRA_tppGrafo pGrafo, char *nomeAresta)
+GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafo, char *nomeVertice)
+
+
+/* Obter e alterar */
+GRA_tpCondRet GRA_ObterConteudoCorrente(GRA_tppGrafo pGrafo, CON_tppConteudoVertice *ppConteudo));
+GRA_tpCondRet GRA_AlterarConteudoCorrente(GRA_tppGrafo pGrafo, CON_tppConteudoVertice pConteudo);
+
+
+
+ConteudoDoVertice(conteudo.c)
+CON_tpCondRet CON_DestruirConteudo(CON_tppConteudo *ppConteudo);
+CON_tpCondRet CON_CriarConteudo(CON_tppConteudo *ppConteudo, char *pValor);
+CON_tpCondRet CON_ObterConteudo(CON_tppConteudo *ppConteudo, char **ppValor);
+CON_tpCondRet CON_AlterarConteudo(CON_tppConteudo *ppConteudo, char *pValor);
+
+Lista

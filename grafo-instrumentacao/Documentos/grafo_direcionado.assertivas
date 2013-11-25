@@ -1,0 +1,43 @@
+* Vertice
+
+"Anteressores" apenas referenciam listas do tipo 1.
+"Sucessores" apenas referenciam listas do tipo 2.
+
+Conteúdo apenas referencia valor do conteúdo do vértice
+
+* Aresta
+
+"Aresta" apenas referencia vértice
+
+Com essa assertiva não pode ser:
+	- Valor conteudo do vértice.
+
+* Valor do conteúdo do vértice
+
+Apenas possui valor do tipo char*
+
+Com essa assertiva não pode ser:
+	- Aresta.
+
+
+Também acho que seria legal no vértice ter essas assertivas:
+// Antecessor aponta de volta para o vértice como sucessor
+Para todo vértice pVerAnt em pVer->pAntecessores existirá uma aresta pAreSuc em pVerAnt->pSucessores tal que pAreSuc->pVertice = pVer
+
+// Sucessor aponta de volta para o vértice como antecessor
+Para toda aresta pAreSuc em pVer->pSucessores existirá um vértice pVerAnt em pAreSuc->pVertice->pAntecessores tal que pVerAnt = pVer
+
+
+
+E essas no grafo:
+// se está na origem tem que estar na lista de vértices
+Para todo vértice pVerOri em pGrafo->pOrigens existirá um vértice pVer em pGrafo->pVertices tal que pVerOri = pVer
+
+// se tem corrente ele tem q estar na lista de vértices
+Se pGrafo->pCorrente != NULL => Existirá um vértice pVer em pGrafo->pVertices tal que pVer = pGrafo->pCorrente
+
+// todos os antecessores dos vértices de um grafo têm q estar na lista de vértices desse grafo  
+Para todo vértice pVer e pVerAnt tal que pVer pertence à pGrafo->pVertices e pVerAnt pertence à pVer->Antecessores existirá um pVer2 pertencente à pGrafo->pVertices tal que pVerAnt = pVer2
+
+// todas as arestas dos vértices de um grafo G têm que apontar para um vértice que está na lista desse grafo
+Para todo vértice pVer e aresta pAre tal que pVer pertence à pGrafo->pVertices e pAre pertence à pVer->pSucessores, existirá um pVer2 pertencente à pGrafo->pVertices tal que pVer2 = pAre->pVertice.

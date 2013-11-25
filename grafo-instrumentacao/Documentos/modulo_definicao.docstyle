@@ -1,0 +1,94 @@
+====> No módulo de definição:
+>> No topo:
+/***************************************************************************
+*
+*  Módulo de definição: <abreviação>  <estrutura manipulada pelo módulo>
+*
+*  Arquivo gerado:              <nome-do-arquivo>.h
+*  Letras identificadoras:      <abreviação>
+*
+*	Autores:
+*     - <nick>: <nome>
+*     - <nick>: <nome>
+*
+*  Histórico de evolução:
+*     Versão  Autor    Data        Observações
+*     1       <nick>   <data>      <observações>
+*
+*  Descrição do módulo
+*     <descrição do módulo>
+*
+***************************************************************************/
+
+
+
+>> Em volta dos componentes exportados:
+/***** Declarações exportadas pelo módulo *****/
+
+<componentes exportados>
+
+/***********************************************************************/
+
+
+
+>> Para tipos exportados:
+/* Tipo referência para uma <estrutura-manipulada> */
+typedef <estrutura exportada> * <nome do tipo> ;
+
+
+
+
+>> Para enums:
+/***********************************************************************
+*
+*  Tipo de dados: <abreviacao> <descricao-do-enum>
+*
+*
+*  Descrição do tipo
+*     <descricao do enum>
+*
+***********************************************************************/
+
+   typedef enum {
+
+         Valor ,
+           /* Descrição do valor */
+
+         Valor2 ,
+               /* Descrição do valor2 */
+
+   } <tipo exportado> ;
+
+
+
+>> Funções exportadas
+/***********************************************************************
+*
+*  Função: <abreviacao do modulo> <nome da funcao por extenso>
+*
+*  Descrição
+*     <descricao da função>
+*
+*  Parâmetros
+*     <param 1>      - <explicação sobre parametro 1>
+*     <parametro 2>  - <explicação sobre parametro 2>
+*
+*  Condições de retorno
+*     <listar os possíveis tpCondRet>
+*
+*  Retorno por referência
+*     <descrição do retorno>
+*
+*  Assertivas de entrada
+*     <assertivas de entrada>
+*
+*  Assertivas de saida
+*     <assertivas de saida>
+*
+***********************************************************************/
+
+
+
+
+>> acima do #else#endif
+/********** Fim do módulo de definição: LIS  Lista duplamente encadeada **********/
