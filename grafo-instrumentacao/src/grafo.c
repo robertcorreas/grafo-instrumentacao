@@ -124,6 +124,13 @@ typedef struct stGrafo {
 #ifdef _DEBUG
    static void DET_EliminaElementoCorrente(tpGrafo *pGrafo);
    static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo);
+
+   static void DET_LixoNaReferenciaParaAntecessor(GRA_tppGrafo pGrafoParm);
+   static void DET_ConteudoDoVerticeNULL(GRA_tppGrafo pGrafoParm);
+   static void DET_AlteraTipoDoValorDoVertice(GRA_tppGrafo pGrafoParm);
+   static void DET_DestacaVertice(GRA_tppGrafo pGrafoParm);
+   static void DET_AtribuiNullAoCorrente(GRA_tppGrafo pGrafoParm);
+   static void DET_AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm);
 #endif
 
 static void DestruirVertice(void *pVazio);
@@ -922,7 +929,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
 #ifdef _DEBUG
    // Det 05
-   void LixoNaReferenciaParaAntecessor(GRA_tppGrafo pGrafoParm)
+   void DET_LixoNaReferenciaParaAntecessor(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
       tpVertice *pVertice;
@@ -933,7 +940,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    }
 
    // Det 06
-   void ConteudoDoVerticeNULL(GRA_tppGrafo pGrafoParm)
+   void DET_ConteudoDoVerticeNULL(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
 
@@ -941,7 +948,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    }
 
    // Det 07
-   void AlteraTipoDoValorDoVertice(GRA_tppGrafo pGrafoParm)
+   void DET_AlteraTipoDoValorDoVertice(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
 
@@ -949,7 +956,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    }
 
    // Det 08
-   void DestacaVertice(GRA_tppGrafo pGrafoParm)
+   void DET_DestacaVertice(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
       LIS_tppLista pSuc, pAnt;
@@ -1016,7 +1023,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    }
 
    // Det 09
-   void AtribuiNullAoCorrente(GRA_tppGrafo pGrafoParm)
+   void DET_AtribuiNullAoCorrente(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
 
@@ -1024,7 +1031,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    }
 
    // Det 10
-   void AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
+   void DET_AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
       int *pOrigem;
