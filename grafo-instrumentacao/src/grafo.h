@@ -77,6 +77,26 @@ typedef enum {
 
 /***********************************************************************
 *
+*  $TC Tipo de dados: ARV Modos de deturpar
+*
+*
+***********************************************************************/
+
+#ifdef _DEBUG
+
+typedef enum {
+
+   DeturpaEliminaElementoCorrente        =  1 ,
+      /* elimina o elemento corrente da lista de vértices */
+
+  
+
+} GRA_tpModosDeturpacao ;
+
+#endif
+
+/***********************************************************************
+*
 *  Função: GRA Criar grafo
 *
 *  Descrição
