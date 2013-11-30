@@ -896,6 +896,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 }
 
 #ifdef _DEBUG
+   // Det 09
    void AtribuiNullAoCorrente(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
@@ -903,6 +904,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       pGrafo->pCorrente = NULL;
    }
 
+   // Det 10
    void AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
