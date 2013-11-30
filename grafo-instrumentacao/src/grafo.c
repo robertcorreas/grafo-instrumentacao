@@ -635,7 +635,7 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 
    case DeturpaEliminaElementoCorrente :
       {
-         void DET_EliminaElementoCorrente(tpGrafo *pGrafo);
+         DET_EliminaElementoCorrente(pGrafo);
          break ;
       } 
    }
