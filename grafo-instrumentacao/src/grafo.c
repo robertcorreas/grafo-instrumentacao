@@ -137,10 +137,6 @@ GRA_tpCondRet GRA_CriarGrafo(GRA_tppGrafo *ppGrafo,
 	tpGrafo *pGrafo;
    MEM_Alloc(sizeof(tpGrafo), (void **) &pGrafo);
 
-   #ifdef _DEBUG
-      CNT_CONTAR( "GRA_CriarGrafo" ) ;
-   #endif
-
 	pGrafo->pCorrente = NULL;
 	pGrafo->destruirValor = destruirValor;
 
@@ -209,6 +205,10 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafoParm, char *nomeVertice, voi
 	LIS_CriarLista(&pVertice->pAntecessores, NULL, CompararVerticeENome);
 	LIS_CriarLista(&pVertice->pSucessores, DestruirAresta, CompararArestaENome);
 
+   #ifdef _DEBUG
+      CED_DefinirTipoEspaco( pVertice , GRA_TipoEspacoVertice ) ;
+   #endif
+
 	pGrafo->pCorrente = pVertice;
 	LIS_InserirElementoApos(pGrafo->pVertices, pVertice);
 
@@ -273,7 +273,11 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
 	}
 
 	pAresta->nome = nomeAresta;
-    pAresta->pVertice = pVerticeDestino;
+   pAresta->pVertice = pVerticeDestino;
+
+   #ifdef _DEBUG
+      CED_DefinirTipoEspaco( pAresta , GRA_TipoEspacoCabeca ) ;
+   #endif
 
 	return GRA_CondRetOK;
 }
@@ -616,6 +620,38 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 
       return GRA_CondRetOK;
    }
+
+/***************************************************************************
+*
+*  Função: ARV  &Deturpar grafo
+*  ****/
+
+void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
+{
+
+   tpGrafo *pGrafo = NULL ;
+
+   if ( pGrafoParm == NULL )
+   {
+      return ;
+   } /* if */
+
+   pGrafo = ( tpGrafo* )( pGrafoParm ) ;
+
+   switch ( ModoDeturpar ) {
+
+      /* Elimina o elemento corrente da lista de vértices */
+
+   case DeturpaEliminaElementoCorrente :
+      {
+         tpVertice* pVertice = NULL;
+         LIS_ObterValor(pGrafo->pVertices, (void**) pVertice);
+         free(pVertice);
+         break ;
+      } 
+   }
+} 
+
 #endif
 
 /*****  Código das funções encapsuladas no módulo  *****/
