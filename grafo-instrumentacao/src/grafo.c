@@ -134,10 +134,6 @@ static int ExisteVertice(tpGrafo *pGrafo, char *nome);
 static int ExisteOrigem(tpGrafo *pGrafo, char *nome);
 static int ExisteAresta(tpVertice *pVertice, char *nome);
 
-#ifdef _DEBUG
-   static GRA_tpCondRet AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm);
-#endif
-
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /***************************************************************************
