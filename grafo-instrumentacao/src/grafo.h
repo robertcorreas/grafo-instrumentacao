@@ -86,16 +86,31 @@ typedef enum {
 
 typedef enum {
 
-   DeturpaEliminaElementoCorrente        =  1 ,
+   DeturpaEliminaElementoCorrente            = 1,
       /* Elimina o elemento corrente da lista de vértices */
 
-   GRA_DeturpaAtribuiNullParaVerticeSucessor = 2 ,
+   GRA_DeturpaAtribuiNullParaVerticeSucessor = 2,
       /* Atribui NULL ao ponteiro para um vértice sucessor */
 
-  
-   GRA_AtribuirNullParaOrigem            =  10 ,
-      /* atribui uma origem como null */
-} GRA_tpModosDeturpacao ;
+   GRA_LixoNaReferenciaParaAntecessor        = 5,
+      /* Atribui lixo ao ponteiro para a referência a um vértice predecessor. */
+
+   GRA_ConteudoDoVerticeNULL                 = 6,
+      /* Atribui NULL ao ponteiro para o conteúdo do vértice. */
+
+   GRA_AlteraTipoDoValorDoVertice            = 7,
+      /* Altera o tipo de estrutura apontado no vértice. */
+
+   GRA_DestacaVertice                        = 8,
+      /* Destaca vértice do grafo sem liberá-lo com free. */
+
+   GRA_AtribuiNullAoCorrente                 = 9,
+      /* Atribui NULL ao ponteiro corrente. */
+
+   GRA_AtribuiNullParaUmaOrigem              = 10
+      /* Atribui NULL a um ponteiro de origem. */
+
+} GRA_tpModosDeturpacao;
 
 #endif
 
