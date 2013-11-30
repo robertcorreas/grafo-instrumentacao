@@ -905,6 +905,73 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 }
 
 #ifdef _DEBUG
+   // Det 08
+   void DestacaVertice(GRA_tppGrafo pGrafoParm)
+   {
+      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+      LIS_tppLista pSuc, pAnt;
+      tpVertice *pCorr;
+      LIS_tpCondRet lisCondRet;
+      int estaVazia;
+
+      pCorr = pGrafo->pCorrente;
+
+      // Garantindo que não será antecessor de ninguém
+      pSuc = pGrafo->pCorrente->pSucessores;
+      LIS_EstaVazia(pSuc, &estaVazia);
+      if (!estaVazia)
+      {
+         LIS_IrInicioLista(pSuc);
+         lisCondRet = LIS_CondRetOK;
+         while (lisCondRet == LIS_CondRetOK)
+         {
+            tpAresta *pAresta;
+            LIS_tppLista pBackAnt;
+
+            LIS_ObterValor(pSuc, (void**) &pAresta);
+            pBackAnt = pAresta->pVertice->pAntecessores;
+            LIS_IrInicioLista(pBackAnt);
+            LIS_ProcurarValor(pBackAnt, pCorr->nome);
+            LIS_ExcluirElemento(pBackAnt);
+            lisCondRet = LIS_AvancarElementoCorrente(pSuc, 1);
+         }
+      }
+      
+      // Garantindo que não é sucessor de ninguém.
+      pAnt = pGrafo->pCorrente->pAntecessores;
+      LIS_EstaVazia(pAnt, &estaVazia);
+      if (!estaVazia)
+      {
+         LIS_IrInicioLista(pAnt);
+         lisCondRet = LIS_CondRetOK;
+         while (lisCondRet == LIS_CondRetOK)
+         {
+            LIS_tpCondRet retBackSuc;
+            tpVertice *pVertice;
+            LIS_tppLista pBackSuc;
+
+            LIS_ObterValor(pAnt, (void**) &pVertice);
+            pBackSuc = pVertice->pSucessores;
+            LIS_IrInicioLista(pBackSuc);
+            while(retBackSuc == LIS_CondRetOK)
+            {
+               tpAresta *pAresta;
+
+               LIS_ObterValor(pBackSuc, (void**) &pAresta);
+               if (strcmp(pVertice->nome, pCorr->nome) == 0)
+               {
+                  break;
+               }
+
+               retBackSuc = LIS_AvancarElementoCorrente(pBackSuc, 1);
+            }
+            LIS_ExcluirElemento(pBackSuc);
+            
+            lisCondRet = LIS_AvancarElementoCorrente(pAnt, 1);
+         }
+      }
+   }
+
    // Det 09
    void AtribuiNullAoCorrente(GRA_tppGrafo pGrafoParm)
    {
