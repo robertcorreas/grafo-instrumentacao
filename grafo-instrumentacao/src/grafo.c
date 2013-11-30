@@ -918,6 +918,14 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 }
 
 #ifdef _DEBUG
+   // Det 07
+   void AlteraTipoDoValorDoVertice(GRA_tppGrafo pGrafoParm)
+   {
+      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+
+      CED_DefinirTipoEspaco(pGrafo->pCorrente->pValor, CED_ID_TIPO_VALOR_NULO);
+   }
+
    // Det 08
    void DestacaVertice(GRA_tppGrafo pGrafoParm)
    {
