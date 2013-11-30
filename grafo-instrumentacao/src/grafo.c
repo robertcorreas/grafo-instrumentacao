@@ -118,6 +118,10 @@ typedef struct stGrafo {
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
+#ifdef _DEBUG
+   static void DET_EliminaElementoCorrente(tpGrafo *pGrafo);
+#endif
+
 static void DestruirVertice(void *pVazio);
 static void DestruirAresta(void *pVazio);
 static int CompararVerticeENome (void *pVazio1, void *pVazio2);
@@ -635,9 +639,7 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 
    case DeturpaEliminaElementoCorrente :
       {
-         tpVertice* pVertice = NULL;
-         LIS_ObterValor(pGrafo->pVertices, (void**) pVertice);
-         free(pVertice);
+         void DET_EliminaElementoCorrente(tpGrafo *pGrafo);
          break ;
       } 
    }
@@ -646,6 +648,17 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 #endif
 
 /*****  Código das funções encapsuladas no módulo  *****/
+
+#ifdef _DEBUG
+
+static void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
+{
+   tpVertice* pVertice = NULL;
+   LIS_ObterValor(pGrafo->pVertices, (void**) pVertice);
+   free(pVertice);
+}
+
+#endif
 
 /***********************************************************************
 *
