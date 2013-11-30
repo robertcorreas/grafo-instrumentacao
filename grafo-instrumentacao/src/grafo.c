@@ -113,7 +113,10 @@ typedef struct stGrafo {
 
 /***** Dados encapsulados no módulo ******/
 #ifdef _DEBUG
-   static int pNull[1] = {NULL};
+
+   static char EspacoLixo[256] =
+            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+         /* Espaço de dados lixo usado ao testar */
 #endif
 
 /***** Protótipos das funções encapuladas no módulo *****/
@@ -918,6 +921,25 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 }
 
 #ifdef _DEBUG
+   // Det 05
+   void LixoNaReferenciaParaAntecessor(GRA_tppGrafo pGrafoParm)
+   {
+      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+      tpVertice *pVertice;
+
+      LIS_ObterValor(pGrafo->pCorrente->pAntecessores, (void **) &pVertice);
+
+      *(char**) pVertice = EspacoLixo;
+   }
+
+   // Det 06
+   void ConteudoDoVerticeNULL(GRA_tppGrafo pGrafoParm)
+   {
+      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+
+      *(int*) pGrafo->pCorrente->pValor = NULL;
+   }
+
    // Det 07
    void AlteraTipoDoValorDoVertice(GRA_tppGrafo pGrafoParm)
    {
@@ -1005,9 +1027,11 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    void AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+      int *pOrigem;
 
       LIS_IrFinalLista(pGrafo->pOrigens);
-      LIS_InserirElementoApos(pGrafo->pOrigens, pNull);
+      LIS_ObterValor(pGrafo->pOrigens, (void**) &pOrigem);
+      *pOrigem = NULL;
    }
 #endif
 
