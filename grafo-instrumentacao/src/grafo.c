@@ -638,7 +638,7 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
       return ;
    } /* if */
 
-   pGrafo = ( tpGrafo* )( pGrafoParm ) ;
+   pGrafo = (tpGrafo*) pGrafoParm;
 
    switch ( ModoDeturpar ) {
 
@@ -647,11 +647,48 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
    case DeturpaEliminaElementoCorrente :
       {
          DET_EliminaElementoCorrente(pGrafo);
-         break ;
+         break;
       } 
+
    case GRA_DeturpaAtribuiNullParaVerticeSucessor:
       {
          DET_AtribuiNullParaVerticeSucessor(pGrafo);
+         break;
+      }
+   
+   case GRA_LixoNaReferenciaParaAntecessor:
+      {
+         DET_LixoNaReferenciaParaAntecessor(pGrafo);
+         break;
+      }
+
+   case GRA_ConteudoDoVerticeNULL:
+      {
+         DET_ConteudoDoVerticeNULL(pGrafo);
+         break;
+      }
+
+   case GRA_AlteraTipoDoValorDoVertice:
+      {
+         DET_AlteraTipoDoValorDoVertice(pGrafo);
+         break;
+      }
+
+   case GRA_DestacaVertice:
+      {
+         DET_DestacaVertice(pGrafo);
+         break;
+      }
+
+   case GRA_AtribuiNullAoCorrente:
+      {
+         DET_AtribuiNullAoCorrente(pGrafo);
+         break;
+      }
+
+   case GRA_AtribuiNullParaUmaOrigem:
+      {
+         DET_AtribuiNullParaUmaOrigem(pGrafo);
          break;
       }
    }
