@@ -599,6 +599,24 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 	return GRA_CondRetOK;
 }
 
+#ifdef _DEBUG
+   GRA_tpCondRet GRA_AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
+   {
+      void *pNull;
+      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+      if (pGrafo == NULL)
+      {
+         return GRA_CondRetGrafoNaoFoiCriado;
+      }
+
+      pNull = (void*) malloc(sizeof(NULL));
+
+      LIS_IrFinalLista(pGrafo->pOrigens);
+      LIS_InserirElementoApos(pGrafo->pOrigens, pNull);
+
+      return GRA_CondRetOK;
+   }
+#endif
 
 /*****  Código das funções encapsuladas no módulo  *****/
 

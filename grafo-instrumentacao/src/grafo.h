@@ -90,7 +90,8 @@ typedef enum {
       /* elimina o elemento corrente da lista de vértices */
 
   
-
+   GRA_AtribuirNullParaOrigem            =  10 ,
+      /* atribui uma origem como null */
 } GRA_tpModosDeturpacao ;
 
 #endif
@@ -457,6 +458,12 @@ GRA_tpCondRet GRA_DestruirVerticeCorrente(GRA_tppGrafo pGrafoParm);
 
 ***********************************************************************/
 GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAresta);
+
+
+#ifdef _DEBUG
+   /* funções de deturpação */
+   GRA_tpCondRet GRA_AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafo);
+#endif
 
 /***********************************************************************/
 #undef GRAFO_EXT
