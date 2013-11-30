@@ -126,6 +126,10 @@ static int ExisteVertice(tpGrafo *pGrafo, char *nome);
 static int ExisteOrigem(tpGrafo *pGrafo, char *nome);
 static int ExisteAresta(tpVertice *pVertice, char *nome);
 
+#ifdef _DEBUG
+   static GRA_tpCondRet AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm);
+#endif
+
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /***************************************************************************
@@ -604,23 +608,6 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 }
 
 #ifdef _DEBUG
-   GRA_tpCondRet GRA_AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
-   {
-      void *pNull;
-      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
-      if (pGrafo == NULL)
-      {
-         return GRA_CondRetGrafoNaoFoiCriado;
-      }
-
-      pNull = (void*) malloc(sizeof(NULL));
-
-      LIS_IrFinalLista(pGrafo->pOrigens);
-      LIS_InserirElementoApos(pGrafo->pOrigens, pNull);
-
-      return GRA_CondRetOK;
-   }
-
 /***************************************************************************
 *
 *  Função: ARV  &Deturpar grafo
@@ -903,5 +890,24 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
    return condRet == GRA_CondRetOK;
 }
+
+#ifdef _DEBUG
+   GRA_tpCondRet AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
+   {
+      void *pNull;
+      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+      if (pGrafo == NULL)
+      {
+         return GRA_CondRetGrafoNaoFoiCriado;
+      }
+
+      pNull = (void*) malloc(sizeof(NULL));
+
+      LIS_IrFinalLista(pGrafo->pOrigens);
+      LIS_InserirElementoApos(pGrafo->pOrigens, pNull);
+
+      return GRA_CondRetOK;
+   }
+#endif
 
 /********** Fim do módulo de implementação: GRA Grafo direcionado **********/
