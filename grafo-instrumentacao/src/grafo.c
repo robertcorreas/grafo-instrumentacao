@@ -903,18 +903,12 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       pGrafo->pCorrente = NULL;
    }
 
-   GRA_tpCondRet AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
+   void AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
    {
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
-      if (pGrafo == NULL)
-      {
-         return GRA_CondRetGrafoNaoFoiCriado;
-      }
 
       LIS_IrFinalLista(pGrafo->pOrigens);
       LIS_InserirElementoApos(pGrafo->pOrigens, pNull);
-
-      return GRA_CondRetOK;
    }
 #endif
 
