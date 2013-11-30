@@ -111,6 +111,10 @@ typedef struct stGrafo {
 
 } tpGrafo;
 
+/***** Dados encapsulados no módulo ******/
+#ifdef _DEBUG
+   static int pNull[1] = {NULL};
+#endif
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
@@ -894,14 +898,11 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 #ifdef _DEBUG
    GRA_tpCondRet AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
    {
-      void *pNull;
       tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
       if (pGrafo == NULL)
       {
          return GRA_CondRetGrafoNaoFoiCriado;
       }
-
-      pNull = (void*) malloc(sizeof(NULL));
 
       LIS_IrFinalLista(pGrafo->pOrigens);
       LIS_InserirElementoApos(pGrafo->pOrigens, pNull);
