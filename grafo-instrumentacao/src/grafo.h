@@ -89,6 +89,9 @@ typedef enum {
    DeturpaEliminaElementoCorrente        =  1 ,
       /* Elimina o elemento corrente da lista de vértices */
 
+   GRA_DeturpaAtribuiNullParaVerticeSucessor = 2 ,
+      /* Atribui NULL ao ponteiro para um vértice sucessor */
+
   
    GRA_AtribuirNullParaOrigem            =  10 ,
       /* atribui uma origem como null */
