@@ -125,12 +125,12 @@ typedef struct stGrafo {
    static void DET_EliminaElementoCorrente(tpGrafo *pGrafo);
    static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo);
 
-   static void DET_LixoNaReferenciaParaAntecessor(GRA_tppGrafo pGrafoParm);
-   static void DET_ConteudoDoVerticeNULL(GRA_tppGrafo pGrafoParm);
-   static void DET_AlteraTipoDoValorDoVertice(GRA_tppGrafo pGrafoParm);
-   static void DET_DestacaVertice(GRA_tppGrafo pGrafoParm);
-   static void DET_AtribuiNullAoCorrente(GRA_tppGrafo pGrafoParm);
-   static void DET_AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm);
+   static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
+   static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
+   static void DET_AlteraTipoDoValorDoVertice(tpGrafo *pGrafo);
+   static void DET_DestacaVertice(tpGrafo *pGrafo);
+   static void DET_AtribuiNullAoCorrente(tpGrafo *pGrafo);
+   static void DET_AtribuiNullParaUmaOrigem(tpGrafo *pGrafo);
 #endif
 
 static void DestruirVertice(void *pVazio);
@@ -966,9 +966,8 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
 #ifdef _DEBUG
    // Det 05
-   void DET_LixoNaReferenciaParaAntecessor(GRA_tppGrafo pGrafoParm)
+   void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
    {
-      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
       tpVertice *pVertice;
 
       LIS_ObterValor(pGrafo->pCorrente->pAntecessores, (void **) &pVertice);
@@ -977,25 +976,20 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    }
 
    // Det 06
-   void DET_ConteudoDoVerticeNULL(GRA_tppGrafo pGrafoParm)
+   void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo)
    {
-      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
-
       *(int*) pGrafo->pCorrente->pValor = NULL;
    }
 
    // Det 07
-   void DET_AlteraTipoDoValorDoVertice(GRA_tppGrafo pGrafoParm)
+   void DET_AlteraTipoDoValorDoVertice(tpGrafo *pGrafo)
    {
-      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
-
       CED_DefinirTipoEspaco(pGrafo->pCorrente->pValor, CED_ID_TIPO_VALOR_NULO);
    }
 
    // Det 08
-   void DET_DestacaVertice(GRA_tppGrafo pGrafoParm)
+   void DET_DestacaVertice(tpGrafo *pGrafo)
    {
-      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
       LIS_tppLista pSuc, pAnt;
       tpVertice *pCorr;
       LIS_tpCondRet lisCondRet;
@@ -1060,17 +1054,14 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    }
 
    // Det 09
-   void DET_AtribuiNullAoCorrente(GRA_tppGrafo pGrafoParm)
+   void DET_AtribuiNullAoCorrente(tpGrafo *pGrafo)
    {
-      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
-
       pGrafo->pCorrente = NULL;
    }
 
    // Det 10
-   void DET_AtribuiNullParaUmaOrigem(GRA_tppGrafo pGrafoParm)
+   void DET_AtribuiNullParaUmaOrigem(tpGrafo *pGrafo)
    {
-      tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
       int *pOrigem;
 
       LIS_IrFinalLista(pGrafo->pOrigens);
