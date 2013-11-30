@@ -87,7 +87,7 @@ typedef enum {
 typedef enum {
 
    DeturpaEliminaElementoCorrente        =  1 ,
-      /* elimina o elemento corrente da lista de vértices */
+      /* Elimina o elemento corrente da lista de vértices */
 
   
 
@@ -457,6 +457,14 @@ GRA_tpCondRet GRA_DestruirVerticeCorrente(GRA_tppGrafo pGrafoParm);
 
 ***********************************************************************/
 GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAresta);
+
+#ifdef _DEBUG
+
+void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpa);
+
+#endif
+
+
 
 /***********************************************************************/
 #undef GRAFO_EXT
