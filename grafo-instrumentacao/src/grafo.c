@@ -120,6 +120,7 @@ typedef struct stGrafo {
 
 #ifdef _DEBUG
    static void DET_EliminaElementoCorrente(tpGrafo *pGrafo);
+   static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo);
 #endif
 
 static void DestruirVertice(void *pVazio);
@@ -638,6 +639,11 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
          DET_EliminaElementoCorrente(pGrafo);
          break ;
       } 
+   case GRA_DeturpaAtribuiNullParaVerticeSucessor:
+      {
+         DET_AtribuiNullParaVerticeSucessor(pGrafo);
+         break;
+      }
    }
 } 
 
@@ -652,6 +658,13 @@ static void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
    tpVertice* pVertice = NULL;
    LIS_ObterValor(pGrafo->pVertices, (void**) pVertice);
    free(pVertice);
+}
+
+static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
+{
+   tpVertice *pVertice = NULL;
+   LIS_ObterValor(pGrafo->pCorrente->pSucessores,(void**)pVertice);
+   pVertice = NULL;
 }
 
 #endif
