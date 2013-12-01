@@ -362,7 +362,7 @@ static GRA_tppGrafo pGrafo = NULL;
             return TST_CondRetOK;
          }
 
-       /* Deturpar uma árvore */
+       /* Deturpar uma grafo */
       #ifdef _DEBUG
 
          else if ( strcmp( ComandoTeste , DETURPAR_CMD ) == 0 )
