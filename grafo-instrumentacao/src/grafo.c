@@ -722,7 +722,7 @@ static void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
 static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
 {
    tpAresta *pAresta = NULL;
-   LIS_ObterValor(pGrafo->pCorrente->pSucessores,(void**)pAresta);
+   LIS_ObterValor(pGrafo->pCorrente->pSucessores,(void**)&pAresta);
    pAresta->pVertice = NULL;
 }
 
