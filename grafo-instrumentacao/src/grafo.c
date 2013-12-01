@@ -776,11 +776,11 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
       erroNaEstrutura = 1;
    }
 
-   ret = VER_NenhumVerticeEstaDestacado(pGrafo);
-   if (ret == GRA_CondRetErroNaEstrutura)
-   {
-      erroNaEstrutura = 1;
-   }
+//    ret = VER_NenhumVerticeEstaDestacado(pGrafo);
+//    if (ret == GRA_CondRetErroNaEstrutura)
+//    {
+//       erroNaEstrutura = 1;
+//    }
    
    ret = VER_CorrenteNaoEhNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)

@@ -124,7 +124,10 @@
 == Deturpação 09: Atribui null ao ponteiro corrente
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
 =deturpar 9
+//=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 == Deturpação 10: Atribui null à um ponteiro de origem
