@@ -1016,6 +1016,47 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       CED_DefinirTipoEspaco(pGrafo->pCorrente->pValor, CED_ID_TIPO_VALOR_NULO);
    }
 
+   // Ver 07
+   GRA_tpCondRet VER_TipoDaEstrutura(tpGrafo *pGrafo)
+   {
+      LIS_tppLista pVertices;
+      LIS_tpCondRet lisCondRet = LIS_CondRetOK;
+      int estaVazia;
+      int erroNaEstrutura = 0;
+
+      pVertices = pGrafo->pVertices;
+
+      LIS_EstaVazia(pVertices, &estaVazia);
+      if (estaVazia)
+      {
+         return GRA_CondRetOK;
+      }
+
+      while (lisCondRet == LIS_CondRetOK)
+      {
+         tpVertice *pVertice;
+         CED_tpIdTipoEspaco tipoValor;
+
+         LIS_ObterValor(pVertices, (void**) &pVertice);
+         
+         tipoValor = (CED_tpIdTipoEspaco) CED_ObterTipoEspaco(pVertice->pValor);
+         if (tipoValor != GRA_TipoEspacoVertice)
+         {
+            TST_NotificarFalha("Encontrado vértice cujo valor está com o tipo errado.");
+            erroNaEstrutura = 1;
+         }
+
+         lisCondRet = LIS_AvancarElementoCorrente(pVertices, 1);
+      }
+
+      if (erroNaEstrutura)
+      {
+         return GRA_CondRetErroNaEstrutura;
+      }
+
+      return GRA_CondRetOK;
+   }
+
    // Det 08
    void DET_DestacaVertice(tpGrafo *pGrafo)
    {
