@@ -1091,6 +1091,18 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    {
       pGrafo->pCorrente = NULL;
    }
+   
+   // Ver 09
+   GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo)
+   {
+      if (pGrafo->pCorrente == NULL)
+      {
+         TST_NotificarFalha("Corrente não existe.");
+         return GRA_CondRetErroNaEstrutura;
+      }
+
+      return GRA_CondRetOK;
+   }
 
    // Det 10
    void DET_AtribuiNullParaUmaOrigem(tpGrafo *pGrafo)
