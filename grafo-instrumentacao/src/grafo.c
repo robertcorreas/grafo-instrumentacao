@@ -122,10 +122,14 @@ typedef struct stGrafo {
 /***** Protótipos das funções encapuladas no módulo *****/
 
 #ifdef _DEBUG
+   // deturpacao
    static void DET_EliminaElementoCorrente(tpGrafo *pGrafo);
    static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo);
    static void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo);
    static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo);
+
+   //Verificacao
+   static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo);
 
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
@@ -714,6 +718,10 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 
 #ifdef _DEBUG
 
+/************************************************************************/
+/* Funcoes deturpacao                                                   */
+/************************************************************************/
+
 static void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
 {
   free(pGrafo->pCorrente);
@@ -742,6 +750,30 @@ static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
    pAresta->pVertice = (tpVertice*)(EspacoLixo);
 }
 
+/************************************************************************/
+/*Funcao de verificacao                                                 */
+/************************************************************************/
+
+static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
+{
+   int numElem = 0;
+   tpAresta *pAresta;
+   LIS_NumELementos(pGrafo->pCorrente->pSucessores,&numElem);
+   LIS_IrInicioLista(pGrafo->pCorrente->pSucessores);
+   while(numElem > 0)
+   {
+      LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void**)&pAresta);
+      if(pAresta->pVertice = NULL)
+      {
+         TST_NotificarFalha("Encontrado vertice sucessor nulo");
+         return GRA_CondRetErroNaEstrutura;
+      }
+      LIS_AvancarElementoCorrente(pGrafo->pCorrente->pSucessores,1);
+      numElem--;
+   }
+
+   return GRA_CondRetOK;
+}
 
 #endif
 
