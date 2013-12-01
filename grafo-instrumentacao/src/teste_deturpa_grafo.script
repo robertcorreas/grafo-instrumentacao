@@ -15,6 +15,17 @@
 =declararparm   NULL           string "!N!"
 //*********************************
 
+== Deturpação 05: Atribui lixo para a referência à um vértice antecessor
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bb"   "B"   "B"   OK
+=deturpar 5
+=destruirGrafo                      OK
+
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
