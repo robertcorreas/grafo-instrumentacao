@@ -122,6 +122,7 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
+=verificar TesteOK
 =deturpar 10
 =verificar TesteERRO
 =AceitaFalhasAcumuladas 1
