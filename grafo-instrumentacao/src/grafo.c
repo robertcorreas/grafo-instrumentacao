@@ -132,6 +132,13 @@ typedef struct stGrafo {
    static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo);
    static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo);
 
+   static GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_ReferenciasDoVerticeEstaoCorretas(tpVertice *pVerticeVerificado);
+   static GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo);
+
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
    static void DET_AlteraTipoDoValorDoVertice(tpGrafo *pGrafo);
@@ -713,22 +720,59 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 
 /***************************************************************************
 *
-*  Função: GRA  Deturpar grafo
+*  Função: GRA  Verificar grafo
 *  ****/
 
 GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
 {
    int erroNaEstrutura = 0;
    tpGrafo *pGrafo = NULL;
+   GRA_tpCondRet ret;
 
    if (pGrafoParm == NULL)
    {
-      return;
+      TST_NotificarFalha("Tentou verificar um grafo que não existe.");
+      return GRA_CondRetErroNaEstrutura;
    }
 
    pGrafo = (tpGrafo*) pGrafoParm;
 
+   ret = VER_VerticesNaoPossuemConteudoNulo(pGrafo);
+   if (ret == GRA_CondRetErroNaEstrutura)
+   {
+      erroNaEstrutura = 1;
+   }
+   
+   ret = VER_NenhumVerticeTemConteudoComOTipoCorrompido(pGrafo);
+   if (ret == GRA_CondRetErroNaEstrutura)
+   {
+      erroNaEstrutura = 1;
+   }
 
+   ret = VER_NenhumVerticeEstaDestacado(pGrafo);
+   if (ret == GRA_CondRetErroNaEstrutura)
+   {
+      erroNaEstrutura = 1;
+   }
+   
+   ret = VER_CorrenteNaoEhNulo(pGrafo);
+   if (ret == GRA_CondRetErroNaEstrutura)
+   {
+      erroNaEstrutura = 1;
+   }
+   
+   ret = VER_NaoExisteOrigemNula(pGrafo);
+   if (ret == GRA_CondRetErroNaEstrutura)
+   {
+      erroNaEstrutura = 1;
+   }
+
+   if (erroNaEstrutura)
+   {
+      return GRA_CondRetErroNaEstrutura;
+   }
+
+   return GRA_CondRetOK;
 }
 
 #endif
