@@ -716,9 +716,7 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 
 static void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
 {
-   tpVertice* pVertice = NULL;
-   LIS_ObterValor(pGrafo->pVertices, (void**) pVertice);
-   free(pVertice);
+  free(pGrafo->pCorrente);
 }
 
 static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
