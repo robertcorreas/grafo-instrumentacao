@@ -15,7 +15,18 @@
 =declararparm   NULL           string "!N!"
 //*********************************
 
-== Deturpação 01: Elimina o elemento corrente da lista de vértices
+// == Deturpação 01: Elimina o elemento corrente da lista de vértices
+// =criarGrafo                         OK
+// =insVertice      "A"    "vA"        OK
+// =insVertice      "B"    "vB"        OK
+// =insAresta       "aa"   "A"   "A"   OK
+// =insAresta       "ab"   "A"   "B"   OK
+// =insAresta       "ba"   "B"   "A"   OK
+// =insAresta       "bb"   "B"   "B"   OK
+// =deturpar 1
+// =destruirGrafo                      OK
+
+== Deturpação 02: Atribui NULL ao ponteiro para um vértice sucessor
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
@@ -23,16 +34,36 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
-=deturpar 1
+=deturpar 2
 =destruirGrafo                      OK
 
 
 
+== Deturpação 03: Atribui NULL ao ponteiro para um vértice predecessor
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bb"   "B"   "B"   OK
+=deturpar 3
+=destruirGrafo                      OK
 
 
+== Deturpação 04: Atribui lixo ao ponteiro para a referência a um vértice sucessor
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bb"   "B"   "B"   OK
+=deturpar 4
+=destruirGrafo                      OK
 
 
-
+ 
 
 
 

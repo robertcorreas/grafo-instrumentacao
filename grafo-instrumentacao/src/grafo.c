@@ -722,17 +722,15 @@ static void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
 static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
 {
    tpAresta *pAresta = NULL;
-   LIS_ObterValor(pGrafo->pCorrente->pSucessores,(void**)pAresta);
+   LIS_ObterValor(pGrafo->pCorrente->pSucessores,(void**)&pAresta);
    pAresta->pVertice = NULL;
 }
 
 static void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo)
 {
-   tpVertice *pVertice = NULL;
-   LIS_IrInicioLista(pGrafo->pCorrente->pAntecessores);
-   LIS_ObterValor(pGrafo->pCorrente->pAntecessores, (void**)pVertice);
-   pVertice = NULL;
-   
+   int *pVertice;
+   LIS_ObterValor(pGrafo->pCorrente->pAntecessores, (void**)&pVertice);
+   *pVertice = NULL;
 }
 
 static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
@@ -741,7 +739,7 @@ static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
 
    LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void **) &pAresta);
 
-   *(char**) pAresta = EspacoLixo;
+   pAresta->pVertice = (tpVertice*)(EspacoLixo);
 }
 
 
