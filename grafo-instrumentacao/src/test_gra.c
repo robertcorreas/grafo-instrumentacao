@@ -134,9 +134,14 @@ static GRA_tppGrafo pGrafo = NULL;
             }
 
             CondRet = GRA_InserirVertice(pGrafo, nome, pDado);
+            
+            if (CondRet != TST_CondRetOK)
+            {
+               free(pDado);
+               free(nome);
+            }
 
             return TST_CompararInt(CondRetEsp, CondRet, "Condicao de retorno errada ao inserir vértice.");
-
          }
     
       /*Testar inserir aresta */
@@ -155,7 +160,11 @@ static GRA_tppGrafo pGrafo = NULL;
             }
    
             CondRet = GRA_InserirAresta(pGrafo, nomeAresta, nomeVerticeOrig, nomeVerticeDest);
-
+            
+            if (CondRet != TST_CondRetOK)
+            {
+               free(nomeAresta);
+            }
             free(nomeVerticeOrig);
             free(nomeVerticeDest);
 
@@ -179,6 +188,7 @@ static GRA_tppGrafo pGrafo = NULL;
 
             if (strcmp(pDadoEsperado, SIMBOLO_PARA_NULL) == 0)
             {
+               free(pDadoEsperado);
                pDadoEsperado = NULL;
             }
 
@@ -218,9 +228,17 @@ static GRA_tppGrafo pGrafo = NULL;
             }
             
             GRA_ObterValorCorrente(pGrafo, (void**) &pAntigoValor);
-            free(pAntigoValor);
 
             CondRet = GRA_AlterarValorCorrente(pGrafo, pNovoValor);
+
+            if (CondRet == TST_CondRetOK)
+            {
+               free(pAntigoValor);
+            }
+            else
+            {
+               free(pNovoValor);
+            }
 
             return TST_CompararInt(CondRetEsp, CondRet, "Ocorreu um erro ao alterar o valor.");
          }
@@ -354,15 +372,6 @@ static GRA_tppGrafo pGrafo = NULL;
             CondRet = GRA_DestruirVerticeCorrente(pGrafo);
 
             return TST_CompararInt(CondRetEsp, CondRet, "Ocorreu um erro ao destruir vertice corrente.");
-         }
-
-        /* Finalizar o teste */
-
-       else if (strcmp(ComandoTeste, FIM_CMD) == 0)
-         {
-            MEM_LiberarTodaMemoriaAlocada();
-
-            return TST_CondRetOK;
          }
 
        /* Deturpar o grafo */
