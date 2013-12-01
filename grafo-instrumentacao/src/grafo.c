@@ -744,11 +744,11 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
 //       erroNaEstrutura = 1;
 //    }
 
-   ret = VER_VerticePredecessorNaoEhNulo(pGrafo);
-   if (ret == GRA_CondRetErroNaEstrutura)
-   {
-      erroNaEstrutura = 1;
-   }
+//    ret = VER_VerticePredecessorNaoEhNulo(pGrafo);
+//    if (ret == GRA_CondRetErroNaEstrutura)
+//    {
+//       erroNaEstrutura = 1;
+//    }
 
    ret = VER_VerticesNaoPossuemConteudoNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)

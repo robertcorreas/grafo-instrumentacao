@@ -25,7 +25,6 @@ static const char *DESTRUIR_VERT_CMD    = "=destruirCorr"     ;
 static const char *DESTRUIR_ARESTA_CMD  = "=destruirAresta"   ;
 static const char *TORNAR_ORIGEM_CMD    = "=tornarOrigem"     ;
 static const char *DEIXAR_ORIGEM_CMD    = "=deixarOrigem"     ;
-static const char *FIM_CMD              = "=fim"              ;
 
 #ifdef _DEBUG
 static const char *DETURPAR_CMD         = "=deturpar"         ;

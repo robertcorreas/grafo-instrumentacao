@@ -449,7 +449,7 @@ LIS_tpCondRet LIS_NumELementos(LIS_tppLista pLista,
 LIS_tpCondRet LIS_AlterarValor(LIS_tppLista ppLista, void * pValor)
 {
    LIS_tpLista *pLista = (LIS_tpLista *) ppLista;
-   pLista->destruirValor(pLista->pElemCorr->pValor);
+   //pLista->destruirValor(pLista->pElemCorr->pValor);
    pLista->pElemCorr->pValor = pValor;
 
    return LIS_CondRetOK;
