@@ -232,7 +232,8 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafoParm, char *nomeVertice, voi
 	LIS_CriarLista(&pVertice->pSucessores, DestruirAresta, CompararArestaENome);
 
    #ifdef _DEBUG
-      CED_DefinirTipoEspaco( pVertice , GRA_TipoEspacoVertice ) ;
+      CED_DefinirTipoEspaco(pVertice, GRA_TipoEspacoVertice);
+      CED_DefinirTipoEspaco(pVertice->pValor, GRA_TipoEspacoValorVertice);
    #endif
 
 	pGrafo->pCorrente = pVertice;
@@ -708,7 +709,27 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
          break;
       }
    }
-} 
+}
+
+/***************************************************************************
+*
+*  Função: GRA  Deturpar grafo
+*  ****/
+
+GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
+{
+   int erroNaEstrutura = 0;
+   tpGrafo *pGrafo = NULL;
+
+   if (pGrafoParm == NULL)
+   {
+      return;
+   }
+
+   pGrafo = (tpGrafo*) pGrafoParm;
+
+
+}
 
 #endif
 
@@ -1165,7 +1186,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
          LIS_ObterValor(pVertices, (void**) &pVertice);
          
          tipoValor = (CED_tpIdTipoEspaco) CED_ObterTipoEspaco(pVertice->pValor);
-         if (tipoValor != GRA_TipoEspacoVertice)
+         if (tipoValor != GRA_TipoEspacoValorVertice)
          {
             TST_NotificarFalha("Encontrado vértice cujo valor está com o tipo errado.");
             erroNaEstrutura = 1;
