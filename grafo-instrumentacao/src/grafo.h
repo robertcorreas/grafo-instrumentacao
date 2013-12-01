@@ -92,6 +92,9 @@ typedef enum {
    GRA_DeturpaAtribuiNullParaVerticeSucessor = 2,
       /* Atribui NULL ao ponteiro para um vértice sucessor */
 
+   GRA_AtribuiNullAOPonteiroDoVerticePredecessor = 3,
+   /* Atribui NULL ao ponteiro para um vértice predecessor */
+
    GRA_LixoNaReferenciaParaAntecessor        = 5,
       /* Atribui lixo ao ponteiro para a referência a um vértice predecessor. */
 
