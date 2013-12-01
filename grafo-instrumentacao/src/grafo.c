@@ -132,6 +132,7 @@ typedef struct stGrafo {
    static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo);
    static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo);
    static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
 
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
@@ -885,6 +886,41 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
       LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
       numVerElem--;
    }
+}
+
+static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
+{
+   int numVerElem = 0;
+   LIS_NumELementos(pGrafo->pVertices,&numVerElem);
+   LIS_IrInicioLista(pGrafo->pVertices);
+
+   while(numVerElem > 0)
+   {
+      int numElemAnt = 0;
+      tpVertice *pVertice = NULL;
+      LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
+
+      LIS_NumELementos(pVertice->pAntecessores,&numElemAnt);
+      LIS_IrInicioLista(pVertice->pAntecessores);
+
+      while(numElemAnt > 0)
+      {
+         tpVertice *pVerticeAnt = NULL;
+         LIS_ObterValor(pVertice->pAntecessores,(void**)&pVerticeAnt);
+
+         if(!CED_VerificarEspaco(pVerticeAnt,NULL))
+         {
+            TST_NotificarFalha("Problema de tipo de espaço na referencia para vertice anterior");
+            return GRA_CondRetErroNaEstrutura;
+         }
+         LIS_AvancarElementoCorrente(pVertice->pAntecessores,1);
+         numElemAnt--;
+      }
+      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+      numVerElem--;
+   }
+
+   return GRA_CondRetOK;
 }
 
 #endif
