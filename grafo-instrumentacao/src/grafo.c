@@ -233,7 +233,8 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafoParm, char *nomeVertice, voi
 	LIS_CriarLista(&pVertice->pSucessores, DestruirAresta, CompararArestaENome);
 
    #ifdef _DEBUG
-      CED_DefinirTipoEspaco( pVertice , GRA_TipoEspacoVertice ) ;
+      CED_DefinirTipoEspaco(pVertice, GRA_TipoEspacoVertice);
+      CED_DefinirTipoEspaco(pVertice->pValor, GRA_TipoEspacoValorVertice);
    #endif
 
 	pGrafo->pCorrente = pVertice;
@@ -633,7 +634,7 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 #ifdef _DEBUG
 /***************************************************************************
 *
-*  Função: ARV  &Deturpar grafo
+*  Função: GRA  Deturpar grafo
 *  ****/
 
 void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
@@ -649,9 +650,6 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
    pGrafo = (tpGrafo*) pGrafoParm;
 
    switch ( ModoDeturpar ) {
-
-      /* Elimina o elemento corrente da lista de vértices */
-
    case DeturpaEliminaElementoCorrente :
       {
          DET_EliminaElementoCorrente(pGrafo);
@@ -712,7 +710,27 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
          break;
       }
    }
-} 
+}
+
+/***************************************************************************
+*
+*  Função: GRA  Deturpar grafo
+*  ****/
+
+GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
+{
+   int erroNaEstrutura = 0;
+   tpGrafo *pGrafo = NULL;
+
+   if (pGrafoParm == NULL)
+   {
+      return;
+   }
+
+   pGrafo = (tpGrafo*) pGrafoParm;
+
+
+}
 
 #endif
 
@@ -1136,10 +1154,91 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       *(int*) pGrafo->pCorrente->pValor = NULL;
    }
 
+   // Ver 06
+   GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo)
+   {
+      LIS_tppLista pVertices;
+      LIS_tpCondRet lisCondRet = LIS_CondRetOK;
+      int estaVazia;
+      int erroNaEstrutura = 0;
+
+      pVertices = pGrafo->pVertices;
+
+      LIS_EstaVazia(pVertices, &estaVazia);
+      if (estaVazia)
+      {
+         return GRA_CondRetOK;
+      }
+
+      while (lisCondRet == LIS_CondRetOK)
+      {
+         int *pVertice;
+         CED_tpIdTipoEspaco tipoValor;
+
+         LIS_ObterValor(pVertices, (void**) &pVertice);
+         
+         if (*pVertice == NULL)
+         {
+            TST_NotificarFalha("Encontrado vértice cujo valor é nulo.");
+            erroNaEstrutura = 1;
+         }
+
+         lisCondRet = LIS_AvancarElementoCorrente(pVertices, 1);
+      }
+
+      if (erroNaEstrutura)
+      {
+         return GRA_CondRetErroNaEstrutura;
+      }
+
+      return GRA_CondRetOK;
+   }
+
    // Det 07
    void DET_AlteraTipoDoValorDoVertice(tpGrafo *pGrafo)
    {
       CED_DefinirTipoEspaco(pGrafo->pCorrente->pValor, CED_ID_TIPO_VALOR_NULO);
+   }
+
+   // Ver 07
+   GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo)
+   {
+      LIS_tppLista pVertices;
+      LIS_tpCondRet lisCondRet = LIS_CondRetOK;
+      int estaVazia;
+      int erroNaEstrutura = 0;
+
+      pVertices = pGrafo->pVertices;
+
+      LIS_EstaVazia(pVertices, &estaVazia);
+      if (estaVazia)
+      {
+         return GRA_CondRetOK;
+      }
+
+      while (lisCondRet == LIS_CondRetOK)
+      {
+         tpVertice *pVertice;
+         CED_tpIdTipoEspaco tipoValor;
+
+         LIS_ObterValor(pVertices, (void**) &pVertice);
+         
+         tipoValor = (CED_tpIdTipoEspaco) CED_ObterTipoEspaco(pVertice->pValor);
+         if (tipoValor != GRA_TipoEspacoValorVertice)
+         {
+            TST_NotificarFalha("Encontrado vértice cujo valor está com o tipo errado.");
+            erroNaEstrutura = 1;
+         }
+
+         lisCondRet = LIS_AvancarElementoCorrente(pVertices, 1);
+      }
+
+      if (erroNaEstrutura)
+      {
+         return GRA_CondRetErroNaEstrutura;
+      }
+
+      return GRA_CondRetOK;
    }
 
    // Det 08

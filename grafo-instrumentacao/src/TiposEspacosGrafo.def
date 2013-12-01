@@ -17,9 +17,10 @@
 *
 ***************************************************************************/
 
-      GRA_TipoEspacoCabeca , 
-      GRA_TipoEspacoVertice     ,
-      GRA_TipoEspacoAresta     ,
+      GRA_TipoEspacoCabeca, 
+      GRA_TipoEspacoVertice,
+      GRA_TipoEspacoAresta,
+      GRA_TipoEspacoValorVertice,
 
 /********** Fim do arquivo de definição: TiposEspacosArvore.def  **********/
 
