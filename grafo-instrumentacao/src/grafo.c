@@ -728,11 +728,9 @@ static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
 
 static void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo)
 {
-   tpVertice *pVertice = NULL;
-   LIS_IrInicioLista(pGrafo->pCorrente->pAntecessores);
-   LIS_ObterValor(pGrafo->pCorrente->pAntecessores, (void**)pVertice);
-   pVertice = NULL;
-   
+   int *pVertice;
+   LIS_ObterValor(pGrafo->pCorrente->pAntecessores, (void**)&pVertice);
+   *pVertice = NULL;
 }
 
 static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
