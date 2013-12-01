@@ -632,7 +632,7 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 #ifdef _DEBUG
 /***************************************************************************
 *
-*  Função: ARV  &Deturpar grafo
+*  Função: GRA  Deturpar grafo
 *  ****/
 
 void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
@@ -648,9 +648,6 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
    pGrafo = (tpGrafo*) pGrafoParm;
 
    switch ( ModoDeturpar ) {
-
-      /* Elimina o elemento corrente da lista de vértices */
-
    case DeturpaEliminaElementoCorrente :
       {
          DET_EliminaElementoCorrente(pGrafo);
