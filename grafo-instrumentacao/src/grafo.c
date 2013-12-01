@@ -762,13 +762,13 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
       erroNaEstrutura = 1;
    }
 
-   //
-
    ret = VER_VerticesNaoPossuemConteudoNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       erroNaEstrutura = 1;
    }
+
+   //
    
    ret = VER_NenhumVerticeTemConteudoComOTipoCorrompido(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
@@ -1288,39 +1288,26 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    // Ver 07
    GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo)
    {
-      LIS_tppLista pVertices;
-      LIS_tpCondRet lisCondRet = LIS_CondRetOK;
-      int estaVazia;
-      int erroNaEstrutura = 0;
+      int numElem = 0;
+      LIS_NumELementos(pGrafo->pVertices,&numElem);
+      LIS_IrInicioLista(pGrafo->pVertices);
 
-      pVertices = pGrafo->pVertices;
-
-      LIS_EstaVazia(pVertices, &estaVazia);
-      if (estaVazia)
-      {
-         return GRA_CondRetOK;
-      }
-
-      while (lisCondRet == LIS_CondRetOK)
+      while(numElem > 0)
       {
          tpVertice *pVertice;
          CED_tpIdTipoEspaco tipoValor;
+         LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
 
-         LIS_ObterValor(pVertices, (void**) &pVertice);
-         
          tipoValor = (CED_tpIdTipoEspaco) CED_ObterTipoEspaco(pVertice->pValor);
+
          if (tipoValor != GRA_TipoEspacoValorVertice)
          {
             TST_NotificarFalha("Encontrado vértice cujo valor está com o tipo errado.");
-            erroNaEstrutura = 1;
+            return GRA_CondRetErroNaEstrutura;
          }
 
-         lisCondRet = LIS_AvancarElementoCorrente(pVertices, 1);
-      }
-
-      if (erroNaEstrutura)
-      {
-         return GRA_CondRetErroNaEstrutura;
+         LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+         numElem--;
       }
 
       return GRA_CondRetOK;
