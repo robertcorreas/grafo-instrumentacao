@@ -397,7 +397,7 @@ static GRA_tppGrafo pGrafo = NULL;
 
          else if ( strcmp( ComandoTeste , VERIFICAR_CMD ) == 0 )
          {
-            GRA_tpCondRet condRetEsperado, condRetObido;
+            GRA_tpCondRet condRetEsperado;
             numLidos = LER_LerParametros("i", &condRetEsperado) ;
 
             if( numLidos != 1 )
@@ -405,7 +405,7 @@ static GRA_tppGrafo pGrafo = NULL;
                return TST_CondRetParm ;
             }
             
-            return TST_CompararInt(CondRetEsp, GRA_Verificar(pGrafo),"Encontrado um erro na verificacao");
+            return TST_CompararInt(condRetEsperado, GRA_Verificar(pGrafo), "Encontrado um erro na verificacao");
 
          } /* fim ativa: Verifica o grafo */
 
