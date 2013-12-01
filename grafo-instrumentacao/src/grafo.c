@@ -130,6 +130,7 @@ typedef struct stGrafo {
 
    //Verificacao
    static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo);
 
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
@@ -756,24 +757,79 @@ static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
 
 static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
 {
-   int numElem = 0;
-   tpAresta *pAresta;
-   LIS_NumELementos(pGrafo->pCorrente->pSucessores,&numElem);
-   LIS_IrInicioLista(pGrafo->pCorrente->pSucessores);
-   while(numElem > 0)
+   int numVerElem = 0;
+
+   LIS_NumELementos(pGrafo->pVertices, &numVerElem);
+   LIS_IrInicioLista(pGrafo->pVertices);
+
+   while(numVerElem > 0)
    {
-      LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void**)&pAresta);
-      if(pAresta->pVertice = NULL)
+      int numElem = 0;
+      tpVertice *pVertice = NULL;
+
+      LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
+
+      LIS_NumELementos(pVertice->pSucessores,&numElem);
+      LIS_IrInicioLista(pVertice->pSucessores);
+
+      while(numElem > 0)
       {
-         TST_NotificarFalha("Encontrado vertice sucessor nulo");
-         return GRA_CondRetErroNaEstrutura;
+         tpAresta *pAresta = NULL;
+
+         LIS_ObterValor(pVertice->pSucessores, (void**)&pAresta);
+         if(pAresta->pVertice = NULL)
+         {
+            TST_NotificarFalha("Encontrado vertice sucessor nulo");
+            return GRA_CondRetErroNaEstrutura;
+         }
+         LIS_AvancarElementoCorrente(pGrafo->pCorrente->pSucessores,1);
+         numElem--;
       }
-      LIS_AvancarElementoCorrente(pGrafo->pCorrente->pSucessores,1);
-      numElem--;
+
+      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+      numVerElem--;
    }
 
    return GRA_CondRetOK;
 }
+
+static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo)
+{
+   int numVerElem = 0;
+   LIS_NumELementos(pGrafo->pVertices, &numVerElem);
+   LIS_IrInicioLista(pGrafo->pVertices);
+
+   while(numVerElem > 0)
+   {
+      int numElem = 0;
+      tpVertice *pVertice = NULL;
+
+      LIS_ObterValor(pGrafo->pVertices, (void**)&pVertice);
+
+      LIS_NumELementos(pVertice->pAntecessores, &numElem);
+      LIS_IrInicioLista(pVertice->pAntecessores);
+      while(numElem > 0)
+      {
+         tpVertice *pVerticeAnt = NULL;
+         LIS_ObterValor(pVertice->pAntecessores, (void**)&pVerticeAnt);
+
+         if(pVerticeAnt == NULL)
+         {
+            TST_NotificarFalha("Encontrado vertice antecessor nulo");
+            return GRA_CondRetErroNaEstrutura;
+         }
+
+         LIS_AvancarElementoCorrente(pVertice->pAntecessores,1);
+         numElem--;
+      }
+
+      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+      numVerElem--;
+   }
+
+   return GRA_CondRetOK;
+}
+
 
 #endif
 
