@@ -1113,7 +1113,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    // Det 06
    void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo)
    {
-      *(int*) pGrafo->pCorrente->pValor = NULL;
+      pGrafo->pCorrente->pValor = NULL;
    }
 
    // Ver 06
@@ -1139,7 +1139,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
          LIS_ObterValor(pVertices, (void**) &pVertice);
          
-         if (*pVertice == NULL)
+         if (pVertice == NULL)
          {
             TST_NotificarFalha("Encontrado vértice cujo valor é nulo.");
             erroNaEstrutura = 1;
