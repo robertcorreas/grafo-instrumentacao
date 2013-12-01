@@ -776,11 +776,11 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
       erroNaEstrutura = 1;
    }
 
-//    ret = VER_NenhumVerticeEstaDestacado(pGrafo);
-//    if (ret == GRA_CondRetErroNaEstrutura)
-//    {
-//       erroNaEstrutura = 1;
-//    }
+    ret = VER_NenhumVerticeEstaDestacado(pGrafo);
+    if (ret == GRA_CondRetErroNaEstrutura)
+    {
+       erroNaEstrutura = 1;
+    }
    
    ret = VER_CorrenteNaoEhNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
@@ -1479,7 +1479,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
                   tpAresta *pAresta;
 
                   LIS_ObterValor(pBackSuc, (void**) &pAresta);
-                  if (strcmp(pVertice->nome, pVerticeVerificado->nome) == 0)
+                  if (strcmp(pAresta->pVertice->nome, pVerticeVerificado->nome) == 0)
                   {
                      ehSucessorDoAntecessor = 1;
                      break;

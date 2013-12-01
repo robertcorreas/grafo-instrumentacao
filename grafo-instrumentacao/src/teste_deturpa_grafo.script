@@ -81,8 +81,10 @@
 =insAresta       "aa"   "A"   "A"   OK
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
-=insAresta       "bb"   "B"   "B"   OK
-//=deturpar 5
+=verificar                          TesteOK
+=deturpar 5
+//=verificar                          TesteErro
+//=AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
@@ -90,8 +92,10 @@
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
+=verificar                          TesteOK
 =deturpar 6
 //=verificar                          TesteERRO
+//=AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 == Deturpação 07: Altera o tipo da estrutura apontada no vértice
@@ -99,6 +103,7 @@
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
+=verificar                          TesteOK
 =deturpar 7
 //=verificar                          TesteERRO
 =destruirGrafo                      OK
@@ -117,7 +122,10 @@
 =insAresta       "ca"   "C"   "A"   OK
 =insAresta       "cb"   "C"   "B"   OK
 =insAresta       "cc"   "C"   "C"   OK
+=verificar TesteOK
 =deturpar 8
+//=verificar TesteERRO
+//=AceitaFalhasAcumuladas 4
 =destruirGrafo                      OK
 
 == Deturpação 09: Atribui null ao ponteiro corrente
