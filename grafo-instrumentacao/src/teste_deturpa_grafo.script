@@ -39,7 +39,7 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =deturpar 2
-=verificar                          TesteERRO
+//=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 
@@ -80,7 +80,7 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
-=deturpar 5
+//=deturpar 5
 =destruirGrafo                      OK
 
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
@@ -123,6 +123,6 @@
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
 =deturpar 10
+=verificar TesteERRO
+=AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
-
-=fim
