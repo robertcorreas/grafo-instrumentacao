@@ -38,7 +38,6 @@
 #include <string.h>
 #include <assert.h>
 #include "lista.h"
-#include "mem_manager.h"
 
 #define GRAFO_OWN
 #include "grafo.h"
@@ -170,7 +169,7 @@ GRA_tpCondRet GRA_CriarGrafo(GRA_tppGrafo *ppGrafo,
 	void (*destruirValor)(void *pValor))
 {
 	tpGrafo *pGrafo;
-   MEM_Alloc(sizeof(tpGrafo), (void **) &pGrafo);
+   pGrafo = (tpGrafo*) malloc(sizeof(tpGrafo));
 
 	pGrafo->pCorrente = NULL;
 	pGrafo->destruirValor = destruirValor;
@@ -202,7 +201,7 @@ GRA_tpCondRet GRA_DestruirGrafo(GRA_tppGrafo *ppGrafo)
 	LIS_DestruirLista(pGrafo->pVertices);
 	LIS_DestruirLista(pGrafo->pOrigens);
 
-	MEM_Free(pGrafo);
+	free(pGrafo);
 	pGrafo = NULL;
 	*ppGrafo = NULL;
 	
@@ -227,7 +226,7 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafoParm, char *nomeVertice, voi
       return GRA_CondRetJaExiste;
    }
 
-	MEM_Alloc(sizeof(tpVertice), (void **) &pVertice);
+	pVertice = (tpVertice*) malloc(sizeof(tpVertice));
 	if (pVertice == NULL)
 	{
 		return GRA_CondRetFaltouMemoria;
@@ -288,7 +287,7 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
       return GRA_CondRetJaExiste;
    }
 
-	MEM_Alloc(sizeof(tpAresta), (void **) &pAresta);
+	pAresta = (tpAresta*) malloc(sizeof(tpAresta));
 	if (pAresta == NULL)
 	{
 		return GRA_CondRetFaltouMemoria;
@@ -986,9 +985,9 @@ void DestruirVertice(void *pVazio)
 
 	pVertice->destruirValor(pVertice->pValor);
 
-	MEM_Free(pVertice->nome);
+	free(pVertice->nome);
 
-	MEM_Free(pVertice);
+	free(pVertice);
 
 	
 }
@@ -1005,8 +1004,8 @@ void DestruirAresta(void *pVazio)
 {
 	tpAresta *pAresta = (tpAresta*) pVazio;
 
-	MEM_Free(pAresta->nome);
-	MEM_Free(pAresta);
+	free(pAresta->nome);
+	free(pAresta);
 }
 
 /***********************************************************************

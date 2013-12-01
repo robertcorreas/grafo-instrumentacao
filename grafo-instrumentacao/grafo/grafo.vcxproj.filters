@@ -61,10 +61,10 @@
     <None Include="..\src\teste-contador.script">
       <Filter>Script Files</Filter>
     </None>
-    <None Include="..\src\teste-controle-espaco.script">
+    <None Include="..\src\teste_deturpa_grafo.script">
       <Filter>Script Files</Filter>
     </None>
-    <None Include="..\src\teste_deturpa_grafo.script">
+    <None Include="..\src\teste_controle_espaco.script">
       <Filter>Script Files</Filter>
     </None>
   </ItemGroup>

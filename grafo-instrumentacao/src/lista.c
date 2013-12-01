@@ -30,6 +30,10 @@
 #include   <malloc.h>
 #include   <assert.h>
 
+#ifdef _DEBUG
+#include   "cespdin.h"
+#endif
+
 #define LISTA_OWN
 #include "lista.h"
 #undef LISTA_OWN

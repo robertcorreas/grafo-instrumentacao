@@ -45,11 +45,10 @@
 == Testar criação do grafo
 =criarGrafo                         OK
 
-//TODO [RCS] fazer alocação e checar numero de espaços alocados
 == Controlar vazamento de memória
 =exibirtodosespacos            CriterioExibir
 =verificartodosespacos         CriterioExibir
-=obternumeroespacosalocados    0                 
+=obternumeroespacosalocados    3
 
 == Verificar contadores, 1 deles já contou
 =verificarcontagens    1
@@ -322,5 +321,3 @@
 
 == Terminar contagem
 =terminarcontadores
-
-=fim
