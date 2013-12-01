@@ -134,7 +134,11 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
-=deturpar 10
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
+=tornarOrigem                       OK
+//=deturpar 10
+=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 =fim
