@@ -1133,6 +1133,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
          if (*pValor == NULL)
          {
+            TST_NotificarFalha("Encontrada origem nula.");
             return GRA_CondRetErroNaEstrutura;
          }
 
