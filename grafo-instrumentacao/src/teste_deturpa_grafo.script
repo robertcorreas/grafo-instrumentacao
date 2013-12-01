@@ -39,7 +39,7 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =deturpar 2
-=verificar                          TesteERRO
+//=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 
@@ -53,6 +53,7 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =deturpar 3
+=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 

@@ -738,7 +738,13 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
 
    pGrafo = (tpGrafo*) pGrafoParm;
 
-   ret = VER_VerticeSucessorNaoEhNulo(pGrafo);
+//    ret = VER_VerticeSucessorNaoEhNulo(pGrafo);
+//    if (ret == GRA_CondRetErroNaEstrutura)
+//    {
+//       erroNaEstrutura = 1;
+//    }
+
+   ret = VER_VerticePredecessorNaoEhNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       erroNaEstrutura = 1;
@@ -806,9 +812,7 @@ static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
 
 static void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo)
 {
-   int *pVertice;
-   LIS_ObterValor(pGrafo->pCorrente->pAntecessores, (void**)&pVertice);
-   *pVertice = NULL;
+   LIS_AlterarValor(pGrafo->pCorrente->pAntecessores,NULL);
 }
 
 static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
