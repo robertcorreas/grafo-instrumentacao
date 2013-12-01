@@ -125,6 +125,7 @@ typedef struct stGrafo {
    static void DET_EliminaElementoCorrente(tpGrafo *pGrafo);
    static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo);
    static void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo);
+   static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo);
 
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
@@ -662,6 +663,12 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
          DET_AtribuiNullAOPonteiroDoVerticePredecessor(pGrafo);
          break;
       }
+
+   case GRA_LixoNaReferenciaParaSucessor:
+      {
+         DET_LixoNaReferenciaParaSucessor(pGrafo);
+         break;
+      }
    
    case GRA_LixoNaReferenciaParaAntecessor:
       {
@@ -729,6 +736,16 @@ static void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo)
    pVertice = NULL;
    
 }
+
+static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
+{
+   tpAresta *pAresta;
+
+   LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void **) &pAresta);
+
+   *(char**) pAresta = EspacoLixo;
+}
+
 
 #endif
 
