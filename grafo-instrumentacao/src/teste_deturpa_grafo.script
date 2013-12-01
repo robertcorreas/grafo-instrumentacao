@@ -15,6 +15,12 @@
 =declararparm   NULL           string "!N!"
 //*********************************
 
+== Deturpação 07: Altera o tipo da estrutura apontada no vértice
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=deturpar 7
+=destruirGrafo                      OK
+
 == Deturpação 08: Destaca vértice do grafo
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
