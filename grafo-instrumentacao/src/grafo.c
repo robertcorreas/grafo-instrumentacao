@@ -1121,7 +1121,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
          LIS_ObterValor(pVertices, (void**) &pVertice);
          
-         if (pVertice == NULL)
+         if (*pVertice == NULL)
          {
             TST_NotificarFalha("Encontrado vértice cujo valor é nulo.");
             erroNaEstrutura = 1;
