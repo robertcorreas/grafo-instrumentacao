@@ -1043,7 +1043,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
          lisCondRet = LIS_CondRetOK;
          while (lisCondRet == LIS_CondRetOK)
          {
-            LIS_tpCondRet retBackSuc;
+            LIS_tpCondRet retBackSuc = LIS_CondRetOK;
             tpVertice *pVertice;
             LIS_tppLista pBackSuc;
 

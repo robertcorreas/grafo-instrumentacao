@@ -15,6 +15,29 @@
 =declararparm   NULL           string "!N!"
 //*********************************
 
+== Deturpação 08: Destaca vértice do grafo
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ac"   "A"   "C"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bb"   "B"   "B"   OK
+=insAresta       "bc"   "B"   "C"   OK
+=insAresta       "ca"   "C"   "A"   OK
+=insAresta       "cb"   "C"   "B"   OK
+=insAresta       "cc"   "C"   "C"   OK
+=deturpar 8
+=destruirGrafo                      OK
+
+== Deturpação 09: Atribui null ao ponteiro corrente
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=deturpar 9
+=destruirGrafo                      OK
+
 == Deturpação 10: Atribui null à um ponteiro de origem
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
