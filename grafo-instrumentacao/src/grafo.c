@@ -756,6 +756,14 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
       erroNaEstrutura = 1;
    }
 
+   ret = VER_NaoExisteLixoNaReferenciaParaAntecessor(pGrafo);
+   if (ret == GRA_CondRetErroNaEstrutura)
+   {
+      erroNaEstrutura = 1;
+   }
+
+   //
+
    ret = VER_VerticesNaoPossuemConteudoNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
@@ -1236,11 +1244,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    // Det 05
    void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
    {
-      tpVertice *pVertice;
-
-      LIS_ObterValor(pGrafo->pCorrente->pAntecessores, (void **) &pVertice);
-
-      *(char**) pVertice = EspacoLixo;
+      LIS_AlterarValor(pGrafo->pCorrente->pAntecessores,(tpVertice*)EspacoLixo);
    }
 
    // Det 06

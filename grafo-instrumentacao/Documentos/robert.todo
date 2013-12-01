@@ -1,1 +1,3 @@
 Alterar valor deveria destruir valor anterior e adicionar novo valor. Dificuldade em remover novo valor. Ao adicionar funcao de destruicao, tudo para de funcionar
+
+lembrar de descomentar as verificações do script de deturpações
