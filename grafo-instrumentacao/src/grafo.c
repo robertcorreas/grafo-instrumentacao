@@ -738,6 +738,12 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
 
    pGrafo = (tpGrafo*) pGrafoParm;
 
+   ret = VER_VerticeSucessorNaoEhNulo(pGrafo);
+   if (ret == GRA_CondRetErroNaEstrutura)
+   {
+      erroNaEstrutura = 1;
+   }
+
    ret = VER_VerticesNaoPossuemConteudoNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
@@ -840,7 +846,7 @@ static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
          tpAresta *pAresta = NULL;
 
          LIS_ObterValor(pVertice->pSucessores, (void**)&pAresta);
-         if(pAresta->pVertice = NULL)
+         if(pAresta->pVertice == NULL)
          {
             TST_NotificarFalha("Encontrado vertice sucessor nulo");
             return GRA_CondRetErroNaEstrutura;
