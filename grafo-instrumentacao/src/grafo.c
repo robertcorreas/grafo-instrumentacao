@@ -739,7 +739,7 @@ static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
 
    LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void **) &pAresta);
 
-   *(char**) pAresta = EspacoLixo;
+   pAresta->pVertice = (tpVertice*)(EspacoLixo);
 }
 
 

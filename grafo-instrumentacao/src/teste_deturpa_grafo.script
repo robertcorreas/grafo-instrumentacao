@@ -42,8 +42,19 @@
 =destruirGrafo                      OK
 
 
+== Deturpação 04: Atribui lixo ao ponteiro para a referência a um vértice sucessor
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bb"   "B"   "B"   OK
+=deturpar 4
+=destruirGrafo                      OK
 
 
+ 
 
 
 
