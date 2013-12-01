@@ -1,0 +1,25 @@
+// Script:    teste_grafo.script
+// Autor:     Robert Correa
+// Data:      03/out/2013
+// Propósito: Testar completamente o módulo grafo genérico
+//
+
+== Declarar as condicoes de retorno
+=declararparm   OK             int  0
+=declararparm   EstaVazio      int  1
+=declararparm   NaoExiste      int  2
+=declararparm   NaoAchou       int  3
+=declararparm   JaExiste       int  4
+
+== Declarar outros parâmetros
+=declararparm   NULL           string "!N!"
+//*********************************
+
+== Deturpação 10: Atribui null à um ponteiro de origem
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=tornarOrigem                       OK
+=deturpar 10
+=destruirGrafo                      OK
+
+=fim

@@ -26,6 +26,10 @@ static const char *TORNAR_ORIGEM_CMD    = "=tornarOrigem"     ;
 static const char *DEIXAR_ORIGEM_CMD    = "=deixarOrigem"     ;
 static const char *FIM_CMD              = "=fim"              ;
 
+#ifdef _DEBUG
+static const char *DETURPAR_CMD         = "=deturpar"         ;
+#endif
+
 #define MAX_CHARS_NOME 3
 #define SIMBOLO_PARA_NULL "!N!"
 
@@ -357,6 +361,26 @@ static GRA_tppGrafo pGrafo = NULL;
 
             return TST_CondRetOK;
          }
+
+       /* Deturpar uma árvore */
+      #ifdef _DEBUG
+
+         else if ( strcmp( ComandoTeste , DETURPAR_CMD ) == 0 )
+         {
+            GRA_tpModosDeturpacao modoDeturpacao;
+            numLidos = LER_LerParametros("i", &modoDeturpacao) ;
+
+            if ( numLidos != 1 )
+            {
+               return TST_CondRetParm ;
+            }
+
+            GRA_Deturpar(pGrafo, modoDeturpacao);
+
+            return TST_CondRetOK ;
+
+         } /* fim ativa: Deturpar uma árvore */
+      #endif
 
       return TST_CondRetNaoConhec;
 
