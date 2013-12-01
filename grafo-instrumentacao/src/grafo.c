@@ -131,6 +131,7 @@ typedef struct stGrafo {
    //Verificacao
    static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo);
    static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo);
 
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
@@ -830,6 +831,43 @@ static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo)
    return GRA_CondRetOK;
 }
 
+//TODO [RCS] checar se soluciona o problema de checar espaçoLixo
+static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
+{
+   int numVerElem = 0;
+   LIS_NumELementos(pGrafo->pVertices,&numVerElem);
+   LIS_IrInicioLista(pGrafo->pVertices);
+
+   while(numVerElem > 0)
+   {
+      tpVertice *pVertice = NULL;
+      int numElemSucces = 0;
+
+      LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
+
+      LIS_NumELementos(pVertice->pSucessores,&numElemSucces);
+      LIS_IrInicioLista(pVertice->pSucessores);
+
+      while(numElemSucces > 0)
+      {
+         tpAresta *pAresta = NULL;
+         int numElem = 0;
+         LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
+         
+         if(!CED_VerificarEspaco(pAresta->pVertice,NULL))
+         {
+            TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+            return GRA_CondRetErroNaEstrutura;
+         }
+
+         LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
+         numElemSucces--;
+      }
+
+      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+      numVerElem--;
+   }
+}
 
 #endif
 
