@@ -15,6 +15,12 @@
 =declararparm   NULL           string "!N!"
 //*********************************
 
+== Deturpação 09: Atribui null ao ponteiro corrente
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=deturpar 9
+=destruirGrafo                      OK
+
 == Deturpação 10: Atribui null à um ponteiro de origem
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
