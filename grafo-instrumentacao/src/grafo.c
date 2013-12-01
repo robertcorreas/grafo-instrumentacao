@@ -1098,6 +1098,46 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       *(int*) pGrafo->pCorrente->pValor = NULL;
    }
 
+   // Ver 06
+   GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo)
+   {
+      LIS_tppLista pVertices;
+      LIS_tpCondRet lisCondRet = LIS_CondRetOK;
+      int estaVazia;
+      int erroNaEstrutura = 0;
+
+      pVertices = pGrafo->pVertices;
+
+      LIS_EstaVazia(pVertices, &estaVazia);
+      if (estaVazia)
+      {
+         return GRA_CondRetOK;
+      }
+
+      while (lisCondRet == LIS_CondRetOK)
+      {
+         int *pVertice;
+         CED_tpIdTipoEspaco tipoValor;
+
+         LIS_ObterValor(pVertices, (void**) &pVertice);
+         
+         if (pVertice == NULL)
+         {
+            TST_NotificarFalha("Encontrado vértice cujo valor é nulo.");
+            erroNaEstrutura = 1;
+         }
+
+         lisCondRet = LIS_AvancarElementoCorrente(pVertices, 1);
+      }
+
+      if (erroNaEstrutura)
+      {
+         return GRA_CondRetErroNaEstrutura;
+      }
+
+      return GRA_CondRetOK;
+   }
+
    // Det 07
    void DET_AlteraTipoDoValorDoVertice(tpGrafo *pGrafo)
    {
