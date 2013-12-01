@@ -53,6 +53,7 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =deturpar 3
+//=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 
@@ -65,6 +66,7 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =deturpar 4
+//=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 
@@ -86,13 +88,19 @@
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
 =deturpar 6
+//=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 == Deturpação 07: Altera o tipo da estrutura apontada no vértice
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
 =deturpar 7
+//=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 == Deturpação 08: Destaca vértice do grafo

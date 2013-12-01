@@ -468,6 +468,31 @@ typedef struct LIS_stLista * LIS_tppLista ;
 	LIS_tpCondRet LIS_NumELementos(LIS_tppLista pLista ,
                                       int *pNumElementos);
 
+
+   /***********************************************************************
+   *
+   *  Função: LIS Altera Valor
+   *
+   *  Descrição
+   *     Altera o valor do elemento corrente
+   *
+   *  Parâmetros
+   *     ppLista - ponteiro para a lista onde procura
+   *     pValor - ponteiro que armazena o novo valor
+   *
+   *
+   *  Condições de retorno
+   *     LIS_CondRetOK
+   *
+   *  Assertivas de entrada
+   *     - Valem as assertivas estruturais da lista duplamente encadeada com cabeça.
+   *
+   *  Assertivas de saída
+   *     - Valem as assertivas estruturais da lista duplamente encadeada com cabeça.
+   *
+   ***********************************************************************/
+   LIS_tpCondRet LIS_AlterarValor(LIS_tppLista ppLista, void * pValor);
+
 /***********************************************************************/
 #undef LISTA_EXT
 
