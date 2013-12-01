@@ -488,8 +488,10 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
 
 
 #ifdef _DEBUG
-   /* funções de deturpação */
+   /* Função de deturpação */
    void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpa);
+   /* Funcao de verificação */
+   GRA_tpCondRet GRA_Verificar(void *pGrafoParm);
 #endif
 
 
