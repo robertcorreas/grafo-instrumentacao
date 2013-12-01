@@ -13,6 +13,10 @@
 
 == Declarar outros parâmetros
 =declararparm   NULL           string "!N!"
+
+== Declarar condicoes de verificacao
+=declararparm   TesteOK             int 0
+=declararparm   TesteERRO           int 6
 //*********************************
 
 // == Deturpação 01: Elimina o elemento corrente da lista de vértices
@@ -35,6 +39,7 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =deturpar 2
+=verificar                          TesteERRO
 =destruirGrafo                      OK
 
 

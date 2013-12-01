@@ -29,6 +29,8 @@ static const char *FIM_CMD              = "=fim"              ;
 
 #ifdef _DEBUG
 static const char *DETURPAR_CMD         = "=deturpar"         ;
+static const char *VERIFICAR_CMD        = "=verificar"        ;
+
 #endif
 
 #define MAX_CHARS_NOME 3
@@ -363,7 +365,7 @@ static GRA_tppGrafo pGrafo = NULL;
             return TST_CondRetOK;
          }
 
-       /* Deturpar uma grafo */
+       /* Deturpar o grafo */
       #ifdef _DEBUG
 
          else if ( strcmp( ComandoTeste , DETURPAR_CMD ) == 0 )
@@ -380,7 +382,25 @@ static GRA_tppGrafo pGrafo = NULL;
 
             return TST_CondRetOK ;
 
-         } /* fim ativa: Deturpar uma árvore */
+         } /* fim ativa: Deturpar o grafo */
+
+       /* Verifica o grafo */
+
+         else if ( strcmp( ComandoTeste , VERIFICAR_CMD ) == 0 )
+         {
+            GRA_tpCondRet condRetEsperado, condRetObido;
+            numLidos = LER_LerParametros("i", &condRetEsperado) ;
+
+            if( numLidos != 1 )
+            {
+               return TST_CondRetParm ;
+            }
+            
+            return TST_CompararInt(CondRetEsp, GRA_Verificar(pGrafo),"Encontrado um erro na verificacao");
+
+         } /* fim ativa: Verifica o grafo */
+
+       
       #endif
 
       return TST_CondRetNaoConhec;
