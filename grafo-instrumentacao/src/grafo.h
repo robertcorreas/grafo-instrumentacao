@@ -70,10 +70,13 @@ typedef enum {
    GRA_CondRetJaExiste,
       /* Nome do vértice ou aresta está repetido */
 
-   GRA_CondRetFaltouMemoria,
+   GRA_CondRetFaltouMemoria
       /* Faltou memória ao tentar alocar algo */
  
-} GRA_tpCondRet ;
+#ifdef _DEBUG
+   ,GRA_CondRetErroNaEstrutura
+#endif
+} GRA_tpCondRet;
 
 /***********************************************************************
 *

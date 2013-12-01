@@ -1099,6 +1099,34 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       LIS_ObterValor(pGrafo->pOrigens, (void**) &pOrigem);
       *pOrigem = NULL;
    }
+
+   // Ver 10
+   GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo)
+   {
+      LIS_tpCondRet lisCondRet = LIS_CondRetOK;
+      int estaVazia;
+      LIS_EstaVazia(pGrafo->pOrigens, &estaVazia);
+      if (estaVazia)
+      {
+         return GRA_CondRetOK;
+      }
+      
+      LIS_IrInicioLista(pGrafo->pOrigens);
+      while (lisCondRet == LIS_CondRetOK)
+      {
+         int *pValor;
+         LIS_ObterValor(pGrafo->pOrigens, (void**) &pValor);
+
+         if (*pValor == NULL)
+         {
+            return GRA_CondRetErroNaEstrutura;
+         }
+
+         lisCondRet = LIS_AvancarElementoCorrente(pGrafo->pOrigens, 1);
+      }
+
+      return GRA_CondRetOK;
+   }
 #endif
 
 /********** Fim do módulo de implementação: GRA Grafo direcionado **********/
