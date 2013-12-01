@@ -15,6 +15,12 @@
 =declararparm   NULL           string "!N!"
 //*********************************
 
+== Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=deturpar 6
+=destruirGrafo                      OK
+
 == Deturpação 07: Altera o tipo da estrutura apontada no vértice
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
