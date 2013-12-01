@@ -1145,7 +1145,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    }
 
    // Ver 07
-   GRA_tpCondRet VER_TipoDaEstrutura(tpGrafo *pGrafo)
+   GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo)
    {
       LIS_tppLista pVertices;
       LIS_tpCondRet lisCondRet = LIS_CondRetOK;
