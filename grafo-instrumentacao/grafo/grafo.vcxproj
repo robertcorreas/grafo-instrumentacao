@@ -89,6 +89,7 @@
     <None Include="..\src\IdTiposEspaco.def" />
     <None Include="..\src\teste-contador.script" />
     <None Include="..\src\teste-controle-espaco.script" />
+    <None Include="..\src\teste_deturpa_grafo.script" />
     <None Include="..\src\teste_grafo.script" />
     <None Include="..\src\TiposEspacosGrafo.def" />
   </ItemGroup>

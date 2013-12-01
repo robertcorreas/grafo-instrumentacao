@@ -64,6 +64,9 @@
     <None Include="..\src\teste-controle-espaco.script">
       <Filter>Script Files</Filter>
     </None>
+    <None Include="..\src\teste_deturpa_grafo.script">
+      <Filter>Script Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\src\ArcaboucoTeste.lib" />
