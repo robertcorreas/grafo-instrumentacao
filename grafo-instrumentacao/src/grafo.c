@@ -1083,6 +1083,134 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
          }
       }
    }
+   
+   // Ver 08
+   GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo)
+   {
+      LIS_tppLista pVertices;
+      LIS_tpCondRet lisCondRet = LIS_CondRetOK;
+      int estaVazia;
+      int erroNaEstrutura = 0;
+
+      pVertices = pGrafo->pVertices;
+
+      LIS_EstaVazia(pVertices, &estaVazia);
+      if (estaVazia)
+      {
+         return GRA_CondRetOK;
+      }
+
+      while (lisCondRet == LIS_CondRetOK)
+      {
+         tpVertice *pVertice;
+         GRA_tpCondRet graCondRet;
+
+         LIS_ObterValor(pVertices, (void**) &pVertice);
+
+         graCondRet = VER_ReferenciasDoVerticeEstaoCorretas(pVertice);
+         if (graCondRet == GRA_CondRetErroNaEstrutura)
+         {
+            erroNaEstrutura = 1;
+         }
+
+         lisCondRet = LIS_AvancarElementoCorrente(pVertices, 1);
+      }
+
+      if (erroNaEstrutura)
+      {
+         return GRA_CondRetErroNaEstrutura;
+      }
+
+      return GRA_CondRetOK;
+   }
+
+   GRA_tpCondRet VER_ReferenciasDoVerticeEstaoCorretas(tpVertice *pVerticeVerificado)
+   {
+      LIS_tppLista pSuc, pAnt;
+      LIS_tpCondRet lisCondRet;
+      int estaVazia;
+      int erroNaEstrutura = 0;
+
+      // Verificando se seus sucessores têm o vértice como antecessor.
+      pSuc = pVerticeVerificado->pSucessores;
+      LIS_EstaVazia(pSuc, &estaVazia);
+      if (!estaVazia)
+      {
+         LIS_IrInicioLista(pSuc);
+         lisCondRet = LIS_CondRetOK;
+         while (lisCondRet == LIS_CondRetOK)
+         {
+            LIS_tpCondRet resultadoBusca;
+            tpAresta *pAresta;
+            LIS_tppLista pBackAnt;
+
+            LIS_ObterValor(pSuc, (void**) &pAresta);
+            pBackAnt = pAresta->pVertice->pAntecessores;
+            LIS_IrInicioLista(pBackAnt);
+            resultadoBusca = LIS_ProcurarValor(pBackAnt, pVerticeVerificado->nome);
+            if (resultadoBusca == LIS_CondRetNaoAchou)
+            {
+               TST_NotificarFalha("Encontrado sucessor de vértice que não possui ele como antecessor.");
+               erroNaEstrutura = 1;
+            }
+
+            lisCondRet = LIS_AvancarElementoCorrente(pSuc, 1);
+         }
+      }
+      
+      // Verificando se seus antecessores tem o vértice como sucessor
+      pAnt = pVerticeVerificado->pAntecessores;
+      LIS_EstaVazia(pAnt, &estaVazia);
+      if (!estaVazia)
+      {
+         LIS_IrInicioLista(pAnt);
+         lisCondRet = LIS_CondRetOK;
+         while (lisCondRet == LIS_CondRetOK)
+         {
+            LIS_tpCondRet retBackSuc = LIS_CondRetOK;
+            tpVertice *pVertice;
+            LIS_tppLista pBackSuc;
+            int sucessoresVazia;
+            int ehSucessorDoAntecessor = 0;
+
+            LIS_ObterValor(pAnt, (void**) &pVertice);
+            pBackSuc = pVertice->pSucessores;
+            LIS_EstaVazia(pBackSuc, &sucessoresVazia);
+            if (!sucessoresVazia)
+            {
+               LIS_IrInicioLista(pBackSuc);
+               while(retBackSuc == LIS_CondRetOK)
+               {
+                  tpAresta *pAresta;
+
+                  LIS_ObterValor(pBackSuc, (void**) &pAresta);
+                  if (strcmp(pVertice->nome, pVerticeVerificado->nome) == 0)
+                  {
+                     ehSucessorDoAntecessor = 1;
+                     break;
+                  }
+
+                  retBackSuc = LIS_AvancarElementoCorrente(pBackSuc, 1);
+               }
+            }
+
+            if (!ehSucessorDoAntecessor)
+            {
+               TST_NotificarFalha("Encontrado antecessor de vértice que não possui ele como sucessor.");
+               erroNaEstrutura = 1;
+            }
+            
+            lisCondRet = LIS_AvancarElementoCorrente(pAnt, 1);
+         }
+      }
+
+      if (erroNaEstrutura)
+      {
+         return GRA_CondRetErroNaEstrutura;
+      }
+
+      return GRA_CondRetOK;
+   }
 
    // Det 09
    void DET_AtribuiNullAoCorrente(tpGrafo *pGrafo)
