@@ -288,6 +288,11 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
    }
 
 	pAresta = (tpAresta*) malloc(sizeof(tpAresta));
+
+   #ifdef _DEBUG
+      CED_DefinirTipoEspaco(pAresta, GRA_TipoEspacoAresta);
+   #endif
+
 	if (pAresta == NULL)
 	{
 		return GRA_CondRetFaltouMemoria;
@@ -1244,7 +1249,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    // Det 05
    void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
    {
-      LIS_AlterarValor(pGrafo->pCorrente->pAntecessores,(tpVertice*)EspacoLixo);
+      LIS_AlterarValor(pGrafo->pCorrente->pAntecessores, EspacoLixo);
    }
 
    // Det 06
@@ -1426,6 +1431,11 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       int estaVazia;
       int erroNaEstrutura = 0;
 
+      if (CED_ObterTipoEspaco(pVerticeVerificado) != GRA_TipoEspacoVertice)
+      {
+         return GRA_CondRetOK;
+      }
+
       // Verificando se seus sucessores têm o vértice como antecessor.
       pSuc = pVerticeVerificado->pSucessores;
       LIS_EstaVazia(pSuc, &estaVazia);
@@ -1435,18 +1445,43 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
          lisCondRet = LIS_CondRetOK;
          while (lisCondRet == LIS_CondRetOK)
          {
-            LIS_tpCondRet resultadoBusca;
             tpAresta *pAresta;
             LIS_tppLista pBackAnt;
+            LIS_tpCondRet retBackAnt;
+            int antecessoresVazia;
+            int ehAntecessorDoSucessor = 0;
 
             LIS_ObterValor(pSuc, (void**) &pAresta);
-            pBackAnt = pAresta->pVertice->pAntecessores;
-            LIS_IrInicioLista(pBackAnt);
-            resultadoBusca = LIS_ProcurarValor(pBackAnt, pVerticeVerificado->nome);
-            if (resultadoBusca == LIS_CondRetNaoAchou)
+            if (CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
+               CED_ObterTipoEspaco(pAresta->pVertice) == GRA_TipoEspacoVertice)
             {
-               TST_NotificarFalha("Encontrado sucessor de vértice que não possui ele como antecessor.");
-               erroNaEstrutura = 1;
+               pBackAnt = pAresta->pVertice->pAntecessores;
+               LIS_EstaVazia(pBackAnt, &antecessoresVazia);
+               if (!antecessoresVazia)
+               {
+                  LIS_IrInicioLista(pBackAnt);
+                  retBackAnt = LIS_CondRetOK;
+                  while(retBackAnt == LIS_CondRetOK)
+                  {
+                     tpVertice *pAntecessor;
+
+                     LIS_ObterValor(pBackAnt, (void**) &pAntecessor);
+                     if (CED_ObterTipoEspaco(pAntecessor) == GRA_TipoEspacoVertice &&
+                         strcmp(pAntecessor->nome, pVerticeVerificado->nome) == 0)
+                     {
+                        ehAntecessorDoSucessor = 1;
+                        break;
+                     }
+
+                     retBackAnt = LIS_AvancarElementoCorrente(pBackAnt, 1);
+                  }
+               }
+            
+               if (!ehAntecessorDoSucessor)
+               {
+                  TST_NotificarFalha("Encontrado sucessor de vértice que não possui ele como antecessor.");
+                  erroNaEstrutura = 1;
+               }
             }
 
             lisCondRet = LIS_AvancarElementoCorrente(pSuc, 1);
@@ -1469,32 +1504,38 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
             int ehSucessorDoAntecessor = 0;
 
             LIS_ObterValor(pAnt, (void**) &pVertice);
-            pBackSuc = pVertice->pSucessores;
-            LIS_EstaVazia(pBackSuc, &sucessoresVazia);
-            if (!sucessoresVazia)
+
+            if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
             {
-               LIS_IrInicioLista(pBackSuc);
-               while(retBackSuc == LIS_CondRetOK)
+               pBackSuc = pVertice->pSucessores;
+               LIS_EstaVazia(pBackSuc, &sucessoresVazia);
+               if (!sucessoresVazia)
                {
-                  tpAresta *pAresta;
-
-                  LIS_ObterValor(pBackSuc, (void**) &pAresta);
-                  if (strcmp(pAresta->pVertice->nome, pVerticeVerificado->nome) == 0)
+                  LIS_IrInicioLista(pBackSuc);
+                  while(retBackSuc == LIS_CondRetOK)
                   {
-                     ehSucessorDoAntecessor = 1;
-                     break;
-                  }
+                     tpAresta *pAresta;
 
-                  retBackSuc = LIS_AvancarElementoCorrente(pBackSuc, 1);
+                     LIS_ObterValor(pBackSuc, (void**) &pAresta);
+                     if (CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
+                        CED_ObterTipoEspaco(pAresta->pVertice) == GRA_TipoEspacoVertice &&
+                         strcmp(pAresta->pVertice->nome, pVerticeVerificado->nome) == 0)
+                     {
+                        ehSucessorDoAntecessor = 1;
+                        break;
+                     }
+
+                     retBackSuc = LIS_AvancarElementoCorrente(pBackSuc, 1);
+                  }
+               }
+
+               if (!ehSucessorDoAntecessor)
+               {
+                  TST_NotificarFalha("Encontrado antecessor de vértice que não possui ele como sucessor.");
+                  erroNaEstrutura = 1;
                }
             }
 
-            if (!ehSucessorDoAntecessor)
-            {
-               TST_NotificarFalha("Encontrado antecessor de vértice que não possui ele como sucessor.");
-               erroNaEstrutura = 1;
-            }
-            
             lisCondRet = LIS_AvancarElementoCorrente(pAnt, 1);
          }
       }

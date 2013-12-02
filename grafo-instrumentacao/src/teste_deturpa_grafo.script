@@ -39,9 +39,9 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =verificar                          TesteOK
-//=deturpar 2
-//=verificar                          TesteERRO
-//=AceitaFalhasAcumuladas 1
+=deturpar 2
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 2  // 1 referência de volta errada + 1 EspacoLixo
 =destruirGrafo                      OK
 
 
@@ -55,9 +55,9 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =verificar                          TesteOK
-//=deturpar 3
-//=verificar                          TesteERRO
-//=AceitaFalhasAcumuladas 1
+=deturpar 3
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 2  // 1 referência de volta errada + 1 EspacoLixo
 =destruirGrafo                      OK
 
 
@@ -70,9 +70,9 @@
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
 =verificar                          TesteOK
-//=deturpar 4
-//=verificar                          TesteERRO
-//=AceitaFalhasAcumuladas 1
+=deturpar 4
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 2 // 1 referência de volta errada + 1 EspacoLixo
 =destruirGrafo                      OK
 
 
@@ -85,9 +85,9 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =verificar                          TesteOK
-//=deturpar 5
-//=verificar                          TesteERRO
-//=AceitaFalhasAcumuladas 1
+=deturpar 5
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 2 // 1 referência de volta errada + 1 EspacoLixo
 =destruirGrafo                      OK
 
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
