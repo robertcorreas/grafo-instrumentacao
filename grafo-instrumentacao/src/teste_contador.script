@@ -13,306 +13,46 @@
 
 == Declarar outros parâmetros
 =declararparm   NULL           string "!N!"
+
+== Declarar condicoes de verificacao
+=declararparm   TesteOK             int 0
+=declararparm   TesteERRO           int 6
 //*********************************
-
-== Operações inválidas antes da criação do grafo
-=insVertice      "X"    "x"         NaoExiste
-=insAresta       "ba"   "A"   "B"   NaoExiste
-=obterValor      NULL               NaoExiste
-=alterarValor    "x"                NaoExiste
-=tornarOrigem                       NaoExiste
-=deixarOrigem                       NaoExiste
-=irOrigem        "A"                NaoExiste
-=destruirAresta  "11"               NaoExiste
-=destruirCorr                       NaoExiste
-
-
-== Destruir funciona antes da criação do grafo
-=destruirGrafo                      OK
-
-
-== Testando recuperar
-=tornarOrigem                       OK
-=recuperar
 
 == Iniciar contagem
 =inicializarcontadores  ""
 =lercontadores          "..\\src\\Grafo"
 =iniciarcontagem
 
-== Testar criação do grafo
+
+== Deturpação 10: Atribui null à um ponteiro de origem
 =criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=tornarOrigem                       OK
+=verificar                          TesteOK
+=deturpar 10
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+
+== Deturpação 10: Atribui null à um ponteiro de origem (não possui origem)
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=verificar                          TesteOK
+=deturpar 10
+=verificar                          TesteOK
+=destruirGrafo                      OK
+
 
 == Verificar contadores, 1 deles já contou
-=verificarcontagens    1
-=contagemcontador   "GRA_CriarGrafo"  1
-=AceitaFalhasAcumuladas 1
-
-== Operações inválidas com grafo vazio
-=obterValor      NULL               EstaVazio
-=alterarValor    "x"                EstaVazio
-=tornarOrigem                       EstaVazio
-=deixarOrigem                       EstaVazio
-=destruirCorr                       EstaVazio
-=irPelaAresta    "cb"               EstaVazio
-=irVertice       "B"                EstaVazio
-=destruirAresta  "11"               EstaVazio
-=irOrigem        "A"                EstaVazio
-
-
-== Destruir funciona com grafo vazio
-=destruirGrafo                      OK
-
-== Testar obter valor
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=obterValor      "vA"               OK
-=destruirGrafo                      OK
-
-== Testar inserir vértice com sucesso
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=obterValor      "vA"               OK
-=insVertice      "B"    "vB"        OK
-=obterValor      "vB"               OK
-=insVertice      "C"    "vC"        OK
-=obterValor      "vC"               OK
-=destruirGrafo                      OK
-
-== Testar inserir vértice com nome repetido
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=insVertice      "A"    "xx"        JaExiste
-=obterValor      "vA"               OK
-=insVertice      "B"    "vB"        OK
-=obterValor      "vB"               OK
-=destruirGrafo                      OK
-
-== Testar inserir arestas com sucesso
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=insVertice      "B"    "vB"        OK
-=insAresta       "ba"   "B"   "A"   OK
-=obterValor      "vB"               OK
-=insAresta       "bb"   "B"   "B"   OK
-=obterValor      "vB"               OK
-=destruirGrafo                      OK
-
-== Testar inserir arestas com nome repetido
-=criarGrafo                         OK
-=insVertice      "A"    "x"         OK
-=insVertice      "B"    "x"         OK
-=insAresta       "a"    "B"   "A"   OK
-=insAresta       "a"    "B"   "B"   JaExiste
-=insVertice      "C"    "x"         OK
-=insAresta       "a"    "C"   "A"   OK
-=destruirGrafo                      OK
-
-== Testar inserir arestas para um vértice inexistente
-=criarGrafo                         OK
-=insVertice      "A"    "x"         OK
-=insAresta       "a"    "A"   "B"   NaoAchou
-=destruirGrafo                      OK
-
-== Testar inserir aresta de um vértice inexistente
-=criarGrafo                         OK
-=insVertice      "A"    "x"         OK
-=insAresta       "a"    "B"   "A"   NaoAchou
-=destruirGrafo                      OK
-
-== Testar alterar valor do corrente
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=alterarValor    "xx"               OK
-=obterValor      "xx"               OK
-=destruirGrafo                      OK
-
-== Testar tornar origem
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=tornarOrigem                       OK
-=destruirGrafo                      OK
-
-== Testar tornar origem duas vezes seguidas
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=tornarOrigem                       OK
-=tornarOrigem                       JaExiste
-=destruirGrafo                      OK
-
-== Testar seguir pela aresta
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=insVertice      "B"    "vB"        OK
-=insVertice      "C"    "vC"        OK
-=insAresta       "ca"   "C"   "A"   OK
-=insAresta       "cb"   "C"   "B"   OK
-=irPelaAresta    "cb"               OK
-=obterValor      "vB"               OK
-=destruirGrafo                      OK
-
-
-== Testar seguir pela aresta com aresta inexistente
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=insVertice      "B"    "vB"        OK
-=insVertice      "C"    "vC"        OK
-=insAresta       "ca"   "C"   "A"   OK
-=insAresta       "cb"   "C"   "B"   OK
-=irPelaAresta    "zz"               NaoAchou
-=destruirGrafo                      OK
-
-
-== Testar ir para vertice adjacente
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=insVertice      "B"    "vB"        OK
-=insVertice      "C"    "vC"        OK
-=insAresta       "ca"   "C"   "A"   OK
-=insAresta       "cb"   "C"   "B"   OK
-=irVertice       "B"                OK
-=obterValor      "vB"               OK
-=destruirGrafo                      OK
-
-
-== Testar ir para vertice adjacente com vertice nao estando na lista de sucessores do corrente
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=insVertice      "B"    "vB"        OK
-=insVertice      "C"    "vC"        OK
-=insAresta       "ca"   "C"   "A"   OK
-=irVertice       "B"                NaoAchou
-=destruirGrafo                      OK
-
-== Testar ir para origem
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=tornarOrigem                       OK
-=insVertice      "B"    "vB"        OK
-=insVertice      "C"    "vC"        OK
-=irOrigem        "A"                OK
-=destruirGrafo                      OK
-
-== Testar ir para origem inexistente
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=tornarOrigem                       OK
-=insVertice      "B"    "vB"        OK
-=insVertice      "C"    "vC"        OK
-=irOrigem        "B"                NaoAchou
-=destruirGrafo                      OK
-
-
-== Testar deixar de ser origem
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=tornarOrigem                       OK
-=deixarOrigem                       OK
-=destruirGrafo                      OK
-
-
-== Testar deixar de ser origem em uma não-origem
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=deixarOrigem                       NaoAchou
-=destruirGrafo                      OK
-
-
-== Testar se deixar de ser origem não é possível ir
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=tornarOrigem                       OK
-=deixarOrigem                       OK
-=insVertice      "B"    "vB"        OK
-=irOrigem        "A"                NaoAchou
-=destruirGrafo                      OK
-
-
-== Testar Destruir aresta adjacente
-=criarGrafo                         OK
-=insVertice      "1"    "vA"        OK
-=tornarOrigem                       OK
-=insVertice      "2"    "vB"        OK
-=insVertice      "3"    "vC"        OK
-=insVertice      "4"    "vD"        OK
-=irOrigem        "1"                OK
-=insAresta       "12"   "1"   "2"   OK
-=insAresta       "13"   "1"   "3"   OK
-=insAresta       "14"   "1"   "4"   OK
-=destruirAresta  "13"               OK
-=destruirGrafo                      OK
-
-
-== Testar Destruir aresta adjacente com aresta inexistente
-=criarGrafo                         OK
-=insVertice      "1"    "vA"        OK
-=tornarOrigem                       OK
-=insVertice      "2"    "vB"        OK
-=insVertice      "3"    "vC"        OK
-=insVertice      "4"    "vD"        OK
-=irOrigem        "1"                OK
-=insAresta       "12"   "1"   "2"   OK
-=insAresta       "13"   "1"   "3"   OK
-=insAresta       "14"   "1"   "4"   OK
-=destruirAresta  "11"               NaoAchou
-=destruirGrafo                      OK
-
-== Testar destruir vertice corrente
-=criarGrafo                         OK
-=insVertice      "1"    "vA"        OK
-=tornarOrigem                       OK
-=insVertice      "2"    "vB"        OK
-=insVertice      "3"    "vC"        OK
-=destruirCorr                       OK
-=destruirGrafo                      OK 
-
-== Testar destruir vertice corrente sem ter origem
-=criarGrafo                         OK
-=insVertice      "1"    "vA"        OK
-=insVertice      "2"    "vB"        OK
-=insVertice      "3"    "vC"        OK
-=destruirCorr                       NaoAchou
-=destruirGrafo                      OK 
-
-== Testar destruir vertice corrente que não contem sucessores
-=criarGrafo                         OK
-=insVertice      "1"    "vA"        OK
-=tornarOrigem                       OK
-=insVertice      "2"    "vB"        OK
-=insVertice      "4"    "vD"        OK
-=insVertice      "5"    "vE"        OK
-=insVertice      "3"    "vC"        OK
-=insAresta       "12"   "1"   "2"   OK
-=insAresta       "21"   "2"   "1"   OK
-=insAresta       "13"   "1"   "3"   OK
-=insAresta       "23"   "2"   "3"   OK
-=destruirCorr                       OK
-=destruirGrafo                      OK 
-
-
-== Testar destruir vertice corrente com antecessores e sucessores
-=criarGrafo                         OK
-=insVertice      "1"    "vA"        OK
-=tornarOrigem                       OK
-=insVertice      "2"    "vB"        OK
-=insVertice      "4"    "vD"        OK
-=insVertice      "5"    "vE"        OK
-=insVertice      "3"    "vC"        OK
-=insAresta       "12"   "1"   "2"   OK
-=insAresta       "21"   "2"   "1"   OK
-=insAresta       "13"   "1"   "3"   OK
-=insAresta       "23"   "2"   "3"   OK
-=insAresta       "34"   "3"   "4"   OK
-=insAresta       "35"   "3"   "5"   OK
-=destruirCorr                       OK
-=destruirGrafo                      OK 
+=verificarcontagens    0
+//=contagemcontador   "GRA_CriarGrafo"  1
+//=AceitaFalhasAcumuladas 1
 
 == Terminar controlar contadores
 =pararcontagem
-=verificarcontagens    1
-=AceitaFalhasAcumuladas 1
+//=verificarcontagens    1
+//=AceitaFalhasAcumuladas 1
 
 == Terminar contagem
 =terminarcontadores
-
-=fim

@@ -4,6 +4,10 @@
 // Conta módulo grafo marcado
 //
 ///////////////////////////////////////////////
-    
-    GRA_CriarGrafo
-    GRA_DestruirGrafo
+
+    ver10 se origens vazia
+    ver10 se origens nao vazia
+    ver10 percorre origens
+    ver10 valor origem eh nula
+    ver10 valor origem nao eh nula
+    ver10 saiu do percorre origens

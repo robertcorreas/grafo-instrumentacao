@@ -1586,6 +1586,12 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    void DET_AtribuiNullParaUmaOrigem(tpGrafo *pGrafo)
    {
       int *pOrigem;
+      int numOrigens;
+      LIS_NumELementos(pGrafo->pOrigens, &numOrigens);
+      if (numOrigens == 0)
+      {
+         return;
+      }
 
       LIS_IrFinalLista(pGrafo->pOrigens);
       LIS_ObterValor(pGrafo->pOrigens, (void**) &pOrigem);
@@ -1600,23 +1606,35 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       LIS_EstaVazia(pGrafo->pOrigens, &estaVazia);
       if (estaVazia)
       {
+         CNT_CONTAR("ver10 se origens vazia");
          return GRA_CondRetOK;
+      }
+      else
+      {
+         CNT_CONTAR("ver10 se origens nao vazia");
       }
       
       LIS_IrInicioLista(pGrafo->pOrigens);
       while (lisCondRet == LIS_CondRetOK)
       {
          int *pValor;
+         CNT_CONTAR("ver10 percorre origens");
          LIS_ObterValor(pGrafo->pOrigens, (void**) &pValor);
 
          if (*pValor == NULL)
          {
+            CNT_CONTAR("ver10 valor origem eh nula");
             TST_NotificarFalha("Encontrada origem nula.");
             return GRA_CondRetErroNaEstrutura;
+         }
+         else
+         {
+            CNT_CONTAR("ver10 valor origem nao eh nula");
          }
 
          lisCondRet = LIS_AvancarElementoCorrente(pGrafo->pOrigens, 1);
       }
+      CNT_CONTAR("ver10 saiu do percorre origens");
 
       return GRA_CondRetOK;
    }
