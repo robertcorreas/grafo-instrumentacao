@@ -1285,17 +1285,26 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       {
          tpVertice *pVertice = NULL;
 
+         CNT_CONTAR("ver06 percorre vertices");
+
          LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
 
          if(pVertice->pValor == NULL)
          {
+            CNT_CONTAR("ver06 valor do vertice eh null");
             TST_NotificarFalha("Encontrado valor NULL para conteudo do vertice");
             return GRA_CondRetErroNaEstrutura;
+         }
+         else
+         {
+            CNT_CONTAR("ver06 valor do vertice nao eh null");
          }
 
          LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
          numElem--;
       }
+
+      CNT_CONTAR("ver06 percorreu todos os vertices");
 
       return GRA_CondRetOK;
    }
@@ -1317,20 +1326,27 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       {
          tpVertice *pVertice;
          CED_tpIdTipoEspaco tipoValor;
+         CNT_CONTAR("ver07 percorre vertices");
          LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
 
          tipoValor = (CED_tpIdTipoEspaco) CED_ObterTipoEspaco(pVertice->pValor);
 
          if (tipoValor != GRA_TipoEspacoValorVertice)
          {
+            CNT_CONTAR("ver07 tipo do valor esta correto");
             TST_NotificarFalha("Encontrado vértice cujo valor está com o tipo errado.");
             return GRA_CondRetErroNaEstrutura;
+         }
+         else
+         {
+            CNT_CONTAR("ver07 tipo do valor nao esta correto");
          }
 
          LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
          numElem--;
       }
 
+      CNT_CONTAR("ver07 percorreu todos os vertices");
       return GRA_CondRetOK;
    }
 
@@ -1413,20 +1429,32 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       LIS_EstaVazia(pVertices, &estaVazia);
       if (estaVazia)
       {
+         //CNT_CONTAR("ver08 nao tem vertices");
          return GRA_CondRetOK;
       }
+      else
+      {
+         //CNT_CONTAR("ver08 tem vertices");
+      }
+
       LIS_IrInicioLista(pVertices);
       while (lisCondRet == LIS_CondRetOK)
       {
          tpVertice *pVertice;
          GRA_tpCondRet graCondRet;
+         //CNT_CONTAR("ver08 percorre vertices");
 
          LIS_ObterValor(pVertices, (void**) &pVertice);
 
          graCondRet = VER_ReferenciasDoVerticeEstaoCorretas(pVertice);
          if (graCondRet == GRA_CondRetErroNaEstrutura)
          {
+            //CNT_CONTAR("ver08 referencias erradas");
             erroNaEstrutura = 1;
+         }
+         else
+         {
+            //CNT_CONTAR("ver08 referencias certas");
          }
 
          lisCondRet = LIS_AvancarElementoCorrente(pVertices, 1);
@@ -1434,7 +1462,12 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
       if (erroNaEstrutura)
       {
+         //CNT_CONTAR("ver08 erros na estrutura");
          return GRA_CondRetErroNaEstrutura;
+      }
+      else
+      {
+         //CNT_CONTAR("ver08 sem erros na estrutura");
       }
 
       return GRA_CondRetOK;
@@ -1449,7 +1482,12 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
       if (CED_ObterTipoEspaco(pVerticeVerificado) != GRA_TipoEspacoVertice)
       {
+         //CNT_CONTAR("ver08 vertice eh do tipo certo");
          return GRA_CondRetOK;
+      }
+      else
+      {
+         //CNT_CONTAR("ver08 vertice nao eh do tipo certo");
       }
 
       // Verificando se seus sucessores têm o vértice como antecessor.
@@ -1457,6 +1495,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       LIS_EstaVazia(pSuc, &estaVazia);
       if (!estaVazia)
       {
+         //CNT_CONTAR("ver08 tem sucessores");
          LIS_IrInicioLista(pSuc);
          lisCondRet = LIS_CondRetOK;
          while (lisCondRet == LIS_CondRetOK)
@@ -1467,41 +1506,69 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
             int antecessoresVazia;
             int ehAntecessorDoSucessor = 0;
 
+            //CNT_CONTAR("ver08 percorrendo sucessores");
+
             LIS_ObterValor(pSuc, (void**) &pAresta);
             if (CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
                CED_ObterTipoEspaco(pAresta->pVertice) == GRA_TipoEspacoVertice)
             {
+               //CNT_CONTAR("ver08 aresta e seu vertice sao do tipo certo");
                pBackAnt = pAresta->pVertice->pAntecessores;
                LIS_EstaVazia(pBackAnt, &antecessoresVazia);
                if (!antecessoresVazia)
                {
+                  //CNT_CONTAR("ver08 sucessor tem antecessores");
                   LIS_IrInicioLista(pBackAnt);
                   retBackAnt = LIS_CondRetOK;
                   while(retBackAnt == LIS_CondRetOK)
                   {
                      tpVertice *pAntecessor;
 
+                     //CNT_CONTAR("ver08 percorre antecessores do sucessor");
+
                      LIS_ObterValor(pBackAnt, (void**) &pAntecessor);
                      if (CED_ObterTipoEspaco(pAntecessor) == GRA_TipoEspacoVertice &&
                          strcmp(pAntecessor->nome, pVerticeVerificado->nome) == 0)
                      {
+                        //CNT_CONTAR("ver08 encontrou antecessor do sucessor");
                         ehAntecessorDoSucessor = 1;
                         break;
+                     }
+                     else
+                     {
+                        //CNT_CONTAR("ver08 nao encontrou antecessor do sucessor");
                      }
 
                      retBackAnt = LIS_AvancarElementoCorrente(pBackAnt, 1);
                   }
                }
+               else
+               {
+                  //CNT_CONTAR("ver08 sucessor nao tem antecessores");
+               }
             
                if (!ehAntecessorDoSucessor)
                {
+                  //CNT_CONTAR("ver08 vertice nao eh antecessor de algum sucessor");
                   TST_NotificarFalha("Encontrado sucessor de vértice que não possui ele como antecessor.");
                   erroNaEstrutura = 1;
                }
+               else
+               {
+                  //CNT_CONTAR("ver08 vertice eh antecessor de algum sucessor");
+               }
+            }
+            else
+            {
+               //CNT_CONTAR("ver08 aresta ou seu vertice nao sao do tipo certo");
             }
 
             lisCondRet = LIS_AvancarElementoCorrente(pSuc, 1);
          }
+      }
+      else
+      {
+         //CNT_CONTAR("ver08 nao tem sucessores");
       }
       
       // Verificando se seus antecessores tem o vértice como sucessor
@@ -1509,6 +1576,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       LIS_EstaVazia(pAnt, &estaVazia);
       if (!estaVazia)
       {
+         //CNT_CONTAR("ver08 tem antecessores");
          LIS_IrInicioLista(pAnt);
          lisCondRet = LIS_CondRetOK;
          while (lisCondRet == LIS_CondRetOK)
@@ -1519,46 +1587,79 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
             int sucessoresVazia;
             int ehSucessorDoAntecessor = 0;
 
+            //CNT_CONTAR("ver08 percorre antecessores");
+
             LIS_ObterValor(pAnt, (void**) &pVertice);
 
             if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
             {
+               //CNT_CONTAR("ver08 antecessor eh do tipo certo");
                pBackSuc = pVertice->pSucessores;
                LIS_EstaVazia(pBackSuc, &sucessoresVazia);
                if (!sucessoresVazia)
                {
+                  //CNT_CONTAR("ver08 antecessor tem sucessores");
                   LIS_IrInicioLista(pBackSuc);
                   while(retBackSuc == LIS_CondRetOK)
                   {
                      tpAresta *pAresta;
+
+                     //CNT_CONTAR("ver08 percorre sucessores do antecessor");
 
                      LIS_ObterValor(pBackSuc, (void**) &pAresta);
                      if (CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
                         CED_ObterTipoEspaco(pAresta->pVertice) == GRA_TipoEspacoVertice &&
                          strcmp(pAresta->pVertice->nome, pVerticeVerificado->nome) == 0)
                      {
+                        //CNT_CONTAR("ver08 encontrou o sucessor do antecessor");
                         ehSucessorDoAntecessor = 1;
                         break;
+                     }
+                     else
+                     {
+                        //CNT_CONTAR("ver08 nao encontrou o sucessor do antecessor");
                      }
 
                      retBackSuc = LIS_AvancarElementoCorrente(pBackSuc, 1);
                   }
                }
+               else
+               {
+                  //CNT_CONTAR("ver08 antecessor nao tem sucessores");
+               }
 
                if (!ehSucessorDoAntecessor)
                {
+                  //CNT_CONTAR("ver08 vertice eh sucessor do antecessor");
                   TST_NotificarFalha("Encontrado antecessor de vértice que não possui ele como sucessor.");
                   erroNaEstrutura = 1;
                }
+               else
+               {
+                  //CNT_CONTAR("ver08 vertice nao eh sucessor do antecessor");
+               }
+            }
+            else
+            {
+               //CNT_CONTAR("ver08 antecessor nao eh do tipo certo");
             }
 
             lisCondRet = LIS_AvancarElementoCorrente(pAnt, 1);
          }
       }
+      else
+      {
+         //CNT_CONTAR("ver08 nao tem antecessores");
+      }
 
       if (erroNaEstrutura)
       {
+         //CNT_CONTAR("ver08 erros na estrutura");
          return GRA_CondRetErroNaEstrutura;
+      }
+      else
+      {
+         //CNT_CONTAR("ver08 sem erros na estrutura");
       }
 
       return GRA_CondRetOK;

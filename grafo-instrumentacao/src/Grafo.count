@@ -14,3 +14,14 @@
     
     ver09 se corrente nulo
     ver09 se corrente nao-nulo
+
+    ver07 percorre vertices
+    ver07 tipo do valor esta correto
+    ver07 tipo do valor nao esta correto
+    ver07 percorreu todos os vertices
+    
+    ver06 percorre vertices
+    ver06 valor do vertice eh null
+    ver06 valor do vertice nao eh null
+    ver06 percorreu todos os vertices
+
