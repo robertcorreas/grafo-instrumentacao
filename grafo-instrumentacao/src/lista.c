@@ -27,8 +27,11 @@
 #include   <stdio.h>
 #include   <string.h>
 #include   <memory.h>
-#include   <malloc.h>
 #include   <assert.h>
+
+#ifdef _DEBUG
+   #include   "CESPDIN.H"
+#endif
 
 #define LISTA_OWN
 #include "lista.h"

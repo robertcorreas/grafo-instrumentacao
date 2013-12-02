@@ -456,8 +456,24 @@ GRA_tpCondRet GRA_DestruirVerticeCorrente(GRA_tppGrafo pGrafoParm)
 	//Pega o valor do primeiro vértice de origem
 	LIS_ObterValor(pGrafo->pOrigens,(void**)&pVerticeOrigem);
 
-	//remove arestas do vertice corrente
-	LIS_EsvaziarLista(pGrafo->pCorrente->pSucessores);
+   // Para cada item da lista de sucessores, remover elem que aponta para o corrente
+	LIS_NumELementos(pGrafo->pCorrente->pSucessores, &numElemLista);
+	LIS_IrInicioLista(pGrafo->pCorrente->pSucessores);
+
+	while(numElemLista > 0)
+	{
+      int numElems;
+      tpAresta *pAresta;
+      LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void**) &pAresta);
+
+      LIS_NumELementos(pAresta->pVertice->pAntecessores, &numElems);
+      LIS_IrInicioLista(pAresta->pVertice->pAntecessores);
+      LIS_ProcurarValor(pAresta->pVertice->pAntecessores, pGrafo->pCorrente->nome);
+      LIS_ExcluirElemento(pAresta->pVertice->pAntecessores);
+
+      LIS_AvancarElementoCorrente(pGrafo->pCorrente->pSucessores, 1);
+      numElemLista--;
+   }
 
 	// Para cada item da lista de anteressores, remover aresta que aponta para o corrente
 	LIS_NumELementos(pGrafo->pCorrente->pAntecessores,&numElemLista);
