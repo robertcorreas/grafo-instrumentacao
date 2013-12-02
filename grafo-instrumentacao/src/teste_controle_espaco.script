@@ -414,3 +414,8 @@
 =obternumeroespacosalocados      36 // 3 do grafo + 6 do vertice * 4 + 4 da aresta * 2 + 1 origem
 
 =destruirGrafo                      OK 
+
+== Controle espaço: Nenhum espaço sobrou
+//=exibirtodosespacos            CriterioExibir
+//=verificartodosespacos         CriterioExibir
+=obternumeroespacosalocados      0
