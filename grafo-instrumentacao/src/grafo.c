@@ -1324,7 +1324,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       pCorr = pGrafo->pCorrente;
 
       // Garantindo que não será antecessor de ninguém
-      pSuc = pGrafo->pCorrente->pSucessores;
+      pSuc = pCorr->pSucessores;
       LIS_EstaVazia(pSuc, &estaVazia);
       if (!estaVazia)
       {
@@ -1365,7 +1365,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
                tpAresta *pAresta;
 
                LIS_ObterValor(pBackSuc, (void**) &pAresta);
-               if (strcmp(pVertice->nome, pCorr->nome) == 0)
+               if (strcmp(pAresta->pVertice->nome, pCorr->nome) == 0)
                {
                   break;
                }
@@ -1394,7 +1394,7 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
       {
          return GRA_CondRetOK;
       }
-
+      LIS_IrInicioLista(pVertices);
       while (lisCondRet == LIS_CondRetOK)
       {
          tpVertice *pVertice;
