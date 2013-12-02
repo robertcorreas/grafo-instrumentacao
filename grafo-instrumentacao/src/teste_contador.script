@@ -43,16 +43,17 @@
 =verificar                          TesteOK
 =destruirGrafo                      OK
 
+== Deturpação 10: Verificando contadores
+=contagemcontador "ver10 se origens vazia" 2
+=contagemcontador "ver10 se origens nao vazia" 2
+=contagemcontador "ver10 percorre origens" 2
+=contagemcontador "ver10 valor origem eh nula" 1
+=contagemcontador "ver10 valor origem nao eh nula" 1
+=contagemcontador "ver10 saiu do percorre origens" 1
 
-== Verificar contadores, 1 deles já contou
-=verificarcontagens    0
-//=contagemcontador   "GRA_CriarGrafo"  1
-//=AceitaFalhasAcumuladas 1
-
-== Terminar controlar contadores
+== Deturpação 10: Terminar controlar contadores
 =pararcontagem
-//=verificarcontagens    1
-//=AceitaFalhasAcumuladas 1
+=verificarcontagens    0
 
-== Terminar contagem
+== Deturpação 10: Terminar contagem
 =terminarcontadores

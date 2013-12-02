@@ -1575,9 +1575,12 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    {
       if (pGrafo->pCorrente == NULL)
       {
+         CNT_CONTAR("ver09 se corrente nulo");
          TST_NotificarFalha("Corrente não existe.");
          return GRA_CondRetErroNaEstrutura;
       }
+      
+      CNT_CONTAR("ver09 se corrente nao-nulo");
 
       return GRA_CondRetOK;
    }

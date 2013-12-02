@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////
 //
-// Exemplo de arquivo de declaração de contadores
-// Conta módulo grafo marcado
+// Arquivo de declaração de contadores
+// para o módulo Grafo
 //
 ///////////////////////////////////////////////
 
@@ -11,3 +11,6 @@
     ver10 valor origem eh nula
     ver10 valor origem nao eh nula
     ver10 saiu do percorre origens
+    
+    ver09 se corrente nulo
+    ver09 se corrente nao-nulo
