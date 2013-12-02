@@ -28,6 +28,14 @@
     ver06 valor do vertice nao eh null
     ver06 percorreu todos os vertices
 
+    ver00 existe vertice cujo sucessor eh nulo
+    ver00 nao existe vertice cujo sucessor eh nulo
+    ver00 existe vertice que tem lixo como referencia para sucessor
+    ver00 nao existe vertice que tem lixo como referencia para sucessor
+    ver00 existe vertice que tem lixo como referencia para antecessor
+    ver00 nao existe vertice que tem lixo como referencia para antecessor
+    ver00 existe um vertice com conteudo nulo
+    ver00 nao existe um vertice com conteudo nulo
     ver00 grafo existe
     ver00 grafo nao existe
     ver00 existe vertice com conteudo de tipo errado

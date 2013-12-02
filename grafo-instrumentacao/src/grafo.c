@@ -713,8 +713,10 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
     ret = VER_VerticeSucessorNaoEhNulo(pGrafo);
     if (ret == GRA_CondRetErroNaEstrutura)
     {
+       CNT_CONTAR("ver00 existe vertice cujo sucessor eh nulo");
        erroNaEstrutura = 1;
     }
+    CNT_CONTAR("ver00 nao existe vertice cujo sucessor eh nulo");
 
     ret = VER_VerticePredecessorNaoEhNulo(pGrafo);
     if (ret == GRA_CondRetErroNaEstrutura)
@@ -725,22 +727,26 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    ret = VER_NaoExisteLixoNaReferenciaParaSucessor(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
+      CNT_CONTAR("ver00 existe vertice que tem lixo como referencia para sucessor");
       erroNaEstrutura = 1;
    }
+   CNT_CONTAR("ver00 nao existe vertice que tem lixo como referencia para sucessor");
 
    ret = VER_NaoExisteLixoNaReferenciaParaAntecessor(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
+      CNT_CONTAR("ver00 existe vertice que tem lixo como referencia para antecessor");
       erroNaEstrutura = 1;
    }
+   CNT_CONTAR("ver00 nao existe vertice que tem lixo como referencia para antecessor");
 
    ret = VER_VerticesNaoPossuemConteudoNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
+      CNT_CONTAR("ver00 existe um vertice com conteudo nulo");
       erroNaEstrutura = 1;
    }
-
-   //
+   CNT_CONTAR("ver00 nao existe um vertice com conteudo nulo");
    
    ret = VER_NenhumVerticeTemConteudoComOTipoCorrompido(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
