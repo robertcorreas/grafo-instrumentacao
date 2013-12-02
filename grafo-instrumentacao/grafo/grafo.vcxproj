@@ -87,7 +87,7 @@
   <ItemGroup>
     <None Include="..\src\Grafo.count" />
     <None Include="..\src\IdTiposEspaco.def" />
-    <None Include="..\src\teste-contador.script" />
+    <None Include="..\src\teste_contador.script" />
     <None Include="..\src\teste_controle_espaco.script" />
     <None Include="..\src\teste_deturpa_grafo.script" />
     <None Include="..\src\teste_grafo.script" />

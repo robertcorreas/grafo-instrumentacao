@@ -58,13 +58,13 @@
     <None Include="..\src\TiposEspacosGrafo.def">
       <Filter>Tabelas</Filter>
     </None>
-    <None Include="..\src\teste-contador.script">
-      <Filter>Script Files</Filter>
-    </None>
     <None Include="..\src\teste_deturpa_grafo.script">
       <Filter>Script Files</Filter>
     </None>
     <None Include="..\src\teste_controle_espaco.script">
+      <Filter>Script Files</Filter>
+    </None>
+    <None Include="..\src\teste_contador.script">
       <Filter>Script Files</Filter>
     </None>
   </ItemGroup>
