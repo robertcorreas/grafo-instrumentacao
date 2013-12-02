@@ -38,8 +38,10 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
+=verificar                          TesteOK
 =deturpar 2
-//=verificar                          TesteERRO
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 
@@ -52,8 +54,10 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
+=verificar                          TesteOK
 =deturpar 3
-//=verificar                          TesteERRO
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 
@@ -65,12 +69,11 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
+=verificar                          TesteOK
 =deturpar 4
-//=verificar                          TesteERRO
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
-
-
- 
 
 
 
@@ -83,8 +86,8 @@
 =insAresta       "ba"   "B"   "A"   OK
 =verificar                          TesteOK
 =deturpar 5
-//=verificar                          TesteErro
-//=AceitaFalhasAcumuladas 1
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
@@ -94,8 +97,8 @@
 =insVertice      "C"    "vC"        OK
 =verificar                          TesteOK
 =deturpar 6
-//=verificar                          TesteERRO
-//=AceitaFalhasAcumuladas 1
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 2
 =destruirGrafo                      OK
 
 == Deturpação 07: Altera o tipo da estrutura apontada no vértice
@@ -105,7 +108,8 @@
 =insVertice      "C"    "vC"        OK
 =verificar                          TesteOK
 =deturpar 7
-//=verificar                          TesteERRO
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 == Deturpação 08: Destaca vértice do grafo
@@ -122,7 +126,7 @@
 =insAresta       "ca"   "C"   "A"   OK
 =insAresta       "cb"   "C"   "B"   OK
 =insAresta       "cc"   "C"   "C"   OK
-=verificar TesteOK
+=verificar                          TesteOK
 =deturpar 8
 //=verificar TesteERRO
 //=AceitaFalhasAcumuladas 4
@@ -131,9 +135,9 @@
 == Deturpação 09: Atribui null ao ponteiro corrente
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
-=verificar TesteOK
+=verificar                          TesteOK
 =deturpar 9
-=verificar TesteERRO
+=verificar                          TesteERRO
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
@@ -141,8 +145,8 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
-=verificar TesteOK
+=verificar                          TesteOK
 =deturpar 10
-=verificar TesteERRO
+=verificar                          TesteERRO
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
