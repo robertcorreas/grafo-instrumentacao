@@ -702,9 +702,11 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
 
    if (pGrafoParm == NULL)
    {
+      CNT_CONTAR("ver00 grafo nao existe");
       TST_NotificarFalha("Tentou verificar um grafo que não existe.");
       return GRA_CondRetErroNaEstrutura;
    }
+   CNT_CONTAR("ver00 grafo existe");
 
    pGrafo = (tpGrafo*) pGrafoParm;
 
@@ -744,30 +746,40 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       erroNaEstrutura = 1;
+      CNT_CONTAR("ver00 existe vertice com conteudo de tipo errado");
    }
+   CNT_CONTAR("ver00 nao existe vertice com conteudo de tipo errado");
 
     ret = VER_NenhumVerticeEstaDestacado(pGrafo);
     if (ret == GRA_CondRetErroNaEstrutura)
     {
+      CNT_CONTAR("ver00 existe vertice destacado");
        erroNaEstrutura = 1;
     }
+    CNT_CONTAR("ver00 nao existe vertice destacado");
    
    ret = VER_CorrenteNaoEhNulo(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       erroNaEstrutura = 1;
+      CNT_CONTAR("ver00 corrente eh nulo");
    }
+   CNT_CONTAR("ver00 corrente nao eh nulo");
    
    ret = VER_NaoExisteOrigemNula(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
+      CNT_CONTAR("ver00 existe origem nula");
       erroNaEstrutura = 1;
    }
+   CNT_CONTAR("ver00 nao existe origem nula");
 
    if (erroNaEstrutura)
    {
+      CNT_CONTAR("ver00 com erros na estrutura");
       return GRA_CondRetErroNaEstrutura;
    }
+   CNT_CONTAR("ver00 sem erros na estrutura");
 
    return GRA_CondRetOK;
 }
@@ -1385,9 +1397,12 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
       if (pGrafo->qntVertices != tamListaVertices)
       {
+         CNT_CONTAR("ver08 tamanho da lista de vertices diferente da quantidade de vertices");
          TST_NotificarFalha("Existem vertices destacados na estrutura.");
          return GRA_CondRetErroNaEstrutura;
       }
+      
+      CNT_CONTAR("ver08 tamanho da lista de vertices igual ah quantidade de vertices");
 
       return GRA_CondRetOK;
    }
