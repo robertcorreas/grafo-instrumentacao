@@ -108,6 +108,10 @@ typedef struct stGrafo {
 	void (*destruirValor)(void *pValor);
 	/* Lógica responsável por destruir o valor do vértice do grafo */
 
+#ifdef _DEBUG
+   unsigned int qntVertices;
+#endif
+
 } tpGrafo;
 
 /***** Dados encapsulados no módulo ******/
@@ -159,6 +163,7 @@ static GRA_tpCondRet ProcurarAresta(tpVertice *pVertice, char *nome, tpAresta **
 static int ExisteVertice(tpGrafo *pGrafo, char *nome);
 static int ExisteOrigem(tpGrafo *pGrafo, char *nome);
 static int ExisteAresta(tpVertice *pVertice, char *nome);
+static void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo);
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -178,7 +183,8 @@ GRA_tpCondRet GRA_CriarGrafo(GRA_tppGrafo *ppGrafo,
 	LIS_CriarLista(&pGrafo->pVertices, DestruirVertice, CompararVerticeENome);
 
    #ifdef _DEBUG
-      CED_DefinirTipoEspaco( pGrafo , GRA_TipoEspacoCabeca ) ;
+      CED_DefinirTipoEspaco(pGrafo, GRA_TipoEspacoCabeca);
+      pGrafo->qntVertices = 0;
    #endif
 
 	*ppGrafo = (GRA_tppGrafo) pGrafo;
@@ -242,6 +248,7 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafoParm, char *nomeVertice, voi
    #ifdef _DEBUG
       CED_DefinirTipoEspaco(pVertice, GRA_TipoEspacoVertice);
       CED_DefinirTipoEspaco(pVertice->pValor, GRA_TipoEspacoValorVertice);
+      pGrafo->qntVertices++;
    #endif
 
 	pGrafo->pCorrente = pVertice;
@@ -427,9 +434,7 @@ GRA_tpCondRet GRA_DeixarDeSerOrigem(GRA_tppGrafo pGrafoParm)
 GRA_tpCondRet GRA_DestruirVerticeCorrente(GRA_tppGrafo pGrafoParm)
 {
 	tpGrafo *pGrafo = NULL;
-	tpVertice  *pVerticeOrigem = NULL, *pVertice = NULL;
-	tpAresta *pAresta = NULL;
-	int estaVazia = -1, numElemLista = 0;
+	int estaVazia = -1;
 
 	if (pGrafoParm == NULL)
 	{
@@ -450,67 +455,11 @@ GRA_tpCondRet GRA_DestruirVerticeCorrente(GRA_tppGrafo pGrafoParm)
 		return GRA_CondRetNaoAchou;
 	}
 
-	// remove corrente vai para origem
-	// Navega para o inicio da lista de origens
-	LIS_IrInicioLista(pGrafo->pOrigens);
-	//Pega o valor do primeiro vértice de origem
-	LIS_ObterValor(pGrafo->pOrigens,(void**)&pVerticeOrigem);
-
-   // Para cada item da lista de sucessores, remover elem que aponta para o corrente
-	LIS_NumELementos(pGrafo->pCorrente->pSucessores, &numElemLista);
-	LIS_IrInicioLista(pGrafo->pCorrente->pSucessores);
-
-	while(numElemLista > 0)
-	{
-      int numElems;
-      tpAresta *pAresta;
-      LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void**) &pAresta);
-
-      LIS_NumELementos(pAresta->pVertice->pAntecessores, &numElems);
-      LIS_IrInicioLista(pAresta->pVertice->pAntecessores);
-      LIS_ProcurarValor(pAresta->pVertice->pAntecessores, pGrafo->pCorrente->nome);
-      LIS_ExcluirElemento(pAresta->pVertice->pAntecessores);
-
-      LIS_AvancarElementoCorrente(pGrafo->pCorrente->pSucessores, 1);
-      numElemLista--;
-   }
-
-	// Para cada item da lista de anteressores, remover aresta que aponta para o corrente
-	LIS_NumELementos(pGrafo->pCorrente->pAntecessores,&numElemLista);
-	LIS_IrInicioLista(pGrafo->pCorrente->pAntecessores);
-
-	while(numElemLista > 0)
-	{
-		int nElem = 0;
-		LIS_ObterValor(pGrafo->pCorrente->pAntecessores,(void**)&pVertice);
-
-		LIS_NumELementos(pVertice->pSucessores, &nElem);
-		LIS_IrInicioLista(pVertice->pSucessores);
-
-		while(nElem > 0)
-		{
-			LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
-
-			if(!strcmp(pAresta->pVertice->nome, pGrafo->pCorrente->nome))
-			{
-				LIS_ExcluirElemento(pVertice->pSucessores);
-				break;
-			}
-
-			LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
-			nElem--;
-		}
-		LIS_AvancarElementoCorrente(pGrafo->pCorrente->pAntecessores,1);
-		numElemLista--;
-	}
-
-	//Exclui elemento corrente
-	LIS_IrInicioLista(pGrafo->pVertices);
-	LIS_ProcurarValor(pGrafo->pVertices,pGrafo->pCorrente->nome);
-	LIS_ExcluirElemento(pGrafo->pVertices);
-
-	pGrafo->pCorrente = pVerticeOrigem;
+   DestacarVertice(pGrafo, pGrafo->pCorrente);
 	
+   #ifdef _DEBUG
+      pGrafo->qntVertices--;
+   #endif
 
 	return GRA_CondRetOK;
 }
@@ -1261,6 +1210,77 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    return condRet == GRA_CondRetOK;
 }
 
+
+
+void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
+{
+   
+	tpVertice *pVertice = NULL, *pVerticeOrigem = NULL;
+	tpAresta *pAresta = NULL;
+   int numElemLista = 0;
+   
+   // remove corrente vai para origem
+	// Navega para o inicio da lista de origens
+	LIS_IrInicioLista(pGrafo->pOrigens);
+	//Pega o valor do primeiro vértice de origem
+	LIS_ObterValor(pGrafo->pOrigens,(void**)&pVerticeOrigem);
+
+   // Para cada item da lista de sucessores, remover elem que aponta para o corrente
+	LIS_NumELementos(pAlvo->pSucessores, &numElemLista);
+	LIS_IrInicioLista(pAlvo->pSucessores);
+
+	while(numElemLista > 0)
+	{
+      int numElems;
+      tpAresta *pAresta;
+      LIS_ObterValor(pAlvo->pSucessores, (void**) &pAresta);
+
+      LIS_NumELementos(pAresta->pVertice->pAntecessores, &numElems);
+      LIS_IrInicioLista(pAresta->pVertice->pAntecessores);
+      LIS_ProcurarValor(pAresta->pVertice->pAntecessores, pAlvo->nome);
+      LIS_ExcluirElemento(pAresta->pVertice->pAntecessores);
+
+      LIS_AvancarElementoCorrente(pAlvo->pSucessores, 1);
+      numElemLista--;
+   }
+
+	// Para cada item da lista de anteressores, remover aresta que aponta para o corrente
+	LIS_NumELementos(pAlvo->pAntecessores,&numElemLista);
+	LIS_IrInicioLista(pAlvo->pAntecessores);
+
+	while(numElemLista > 0)
+	{
+		int nElem = 0;
+		LIS_ObterValor(pAlvo->pAntecessores,(void**)&pVertice);
+
+		LIS_NumELementos(pVertice->pSucessores, &nElem);
+		LIS_IrInicioLista(pVertice->pSucessores);
+
+		while(nElem > 0)
+		{
+			LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
+
+			if(!strcmp(pAresta->pVertice->nome, pAlvo->nome))
+			{
+				LIS_ExcluirElemento(pVertice->pSucessores);
+				break;
+			}
+
+			LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
+			nElem--;
+		}
+		LIS_AvancarElementoCorrente(pAlvo->pAntecessores,1);
+		numElemLista--;
+	}
+
+	//Exclui elemento corrente
+	LIS_IrInicioLista(pGrafo->pVertices);
+	LIS_ProcurarValor(pGrafo->pVertices, pAlvo->nome);
+	LIS_ExcluirElemento(pGrafo->pVertices);
+   
+	pGrafo->pCorrente = pVerticeOrigem;
+}
+
 #ifdef _DEBUG
    // Det 05
    void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
@@ -1353,121 +1373,20 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
    // Det 08
    void DET_DestacaVertice(tpGrafo *pGrafo)
    {
-      LIS_tppLista pSuc, pAnt;
-      tpVertice *pCorr;
-      LIS_tpCondRet lisCondRet;
-      int estaVazia;
-
-      pCorr = pGrafo->pCorrente;
-
-      // Garantindo que não será antecessor de ninguém
-      pSuc = pCorr->pSucessores;
-      LIS_EstaVazia(pSuc, &estaVazia);
-      if (!estaVazia)
-      {
-         LIS_IrInicioLista(pSuc);
-         lisCondRet = LIS_CondRetOK;
-         while (lisCondRet == LIS_CondRetOK)
-         {
-            tpAresta *pAresta;
-            LIS_tppLista pBackAnt;
-
-            LIS_ObterValor(pSuc, (void**) &pAresta);
-            pBackAnt = pAresta->pVertice->pAntecessores;
-            LIS_IrInicioLista(pBackAnt);
-            LIS_ProcurarValor(pBackAnt, pCorr->nome);
-            LIS_ExcluirElemento(pBackAnt);
-            lisCondRet = LIS_AvancarElementoCorrente(pSuc, 1);
-         }
-      }
-      
-      // Garantindo que não é sucessor de ninguém.
-      pAnt = pGrafo->pCorrente->pAntecessores;
-      LIS_EstaVazia(pAnt, &estaVazia);
-      if (!estaVazia)
-      {
-         LIS_IrInicioLista(pAnt);
-         lisCondRet = LIS_CondRetOK;
-         while (lisCondRet == LIS_CondRetOK)
-         {
-            LIS_tpCondRet retBackSuc = LIS_CondRetOK;
-            tpVertice *pVertice;
-            LIS_tppLista pBackSuc;
-
-            LIS_ObterValor(pAnt, (void**) &pVertice);
-            pBackSuc = pVertice->pSucessores;
-            LIS_IrInicioLista(pBackSuc);
-            while(retBackSuc == LIS_CondRetOK)
-            {
-               tpAresta *pAresta;
-
-               LIS_ObterValor(pBackSuc, (void**) &pAresta);
-               if (strcmp(pAresta->pVertice->nome, pCorr->nome) == 0)
-               {
-                  break;
-               }
-
-               retBackSuc = LIS_AvancarElementoCorrente(pBackSuc, 1);
-            }
-            LIS_ExcluirElemento(pBackSuc);
-            
-            lisCondRet = LIS_AvancarElementoCorrente(pAnt, 1);
-         }
-      }
+      DestacarVertice(pGrafo, pGrafo->pCorrente);
    }
    
    // Ver 08
    GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo)
    {
-      LIS_tppLista pVertices;
-      LIS_tpCondRet lisCondRet = LIS_CondRetOK;
-      int estaVazia;
-      int erroNaEstrutura = 0;
+      int tamListaVertices;
 
-      pVertices = pGrafo->pVertices;
+      LIS_NumELementos(pGrafo->pVertices, &tamListaVertices);
 
-      LIS_EstaVazia(pVertices, &estaVazia);
-      if (estaVazia)
+      if (pGrafo->qntVertices != tamListaVertices)
       {
-         //CNT_CONTAR("ver08 nao tem vertices");
-         return GRA_CondRetOK;
-      }
-      else
-      {
-         //CNT_CONTAR("ver08 tem vertices");
-      }
-
-      LIS_IrInicioLista(pVertices);
-      while (lisCondRet == LIS_CondRetOK)
-      {
-         tpVertice *pVertice;
-         GRA_tpCondRet graCondRet;
-         //CNT_CONTAR("ver08 percorre vertices");
-
-         LIS_ObterValor(pVertices, (void**) &pVertice);
-
-         graCondRet = VER_ReferenciasDoVerticeEstaoCorretas(pVertice);
-         if (graCondRet == GRA_CondRetErroNaEstrutura)
-         {
-            //CNT_CONTAR("ver08 referencias erradas");
-            erroNaEstrutura = 1;
-         }
-         else
-         {
-            //CNT_CONTAR("ver08 referencias certas");
-         }
-
-         lisCondRet = LIS_AvancarElementoCorrente(pVertices, 1);
-      }
-
-      if (erroNaEstrutura)
-      {
-         //CNT_CONTAR("ver08 erros na estrutura");
+         TST_NotificarFalha("Existem vertices destacados na estrutura.");
          return GRA_CondRetErroNaEstrutura;
-      }
-      else
-      {
-         //CNT_CONTAR("ver08 sem erros na estrutura");
       }
 
       return GRA_CondRetOK;
