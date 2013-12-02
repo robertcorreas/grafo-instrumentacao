@@ -323,7 +323,7 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
    pAresta->pVertice = pVerticeDestino;
 
    #ifdef _DEBUG
-      CED_DefinirTipoEspaco( pAresta , GRA_TipoEspacoCabeca ) ;
+      CED_DefinirTipoEspaco( pAresta , GRA_TipoEspacoAresta ) ;
    #endif
 
 	return GRA_CondRetOK;

@@ -6,7 +6,10 @@
 
 #include    "Generico.h"
 #include    "LerParm.h"
+#if _DEBUG
 #include     "cespdin.h"
+#endif
+
 
 #include    "grafo.h"
 
