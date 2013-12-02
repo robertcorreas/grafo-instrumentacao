@@ -15,6 +15,9 @@
     ver09 se corrente nulo
     ver09 se corrente nao-nulo
 
+    ver08 tamanho da lista de vertices diferente da quantidade de vertices
+    ver08 tamanho da lista de vertices igual ah quantidade de vertices
+
     ver07 percorre vertices
     ver07 tipo do valor esta correto
     ver07 tipo do valor nao esta correto
@@ -25,3 +28,15 @@
     ver06 valor do vertice nao eh null
     ver06 percorreu todos os vertices
 
+    ver00 grafo existe
+    ver00 grafo nao existe
+    ver00 existe vertice com conteudo de tipo errado
+    ver00 nao existe vertice com conteudo de tipo errado
+    ver00 existe vertice destacado
+    ver00 nao existe vertice destacado
+    ver00 corrente eh nulo
+    ver00 corrente nao eh nulo
+    ver00 existe origem nula
+    ver00 nao existe origem nula
+    ver00 sem erros na estrutura
+    ver00 com erros na estrutura

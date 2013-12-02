@@ -24,36 +24,88 @@
 =lercontadores          "..\\src\\Grafo"
 =iniciarcontagem
 
+== Total de contadores
+=verificarcontagens    30
+=AceitaFalhasAcumuladas 30
+
+
+== Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
+=deturpar 6
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 2
+=destruirGrafo                      OK
+=verificarcontagens 14
+=AceitaFalhasAcumuladas 14
+
+== Deturpação 07: Altera o tipo da estrutura apontada no vértice
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
+=deturpar 7
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+=verificarcontagens 13
+=AceitaFalhasAcumuladas 13
+
+== Deturpação 08: Destaca vértice do grafo
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=tornarOrigem                       OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ac"   "A"   "C"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bc"   "B"   "C"   OK
+=insAresta       "ca"   "C"   "A"   OK
+=insAresta       "cb"   "C"   "B"   OK
+=deturpar 8
+=verificar TesteERRO
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+=verificarcontagens 6
+=AceitaFalhasAcumuladas 6
+
+== Deturpação 09: Atribui null ao ponteiro corrente
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=deturpar 9
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+=verificarcontagens 4
+=AceitaFalhasAcumuladas 4
 
 == Deturpação 10: Atribui null à um ponteiro de origem
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
-=verificar                          TesteOK
 =deturpar 10
 =verificar                          TesteERRO
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
+=verificarcontagens 2
+=AceitaFalhasAcumuladas 2
 
-== Deturpação 10: Atribui null à um ponteiro de origem (não possui origem)
-=criarGrafo                         OK
-=insVertice      "A"    "vA"        OK
-=verificar                          TesteOK
-=deturpar 10
-=verificar                          TesteOK
-=destruirGrafo                      OK
+== Verificacao de um Grafo simples
+=criarGrafo                           OK
+=insVertice      "A"    "vA"          OK
+=verificar                            TesteOK
+=destruirGrafo                        OK
+=verificarcontagens 1
+=AceitaFalhasAcumuladas 1
 
-== Deturpação 10: Verificando contadores
-=contagemcontador "ver10 se origens vazia" 2
-=contagemcontador "ver10 se origens nao vazia" 2
-=contagemcontador "ver10 percorre origens" 2
-=contagemcontador "ver10 valor origem eh nula" 1
-=contagemcontador "ver10 valor origem nao eh nula" 1
-=contagemcontador "ver10 saiu do percorre origens" 1
 
-== Deturpação 10: Terminar controlar contadores
-=pararcontagem
-=verificarcontagens    0
+== Verificacao de um grafo nulo
+=verificar                            TesteERRO
+=AceitaFalhasAcumuladas 1
+=verificarcontagens 0
 
-== Deturpação 10: Terminar contagem
+== Terminar contagem
 =terminarcontadores
