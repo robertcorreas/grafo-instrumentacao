@@ -56,6 +56,8 @@
     ver02 percorreu todos os sucessores
     ver02 percorreu todos os vertices
 
+    ver00 existe vertice liberado
+    ver00 nao existe vertice liberado
     ver00 existe vertice cujo sucessor eh nulo
     ver00 nao existe vertice cujo sucessor eh nulo
     ver00 existe vertice que tem lixo como referencia para sucessor
