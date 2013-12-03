@@ -12,6 +12,7 @@
 *  Histórico de evolução:
 *     Versão  Autor    Data        Observações
 *     1.0     hg & rc  06/out/13   Preparação do módulo para trabalhar com grafos direcionados.
+*     2.0     hg & rc  03/dez/13   Adaptação para uma estrutura auto-verificável.
 *
 *  Assertivas Estruturais
 *     Antecessor aponta de volta para o vértice como sucessor
@@ -916,7 +917,7 @@ static GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int* numFalhas)
 *  Função: GRA  Deturpar grafo
 *  ****/
 
-void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
+GRA_tpCondRet GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 {
 
    tpGrafo *pGrafo = NULL ;
@@ -999,6 +1000,8 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
          break;
       }
    }
+
+   return GRA_CondRetOK;
 }
 
 /***************************************************************************

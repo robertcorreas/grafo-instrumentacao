@@ -1,7 +1,8 @@
-// Script:    teste_grafo.script
-// Autor:     Robert Correa
-// Data:      03/out/2013
-// Propósito: Testar completamente o módulo grafo genérico
+// Script:    teste_contador.script
+// Autores:     Robert Correa e Hugo Roque
+// Data:      03/dez/2013
+// Propósito: Teste completo do funcionamento dos verificadores
+// segundo o critério de cobertura de arestas.
 //
 
 == Declarar as condicoes de retorno

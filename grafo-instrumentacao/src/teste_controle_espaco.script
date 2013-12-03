@@ -1,8 +1,10 @@
-// Script:    teste_grafo.script
-// Autor:     Robert Correa
-// Data:      03/out/2013
-// Propósito: Testar completamente o módulo grafo genérico
-//
+// Script:    teste_controle_espaco.script
+// Autores:     Robert Correa e Hugo Roque
+// Data:      03/dez/2013
+// Propósito: Manter o controle sobre o espaço da memória
+// manipulado pelo módulo de modo que não sobre espaço ao
+// final da execução nem seja alocado mais do que o
+// necessário.
 
 == Declarar as condicoes de retorno
 =declararparm   OK             int  0
@@ -56,28 +58,19 @@
 =destruirAresta  "11"               EstaVazio
 =irOrigem        "A"                EstaVazio
 
-== Controle espaço: Controlar vazamento de memória
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
+== Controle espaço: Apos criar o grafo
 =obternumeroespacosalocados    3
 
 == Destruir funciona com grafo vazio
 =destruirGrafo                      OK
 
 == Controle espaço: Destruir não deixa nenhum espaço alocado
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados    0
 
 == Controle espaço: Apos inserir um vértice
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
-
-// verificando espaços
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      9 // 3 do grafo + 6 do vertice(1 cabeca + 2 listas + 1 elemListaVertices + 1 valor + 1 nome)
-
 =destruirGrafo                      OK
 
 
@@ -86,22 +79,14 @@
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      21 // 3 do grafo + 6 do vertice * 3
-
 =destruirGrafo                      OK
 
 == Controle espaço: Inserir vértice com nome repetido
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =insVertice      "A"    "xx"        JaExiste
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      9 // 3 do grafo + 6 do vertice
-
 =destruirGrafo                      OK
 
 == Controle espaço: Testar inserir arestas com sucesso
@@ -109,11 +94,7 @@
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
 =insAresta       "ba"   "B"   "A"   OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      19 // 3 do grafo + 6 do vertice * 2 + 4 da aresta (1 cabeça + 1 elemSucessores + 1 elemAntecessores + 1 nome)
-
 =destruirGrafo                      OK
 
 == Controle espaço: Testar inserir arestas com nome repetido
@@ -122,33 +103,21 @@
 =insVertice      "B"    "x"         OK
 =insAresta       "a"    "B"   "A"   OK
 =insAresta       "a"    "B"   "B"   JaExiste
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      19 // 3 do grafo + 6 do vertice * 2 + 4 da aresta
-
 =destruirGrafo                      OK
 
 == Controle espaço: Testar inserir arestas para um vértice inexistente
 =criarGrafo                         OK
 =insVertice      "A"    "x"         OK
 =insAresta       "a"    "A"   "B"   NaoAchou
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      9 // 3 do grafo + 6 do vertice
-
 =destruirGrafo                      OK
 
 == Controle espaço: Testar inserir aresta de um vértice inexistente
 =criarGrafo                         OK
 =insVertice      "A"    "x"         OK
 =insAresta       "a"    "B"   "A"   NaoAchou
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      9 // 3 do grafo + 6 do vertice
-
 =destruirGrafo                      OK
 
 
@@ -156,11 +125,7 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =alterarValor    "xx"               OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      9 // 3 do grafo + 6 do vertice
-
 =destruirGrafo                      OK
 
 
@@ -168,11 +133,7 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      10 // 3 do grafo + 6 do vertice + 1 origem
-
 =destruirGrafo                      OK
 
 
@@ -181,11 +142,7 @@
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
 =tornarOrigem                       JaExiste
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      10 // 3 do grafo + 6 do vertice + 1 origem
-
 =destruirGrafo                      OK
 
 == Controle espaço: Testar seguir pela aresta
@@ -196,11 +153,7 @@
 =insAresta       "ca"   "C"   "A"   OK
 =insAresta       "cb"   "C"   "B"   OK
 =irPelaAresta    "cb"               OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      29 // 3 do grafo + 6 do vertice * 3 + 4 da aresta * 2
-
 =destruirGrafo                      OK
 
 
@@ -212,11 +165,7 @@
 =insAresta       "ca"   "C"   "A"   OK
 =insAresta       "cb"   "C"   "B"   OK
 =irPelaAresta    "zz"               NaoAchou
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      29 // 3 do grafo + 6 do vertice * 3 + 4 da aresta * 2
-
 =destruirGrafo                      OK
 
 
@@ -228,11 +177,7 @@
 =insAresta       "ca"   "C"   "A"   OK
 =insAresta       "cb"   "C"   "B"   OK
 =irVertice       "B"                OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      29 // 3 do grafo + 6 do vertice * 3 + 4 da aresta * 2
-
 =destruirGrafo                      OK
 
 
@@ -243,11 +188,7 @@
 =insVertice      "C"    "vC"        OK
 =insAresta       "ca"   "C"   "A"   OK
 =irVertice       "B"                NaoAchou
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      25 // 3 do grafo + 6 do vertice * 3 + 4 da aresta
-
 =destruirGrafo                      OK
 
 == Controle espaço: Testar ir para origem
@@ -257,11 +198,7 @@
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
 =irOrigem        "A"                OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      22 // 3 do grafo + 6 do vertice * 3 + 1 origem
-
 =destruirGrafo                      OK
 
 == Controle espaço: Testar ir para origem inexistente
@@ -271,11 +208,7 @@
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
 =irOrigem        "B"                NaoAchou
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      22 // 3 do grafo + 6 do vertice * 3 + 1 origem
-
 =destruirGrafo                      OK
 
 
@@ -284,11 +217,7 @@
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
 =deixarOrigem                       OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      9 // 3 do grafo + 6 do vertice
-
 =destruirGrafo                      OK
 
 
@@ -296,11 +225,7 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =deixarOrigem                       NaoAchou
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      9 // 3 do grafo + 6 do vertice
-
 =destruirGrafo                      OK
 
 
@@ -311,11 +236,7 @@
 =deixarOrigem                       OK
 =insVertice      "B"    "vB"        OK
 =irOrigem        "A"                NaoAchou
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      15 // 3 do grafo + 6 do vertice * 2
-
 =destruirGrafo                      OK
 
 
@@ -331,11 +252,7 @@
 =insAresta       "13"   "1"   "3"   OK
 =insAresta       "14"   "1"   "4"   OK
 =destruirAresta  "13"               OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      36 // 3 do grafo + 6 do vertice * 4 + 4 da aresta * 2 + 1 origem
-
 =destruirGrafo                      OK
 
 
@@ -351,11 +268,7 @@
 =insAresta       "13"   "1"   "3"   OK
 =insAresta       "14"   "1"   "4"   OK
 =destruirAresta  "11"               NaoAchou
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      40 // 3 do grafo + 6 do vertice * 4 + 4 da aresta * 3 + 1 origem
-
 =destruirGrafo                      OK
 
 == Controle espaço: Testar destruir vertice corrente
@@ -365,11 +278,7 @@
 =insVertice      "2"    "vB"        OK
 =insVertice      "3"    "vC"        OK
 =destruirCorr                       OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      16 // 3 do grafo + 6 do vertice * 2 + 1 origem
-
 =destruirGrafo                      OK 
 
 == Controle espaço: Testar destruir vertice corrente que não contem sucessores
@@ -385,11 +294,7 @@
 =insAresta       "13"   "1"   "3"   OK
 =insAresta       "23"   "2"   "3"   OK
 =destruirCorr                       OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      36 // 3 do grafo + 6 do vertice * 4 + 4 da aresta * 2 + 1 origem
-
 =destruirGrafo                      OK 
 
 
@@ -408,14 +313,10 @@
 =insAresta       "34"   "3"   "4"   OK
 =insAresta       "35"   "3"   "5"   OK
 =destruirCorr                       OK
-
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      36 // 3 do grafo + 6 do vertice * 4 + 4 da aresta * 2 + 1 origem
-
 =destruirGrafo                      OK 
 
 == Controle espaço: Nenhum espaço sobrou
-//=exibirtodosespacos            CriterioExibir
-//=verificartodosespacos         CriterioExibir
+=exibirtodosespacos            CriterioExibir
+=verificartodosespacos         CriterioExibir
 =obternumeroespacosalocados      0
