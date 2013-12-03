@@ -154,13 +154,14 @@ typedef struct stGrafo {
    static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas);
-
    static GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo, int *numFalhas);
-   static GRA_tpCondRet VER_ReferenciasDoVerticeEstaoCorretas(tpVertice *pVerticeVerificado, int *numFalhas);
+   static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo, int *numFalhas);
+
+   static GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int *numFalhas);
 
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
@@ -924,7 +925,7 @@ GRA_tpCondRet GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 
    if ( pGrafoParm == NULL )
    {
-      return ;
+      return GRA_CondRetOK;
    } /* if */
 
    pGrafo = (tpGrafo*) pGrafoParm;
@@ -1175,7 +1176,7 @@ static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
 /*Funcao de verificacao                                                 */
 /************************************************************************/
 
-static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalhas)
+GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
    int erroNaEstrutura = 0;
@@ -1221,7 +1222,7 @@ static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalha
    }
 }
 
-static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
+GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
 
@@ -1281,7 +1282,7 @@ static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo, int *numFalha
    return GRA_CondRetOK;
 }
 
-static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
+GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
    LIS_NumELementos(pGrafo->pVertices, &numVerElem);
@@ -1339,8 +1340,7 @@ static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFa
    return GRA_CondRetOK;
 }
 
-//TODO [RCS] checar se soluciona o problema de checar espaçoLixo
-static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas)
+GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
    LIS_NumELementos(pGrafo->pVertices,&numVerElem);
@@ -1394,9 +1394,11 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, 
       numVerElem--;
    }
    CNT_CONTAR("ver04 percorreu todos os vertices");
+
+   return GRA_CondRetOK;
 }
 
-static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas)
+GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
    LIS_NumELementos(pGrafo->pVertices,&numVerElem);
@@ -1852,7 +1854,6 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    void DET_EspalharLixosPelaEstrutura(tpGrafo *pGrafo)
    {
       tpVertice *pVertice;
-      tpAresta *pAresta;
       LIS_AlterarValor(pGrafo->pOrigens, EspacoLixo);
       LIS_AlterarValor(pGrafo->pVertices, EspacoLixo);
       LIS_IrInicioLista(pGrafo->pVertices);
