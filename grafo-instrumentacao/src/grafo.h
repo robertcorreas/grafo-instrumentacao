@@ -498,6 +498,32 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
    void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpa);
    /* Funcao de verificação */
    GRA_tpCondRet GRA_Verificar(void *pGrafoParm, int *numFalhas);
+   
+   /***********************************************************************
+   *
+   *  Função: GRA Total espaço alocado
+   *
+   *  Descrição
+   *     Pega o total de espaço alocado pelo grafo
+   *
+   *  Parâmetros
+   *     pGrafoParm          - ponteiro para a grafo onde procura
+   *     pTotalEspacoAlocado - ponteiro que ira armazenar o total de espaço alocado
+   *
+   *  Retorno por referência
+   *     pTotalEspacoAlocado - O total de espaço alocado.
+   *
+   *  Condições de retorno
+   *     GRA_CondRetOK
+   *
+   *  Assertivas de entrada
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   *  Assertivas de saída
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   ***********************************************************************/
+   GRA_tpCondRet GRA_TotalEspacoAlocado(GRA_tppGrafo pGrafoParm, unsigned long *pTotalEspaco);
 #endif
 
 

@@ -1,38 +1,7 @@
 - Falta definir o tipo do grafo em debug e alterar na verificacao 7
 - documentar o DestacarVertice
+- documentação do grafo TotalEspacoAlocado
+- doc pra verificação e deturpação
 
-    ver08 nao tem vertices
-    ver08 tem vertices
-    ver08 percorre vertices
-    ver08 referencias erradas
-    ver08 referencias certas
-    ver08 erros na estrutura
-    ver08 sem erros na estrutura
-    ver08 vertice eh do tipo certo
-    ver08 vertice nao eh do tipo certo
-    ver08 tem sucessores
-    ver08 percorrendo sucessores
-    ver08 aresta e seu vertice sao do tipo certo
-    ver08 sucessor tem antecessores
-    ver08 percorre antecessores do sucessor
-    ver08 encontrou antecessor do sucessor
-    ver08 nao encontrou antecessor do sucessor
-    ver08 sucessor nao tem antecessores
-    ver08 vertice nao eh antecessor de algum sucessor
-    ver08 vertice eh antecessor de algum sucessor
-    ver08 aresta ou seu vertice nao sao do tipo certo
-    ver08 nao tem sucessores
-    ver08 tem antecessores
-    ver08 percorre antecessores
-    ver08 antecessor eh do tipo certo
-    ver08 antecessor tem sucessores
-    ver08 percorre sucessores do antecessor
-    ver08 encontrou o sucessor do antecessor
-    ver08 nao encontrou o sucessor do antecessor
-    ver08 antecessor nao tem sucessores
-    ver08 vertice eh sucessor do antecessor
-    ver08 vertice nao eh sucessor do antecessor
-    ver08 antecessor nao eh do tipo certo
-    ver08 nao tem antecessores
-    ver08 erros na estrutura
-    ver08 sem erros na estrutura
+
+- cade destruir aresta no DestruirArestaAdjacente?

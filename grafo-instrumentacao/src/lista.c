@@ -78,6 +78,11 @@ typedef struct LIS_stLista {
    int (*compararValores)(void * pValor1 , void * pValor2);
    /* Lógica responsável por comparar dois valores */
 
+#ifdef _DEBUG
+   unsigned long totalEspacoAlocado;
+   /* Tamanho em bytes de todo espaço alocado para o armazenamento da lista */
+#endif
+
 } LIS_tpLista ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
@@ -111,6 +116,10 @@ LIS_tpCondRet LIS_CriarLista(LIS_tppLista *ppLista,
 
    pLista->destruirValor = destruirValor;
    pLista->compararValores = compararValores;
+
+#ifdef _DEBUG
+   pLista->totalEspacoAlocado = _msize(pLista);
+#endif
 
    *ppLista = pLista;
 
@@ -449,6 +458,9 @@ LIS_tpCondRet LIS_NumELementos(LIS_tppLista pLista,
    return LIS_CondRetOK;
 }
 
+/***************************************************************************
+*  Função: LIS Alterar valor
+*  ****/
 LIS_tpCondRet LIS_AlterarValor(LIS_tppLista ppLista, void * pValor)
 {
    LIS_tpLista *pLista = (LIS_tpLista *) ppLista;
@@ -457,6 +469,19 @@ LIS_tpCondRet LIS_AlterarValor(LIS_tppLista ppLista, void * pValor)
 
    return LIS_CondRetOK;
 }
+
+
+#ifdef _DEBUG
+/***************************************************************************
+*  Função: LIS Total espaco alocado
+*  ****/
+LIS_tpCondRet LIS_TotalEspacoAlocado(LIS_tppLista pLista,
+   unsigned long *pTotalEspacoAlocado)
+{
+   *pTotalEspacoAlocado = pLista->totalEspacoAlocado;
+   return LIS_CondRetOK;
+}
+#endif
 
 
 /*****  Código das funções encapsuladas no módulo  *****/
@@ -486,6 +511,10 @@ tpElemLista * CriarElemento(LIS_tppLista pLista,
 
    pLista->numElem++;
 
+#ifdef _DEBUG
+   pLista->totalEspacoAlocado += _msize(pElem);
+#endif
+
    return pElem;
 }
 
@@ -500,6 +529,10 @@ tpElemLista * CriarElemento(LIS_tppLista pLista,
 void LiberarElemento(LIS_tppLista pLista,
    tpElemLista  *pElem)
 {
+#ifdef _DEBUG
+   pLista->totalEspacoAlocado -= _msize(pElem);
+#endif
+
    if (pLista->destruirValor != NULL)
    {
       pLista->destruirValor(pElem->pValor);
