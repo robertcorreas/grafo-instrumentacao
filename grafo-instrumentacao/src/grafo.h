@@ -14,6 +14,7 @@
 *  Histórico de evolução:
 *     Versão  Autor    Data        Observações
 *     1.0     hg & rc  06/out/13   Preparação do módulo para trabalhar com grafos direcionados.
+*     2.0     hg & rc  03/dez/13   Adaptação para uma estrutura auto-verificável.
 *
 *  Descrição do módulo
 *     Implementa grafos direcionados com manipulação, ou seja, é possivel criar, inserir
@@ -27,7 +28,9 @@
 *     Os grafos possuem uma cabeça encapsulando o seu estado.
 *
 *     Cada grafo armazena dados genéricos.
-*     Cada vétice do grafo possui uma referência para o valor.
+*     Cada vértice do grafo possui uma referência para o valor.
+*
+*     Esta é uma estrutura auto-verificável.
 *
 ***************************************************************************/
  
