@@ -14,6 +14,7 @@
 *  Histórico de evolução:
 *     Versão  Autor    Data        Observações
 *     1.0     hg & rc  06/out/13   Preparação do módulo para trabalhar com grafos direcionados.
+*     2.0     hg & rc  03/dez/13   Adaptação para uma estrutura auto-verificável.
 *
 *  Descrição do módulo
 *     Implementa grafos direcionados com manipulação, ou seja, é possivel criar, inserir
@@ -27,7 +28,9 @@
 *     Os grafos possuem uma cabeça encapsulando o seu estado.
 *
 *     Cada grafo armazena dados genéricos.
-*     Cada vétice do grafo possui uma referência para o valor.
+*     Cada vértice do grafo possui uma referência para o valor.
+*
+*     Esta é uma estrutura auto-verificável.
 *
 ***************************************************************************/
  
@@ -494,10 +497,86 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
 
 
 #ifdef _DEBUG
-   /* Função de deturpação */
-   void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpa);
-   /* Funcao de verificação */
+
+   /***********************************************************************
+   *
+   *  Função: GRA Verificar
+   *
+   *  Descrição
+   *     Função de instrumentação cujo objetivo é deturpar a estrutura do grafo
+   *     para testar as verificações.
+   *
+   *  Parâmetros
+   *     pGrafoParm     - ponteiro para a grafo onde procura
+   *     ModoDeturpa    - tipo de deturpação que será efetuada
+   *
+   *  Condições de retorno
+   *     GRA_CondRetOK
+   *
+   *  Assertivas de entrada
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   *  Assertivas de saída
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   ***********************************************************************/
+   GRA_tpCondRet GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpa);
+
+
+   
+   /***********************************************************************
+   *
+   *  Função: GRA Verificar
+   *
+   *  Descrição
+   *     Função de instrumentação cujo objetivo é verificar a integridade da 
+   *     estrutura.
+   *
+   *  Parâmetros
+   *     pGrafoParm   - ponteiro para a grafo onde procura
+   *     numFalhas    - ponteiro que ira armazenar o numero de falhas encontradas
+   *
+   *  Retorno por referência
+   *     numFalhas - O total de falhas encontradas.
+   *
+   *  Condições de retorno
+   *     GRA_CondRetOK
+   *     GRA_CondRetErroNaEstrutura
+   *
+   *  Assertivas de entrada
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   *  Assertivas de saída
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   ***********************************************************************/
    GRA_tpCondRet GRA_Verificar(void *pGrafoParm, int *numFalhas);
+   
+   /***********************************************************************
+   *
+   *  Função: GRA Total espaço alocado
+   *
+   *  Descrição
+   *     Pega o total de espaço alocado pelo grafo
+   *
+   *  Parâmetros
+   *     pGrafoParm          - ponteiro para a grafo onde procura
+   *     pTotalEspacoAlocado - ponteiro que ira armazenar o total de espaço alocado
+   *
+   *  Retorno por referência
+   *     pTotalEspacoAlocado - O total de espaço alocado.
+   *
+   *  Condições de retorno
+   *     GRA_CondRetOK
+   *
+   *  Assertivas de entrada
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   *  Assertivas de saída
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   ***********************************************************************/
+   GRA_tpCondRet GRA_TotalEspacoAlocado(GRA_tppGrafo pGrafoParm, unsigned long *pTotalEspaco);
 #endif
 
 

@@ -12,6 +12,7 @@
 *  Histórico de evolução:
 *     Versão  Autor    Data        Observações
 *     1.0     hg & rc  06/out/13   Preparação do módulo para trabalhar com grafos direcionados.
+*     2.0     hg & rc  03/dez/13   Adaptação para uma estrutura auto-verificável.
 *
 *  Assertivas Estruturais
 *     Antecessor aponta de volta para o vértice como sucessor
@@ -73,6 +74,11 @@ typedef struct stVerticeGrafo {
 	void * pValor;
 	/* valor contido no vértice */
 
+#ifdef _DEBUG
+   struct stGrafo *pGrafo;
+   /* Ponteiro para o cabeça cujo vertice pertence */
+#endif
+
 } tpVertice;
 
 /***********************************************************************
@@ -86,6 +92,11 @@ typedef struct stArestaGrafo {
 
 	tpVertice * pVertice;
 	/* Ponteiro para o vértice destino da aresta */
+
+#ifdef _DEBUG
+   struct stGrafo *pGrafo;
+   /* Ponteiro para o cabeça cuja aresta pertence */
+#endif
 
 } tpAresta;
 
@@ -110,6 +121,11 @@ typedef struct stGrafo {
 
 #ifdef _DEBUG
    unsigned int qntVertices;
+   /* Quantidade de vértices que foram adicionados através da interface
+      exportada */
+
+   unsigned long totalEspacoAlocado;
+   /* Tamanho em bytes de todo espaço alocado para o armazenamento do grafo */
 #endif
 
 } tpGrafo;
@@ -120,6 +136,8 @@ typedef struct stGrafo {
    static char EspacoLixo[256] =
             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
          /* Espaço de dados lixo usado ao testar */
+   
+   static unsigned long espacoAlocado;
 #endif
 
 /***** Protótipos das funções encapuladas no módulo *****/
@@ -136,13 +154,14 @@ typedef struct stGrafo {
    static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas);
-
    static GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo, int *numFalhas);
-   static GRA_tpCondRet VER_ReferenciasDoVerticeEstaoCorretas(tpVertice *pVerticeVerificado, int *numFalhas);
+   static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo, int *numFalhas);
    static GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo, int *numFalhas);
+
+   static GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int *numFalhas);
 
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
@@ -188,6 +207,15 @@ GRA_tpCondRet GRA_CriarGrafo(GRA_tppGrafo *ppGrafo,
    #ifdef _DEBUG
       CED_DefinirTipoEspaco(pGrafo, GRA_TipoEspacoCabeca);
       pGrafo->qntVertices = 0;
+      
+      pGrafo->totalEspacoAlocado = _msize(pGrafo);
+      
+      LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+      
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+      
       CED_MarcarEspacoAtivo(pGrafo);
    #endif
 
@@ -246,19 +274,40 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafoParm, char *nomeVertice, voi
 	pVertice->pValor = pValor;
 	pVertice->destruirValor = pGrafo->destruirValor;
 
+#if _DEBUG
+   pVertice->pGrafo = pGrafo;
+#endif
+   
+
 	LIS_CriarLista(&pVertice->pAntecessores, NULL, CompararVerticeENome);
 	LIS_CriarLista(&pVertice->pSucessores, DestruirAresta, CompararArestaENome);
 
+   #ifdef _DEBUG
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado -= espacoAlocado;
+   #endif
+
+	pGrafo->pCorrente = pVertice;
+	LIS_InserirElementoApos(pGrafo->pVertices, pVertice);
+   
    #ifdef _DEBUG
       CED_DefinirTipoEspaco(pVertice, GRA_TipoEspacoVertice);
       CED_DefinirTipoEspaco(pVertice->pValor, GRA_TipoEspacoValorVertice);
       pGrafo->qntVertices++;
       CED_MarcarEspacoAtivo(pVertice);
       CED_MarcarEspacoAtivo(pVertice->pValor);
-   #endif
 
-	pGrafo->pCorrente = pVertice;
-	LIS_InserirElementoApos(pGrafo->pVertices, pVertice);
+      pGrafo->totalEspacoAlocado += _msize(pVertice);
+
+      LIS_TotalEspacoAlocado(pVertice->pAntecessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+
+      LIS_TotalEspacoAlocado(pVertice->pSucessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+      
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+   #endif
 
 	return GRA_CondRetOK;
 }
@@ -311,6 +360,14 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
 		return GRA_CondRetFaltouMemoria;
 	}
 
+   #ifdef _DEBUG
+      LIS_TotalEspacoAlocado(pVerticeDestino->pAntecessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado -= espacoAlocado;
+
+      LIS_TotalEspacoAlocado(pVerticeOrigem->pSucessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado -= espacoAlocado;
+   #endif
+
    // Atualiza os antecessores do vértice destino
 	lisCondRet = LIS_InserirElementoApos(pVerticeDestino->pAntecessores, pVerticeOrigem);
 	if (lisCondRet == LIS_CondRetFaltouMemoria)
@@ -328,9 +385,22 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
 	pAresta->nome = nomeAresta;
    pAresta->pVertice = pVerticeDestino;
 
+#if _DEBUG
+   pAresta->pGrafo = pGrafo;
+#endif
+   
+
    #ifdef _DEBUG
       CED_DefinirTipoEspaco( pAresta , GRA_TipoEspacoAresta ) ;
       CED_MarcarEspacoAtivo(pAresta);
+
+      pGrafo->totalEspacoAlocado += _msize(pAresta);
+      
+      LIS_TotalEspacoAlocado(pVerticeDestino->pAntecessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+
+      LIS_TotalEspacoAlocado(pVerticeOrigem->pSucessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
    #endif
 
 	return GRA_CondRetOK;
@@ -403,7 +473,18 @@ GRA_tpCondRet GRA_TornarCorrenteUmaOrigem(GRA_tppGrafo pGrafoParm)
       return GRA_CondRetJaExiste;
    }
 
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+   pGrafo->totalEspacoAlocado -= espacoAlocado;
+#endif
+
 	LIS_InserirElementoApos(pGrafo->pOrigens, pGrafo->pCorrente);
+
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+   pGrafo->totalEspacoAlocado += espacoAlocado;
+#endif
+
 	return GRA_CondRetOK;
 }
 
@@ -430,7 +511,17 @@ GRA_tpCondRet GRA_DeixarDeSerOrigem(GRA_tppGrafo pGrafoParm)
       return GRA_CondRetNaoAchou;
    }
 
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+   pGrafo->totalEspacoAlocado -= espacoAlocado;
+#endif
+
    LIS_ExcluirElemento(pGrafo->pOrigens);
+
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+   pGrafo->totalEspacoAlocado += espacoAlocado;
+#endif
 
    return GRA_CondRetOK;
 }
@@ -480,6 +571,7 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
 	tpGrafo *pGrafo = NULL;
 	tpAresta *pAresta = NULL;
 	GRA_tpCondRet graCondRet;
+   LIS_tppLista pAntecessores, pSucessores;
 
 	if (pGrafoParm == NULL)
 	{
@@ -500,12 +592,31 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
       return GRA_CondRetNaoAchou;
    }
 
-	// Remove referência do vértice corrente
-	LIS_IrInicioLista(pAresta->pVertice->pAntecessores);
-	LIS_ProcurarValor(pAresta->pVertice->pAntecessores,pGrafo->pCorrente->nome);
+   pAntecessores = pAresta->pVertice->pAntecessores;
+   pSucessores = pGrafo->pCorrente->pSucessores;
 
-	LIS_ExcluirElemento(pAresta->pVertice->pAntecessores);
-	LIS_ExcluirElemento(pGrafo->pCorrente->pSucessores);
+	// Remove referência do vértice corrente
+	LIS_IrInicioLista(pAntecessores);
+	LIS_ProcurarValor(pAntecessores, pGrafo->pCorrente->nome);
+
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pAntecessores, &espacoAlocado);
+   pGrafo->totalEspacoAlocado -= espacoAlocado;
+   
+   LIS_TotalEspacoAlocado(pSucessores, &espacoAlocado);
+   pGrafo->totalEspacoAlocado -= espacoAlocado;
+#endif
+
+	LIS_ExcluirElemento(pAntecessores);
+	LIS_ExcluirElemento(pSucessores);
+   
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pAntecessores, &espacoAlocado);
+   pGrafo->totalEspacoAlocado += espacoAlocado;
+   
+   LIS_TotalEspacoAlocado(pSucessores, &espacoAlocado);
+   pGrafo->totalEspacoAlocado += espacoAlocado;
+#endif
 
 	return GRA_CondRetOK;
 }
@@ -617,7 +728,7 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 
 #ifdef _DEBUG
 
-static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo, int *numFalhas)
+GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo, int *numFalhas)
 {
    int erroNaEstrutura = 0;
    int numElemVer = 0, numElemOri = 0;
@@ -701,7 +812,7 @@ static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo, int *numFalhas)
 }
 
 // Checa os espaços do vertice, das arestas + vertices apontados por elas e os vertices antecessores
-static GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int* numFalhas)
+GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int* numFalhas)
 {
    int erroNaEstrutura = 0;
    int numElemSuc = 0, numElemAnt = 0;
@@ -815,14 +926,14 @@ static GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int* numFalhas)
 *  Função: GRA  Deturpar grafo
 *  ****/
 
-void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
+GRA_tpCondRet GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 {
 
    tpGrafo *pGrafo = NULL ;
 
    if ( pGrafoParm == NULL )
    {
-      return ;
+      return GRA_CondRetOK;
    } /* if */
 
    pGrafo = (tpGrafo*) pGrafoParm;
@@ -898,6 +1009,8 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
          break;
       }
    }
+
+   return GRA_CondRetOK;
 }
 
 /***************************************************************************
@@ -1018,327 +1131,22 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm, int *numFalhas)
    return GRA_CondRetOK;
 }
 
+
+
+/***************************************************************************
+*
+*  Função: GRA  Total espaço alocado
+*  ****/
+GRA_tpCondRet GRA_TotalEspacoAlocado(GRA_tppGrafo pGrafoParm, unsigned long *pTotalEspaco)
+{
+   tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+   *pTotalEspaco = pGrafo->totalEspacoAlocado;
+   return GRA_CondRetOK;
+}
+
 #endif
 
 /*****  Código das funções encapsuladas no módulo  *****/
-
-#ifdef _DEBUG
-
-/************************************************************************/
-/* Funcoes deturpacao                                                   */
-/************************************************************************/
-
-static void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
-{
-  free(pGrafo->pCorrente);
-}
-
-static void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
-{
-   tpAresta *pAresta = NULL;
-   LIS_ObterValor(pGrafo->pCorrente->pSucessores,(void**)&pAresta);
-   pAresta->pVertice = NULL;
-}
-
-static void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo)
-{
-   LIS_AlterarValor(pGrafo->pCorrente->pAntecessores,NULL);
-}
-
-static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
-{
-   tpAresta *pAresta;
-
-   LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void **) &pAresta);
-
-   pAresta->pVertice = (tpVertice*)(EspacoLixo);
-}
-
-/************************************************************************/
-/*Funcao de verificacao                                                 */
-/************************************************************************/
-
-static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalhas)
-{
-   int numVerElem = 0;
-   int erroNaEstrutura = 0;
-
-   LIS_NumELementos(pGrafo->pVertices, &numVerElem);
-   LIS_IrInicioLista(pGrafo->pVertices);
-
-   while(numVerElem > 0)
-   {
-      int numElem = 0;
-      tpVertice *pVertice = NULL;
-
-      CNT_CONTAR("ver01 percorrendo vertices");
-
-      LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
-
-      if (CED_ObterTipoEspaco(pVertice) != GRA_TipoEspacoVertice)
-      {
-         CNT_CONTAR("ver01 vertice foi liberado");
-         TST_NotificarFalha("Encontrado vertice que foi liberado.");
-         erroNaEstrutura = 1;
-         (*numFalhas)++;
-      }
-      else
-      {
-         CNT_CONTAR("ver01 vertice nao foi liberado");
-      }
-
-      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
-      numVerElem--;
-   }
-   CNT_CONTAR("ver01 percorreu todos os vertices");
-
-   if (erroNaEstrutura)
-   {
-      CNT_CONTAR("ver01 com erros na estrutura");
-      return GRA_CondRetErroNaEstrutura;
-   }
-   else
-   {
-      CNT_CONTAR("ver01 sem erros na estrutura");
-      return GRA_CondRetOK;
-   }
-}
-
-static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
-{
-   int numVerElem = 0;
-
-   LIS_NumELementos(pGrafo->pVertices, &numVerElem);
-   LIS_IrInicioLista(pGrafo->pVertices);
-
-   while(numVerElem > 0)
-   {
-      int numElem = 0;
-      tpVertice *pVertice = NULL;
-
-      CNT_CONTAR("ver02 percorrendo vertices");
-
-      LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
-
-      if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
-      {
-         CNT_CONTAR("ver02 vertice eh valido");
-         LIS_NumELementos(pVertice->pSucessores,&numElem);
-         LIS_IrInicioLista(pVertice->pSucessores);
-
-         while(numElem > 0)
-         {
-            tpAresta *pAresta = NULL;
-         
-            CNT_CONTAR("ver02 percorrendo sucessores");
-
-            LIS_ObterValor(pVertice->pSucessores, (void**)&pAresta);
-
-            if(CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
-               pAresta->pVertice == NULL)
-            {
-               CNT_CONTAR("ver02 vertice destino da aresta eh nulo");
-               TST_NotificarFalha("Encontrado vertice sucessor nulo");
-               (*numFalhas)++;
-               return GRA_CondRetErroNaEstrutura;
-            }
-            else
-            {
-               CNT_CONTAR("ver02 vertice destino da aresta nao eh nulo");
-            }
-            LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
-            numElem--;
-         }
-         CNT_CONTAR("ver02 percorreu todos os sucessores");
-      }
-      else
-      {
-         CNT_CONTAR("ver02 vertice nao eh valido");
-      }
-
-      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
-      numVerElem--;
-   }
-   CNT_CONTAR("ver02 percorreu todos os vertices");
-
-   return GRA_CondRetOK;
-}
-
-static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
-{
-   int numVerElem = 0;
-   LIS_NumELementos(pGrafo->pVertices, &numVerElem);
-   LIS_IrInicioLista(pGrafo->pVertices);
-
-   while(numVerElem > 0)
-   {
-      int numElem = 0;
-      tpVertice *pVertice = NULL;
-
-      CNT_CONTAR("ver03 percorre vertices");
-
-      LIS_ObterValor(pGrafo->pVertices, (void**)&pVertice);
-      
-      if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
-      {
-         CNT_CONTAR("ver03 vertice eh valido");
-         LIS_NumELementos(pVertice->pAntecessores, &numElem);
-         LIS_IrInicioLista(pVertice->pAntecessores);
-         while(numElem > 0)
-         {
-            tpVertice *pVerticeAnt = NULL;
-
-            CNT_CONTAR("ver03 percorre antecessores");
-
-            LIS_ObterValor(pVertice->pAntecessores, (void**)&pVerticeAnt);
-
-            if(pVerticeAnt == NULL)
-            {
-               CNT_CONTAR("ver03 antecessor eh nulo");
-               TST_NotificarFalha("Encontrado vertice antecessor nulo");
-               (*numFalhas)++;
-               return GRA_CondRetErroNaEstrutura;
-            }
-            else
-            {
-               CNT_CONTAR("ver03 antecessor nao eh nulo");
-            }
-
-            LIS_AvancarElementoCorrente(pVertice->pAntecessores,1);
-            numElem--;
-         }
-         CNT_CONTAR("ver03 percorreu todos os antecessores");
-      }
-      else
-      {
-         CNT_CONTAR("ver03 vertice nao eh valido");
-      }
-
-      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
-      numVerElem--;
-   }
-   CNT_CONTAR("ver03 percorreu todos os vertices");
-
-   return GRA_CondRetOK;
-}
-
-//TODO [RCS] checar se soluciona o problema de checar espaçoLixo
-static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas)
-{
-   int numVerElem = 0;
-   LIS_NumELementos(pGrafo->pVertices,&numVerElem);
-   LIS_IrInicioLista(pGrafo->pVertices);
-
-   while(numVerElem > 0)
-   {
-      tpVertice *pVertice = NULL;
-      int numElemSucces = 0;
-
-      CNT_CONTAR("ver04 percorre os vertices");
-
-      LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
-
-      if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
-      {
-         CNT_CONTAR("ver04 vertice eh valido");
-         LIS_NumELementos(pVertice->pSucessores,&numElemSucces);
-         LIS_IrInicioLista(pVertice->pSucessores);
-
-         while(numElemSucces > 0)
-         {
-            tpAresta *pAresta = NULL;
-            int numElem = 0;
-
-            CNT_CONTAR("ver04 percorre os sucessores");
-
-            LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
-         
-            if(CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
-               !CED_VerificarEspaco(pAresta->pVertice,NULL))
-            {
-               CNT_CONTAR("ver04 vertice da aresta eh um espaco invalido");
-               TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
-               (*numFalhas)++;
-               return GRA_CondRetErroNaEstrutura;
-            }
-            CNT_CONTAR("ver04 vertice da aresta nao eh um espaco invalido");
-
-            LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
-            numElemSucces--;
-         }
-         CNT_CONTAR("ver04 percorreu todos os sucessores");
-      }
-      else
-      {
-         CNT_CONTAR("ver04 vertice nao eh valido");
-      }
-
-      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
-      numVerElem--;
-   }
-   CNT_CONTAR("ver04 percorreu todos os vertices");
-}
-
-static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas)
-{
-   int numVerElem = 0;
-   LIS_NumELementos(pGrafo->pVertices,&numVerElem);
-   LIS_IrInicioLista(pGrafo->pVertices);
-
-   while(numVerElem > 0)
-   {
-      int numElemAnt = 0;
-      tpVertice *pVertice = NULL;
-
-      CNT_CONTAR("ver05 percorre os vertices");
-      
-      LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
-
-      if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
-      {
-         CNT_CONTAR("ver05 vertice eh valido");
-         LIS_NumELementos(pVertice->pAntecessores,&numElemAnt);
-         LIS_IrInicioLista(pVertice->pAntecessores);
-
-         while(numElemAnt > 0)
-         {
-            tpVertice *pVerticeAnt = NULL;
-      
-            CNT_CONTAR("ver05 percorre os antecessores");
-
-            LIS_ObterValor(pVertice->pAntecessores,(void**)&pVerticeAnt);
-
-            if(!CED_VerificarEspaco(pVerticeAnt,NULL))
-            {
-               CNT_CONTAR("ver05 espaco do antecessor nao eh valido");
-               TST_NotificarFalha("Problema de tipo de espaço na referencia para vertice anterior");
-               (*numFalhas)++;
-               return GRA_CondRetErroNaEstrutura;
-            }
-            else
-            {
-               CNT_CONTAR("ver05 espaco do antecessor eh valido");
-            }
-            LIS_AvancarElementoCorrente(pVertice->pAntecessores,1);
-            numElemAnt--;
-         }
-         CNT_CONTAR("ver05 percorreu todos os antecessores");
-      }
-      else
-      {
-         CNT_CONTAR("ver05 vertice nao eh valido");
-      }
-
-      LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
-      numVerElem--;
-   }
-   CNT_CONTAR("ver05 percorreu todos os vertices");
-
-   return GRA_CondRetOK;
-}
-
-#endif
-
 /***********************************************************************
 *
 *  Função: GRA Destruir vértice
@@ -1351,16 +1159,32 @@ void DestruirVertice(void *pVazio)
 {
 	tpVertice *pVertice = (tpVertice*) pVazio;
 
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pVertice->pAntecessores, &espacoAlocado);
+   pVertice->pGrafo->totalEspacoAlocado -= espacoAlocado;
+   
+   LIS_TotalEspacoAlocado(pVertice->pSucessores, &espacoAlocado);
+   pVertice->pGrafo->totalEspacoAlocado -= espacoAlocado;
+#endif
+
 	LIS_DestruirLista(pVertice->pAntecessores);
 	LIS_DestruirLista(pVertice->pSucessores);
+   
+#ifdef _DEBUG
+   pVertice->pGrafo->totalEspacoAlocado -= _msize(pVertice);
+
+   LIS_TotalEspacoAlocado(pVertice->pAntecessores, &espacoAlocado);
+   pVertice->pGrafo->totalEspacoAlocado += espacoAlocado;
+   
+   LIS_TotalEspacoAlocado(pVertice->pSucessores, &espacoAlocado);
+   pVertice->pGrafo->totalEspacoAlocado += espacoAlocado;
+#endif
 
 	pVertice->destruirValor(pVertice->pValor);
 
 	free(pVertice->nome);
 
 	free(pVertice);
-
-	
 }
 
 /***********************************************************************
@@ -1374,6 +1198,10 @@ void DestruirVertice(void *pVazio)
 void DestruirAresta(void *pVazio)
 {
 	tpAresta *pAresta = (tpAresta*) pVazio;
+   
+#ifdef _DEBUG
+   pAresta->pGrafo->totalEspacoAlocado -= _msize(pAresta);
+#endif
 
 	free(pAresta->nome);
 	free(pAresta);
@@ -1589,12 +1417,22 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
 
 
+/***********************************************************************
+*
+*  Função: GRA Destacar Vértice
+*
+*  Descrição:
+*    Função responsável por destacar o vértice do resto do grafo.
+*    Operação realizada antes de excluir o vértice.
+*
+***********************************************************************/
 void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 {
    
 	tpVertice *pVertice = NULL, *pVerticeOrigem = NULL;
 	tpAresta *pAresta = NULL;
    int numElemLista = 0;
+   LIS_tppLista pAntecessores;
    
    // remove corrente vai para origem
 	// Navega para o inicio da lista de origens
@@ -1611,11 +1449,23 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       int numElems;
       tpAresta *pAresta;
       LIS_ObterValor(pAlvo->pSucessores, (void**) &pAresta);
+      
+      pAntecessores = pAresta->pVertice->pAntecessores;
 
-      LIS_NumELementos(pAresta->pVertice->pAntecessores, &numElems);
-      LIS_IrInicioLista(pAresta->pVertice->pAntecessores);
-      LIS_ProcurarValor(pAresta->pVertice->pAntecessores, pAlvo->nome);
-      LIS_ExcluirElemento(pAresta->pVertice->pAntecessores);
+      #ifdef _DEBUG
+         LIS_TotalEspacoAlocado(pAntecessores, &espacoAlocado);
+         pGrafo->totalEspacoAlocado -= espacoAlocado;
+      #endif
+
+      LIS_NumELementos(pAntecessores, &numElems);
+      LIS_IrInicioLista(pAntecessores);
+      LIS_ProcurarValor(pAntecessores, pAlvo->nome);
+      LIS_ExcluirElemento(pAntecessores);
+      
+      #ifdef _DEBUG
+         LIS_TotalEspacoAlocado(pAntecessores, &espacoAlocado);
+         pGrafo->totalEspacoAlocado += espacoAlocado;
+      #endif
 
       LIS_AvancarElementoCorrente(pAlvo->pSucessores, 1);
       numElemLista--;
@@ -1627,73 +1477,411 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
 	while(numElemLista > 0)
 	{
+      LIS_tppLista pSucessores;
 		int nElem = 0;
 		LIS_ObterValor(pAlvo->pAntecessores,(void**)&pVertice);
 
-		LIS_NumELementos(pVertice->pSucessores, &nElem);
-		LIS_IrInicioLista(pVertice->pSucessores);
+      pSucessores = pVertice->pSucessores;
+
+		LIS_NumELementos(pSucessores, &nElem);
+		LIS_IrInicioLista(pSucessores);
+      
+      #ifdef _DEBUG
+         LIS_TotalEspacoAlocado(pSucessores, &espacoAlocado);
+         pGrafo->totalEspacoAlocado -= espacoAlocado;
+      #endif
 
 		while(nElem > 0)
 		{
-			LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
+			LIS_ObterValor(pSucessores,(void**)&pAresta);
 
 			if(!strcmp(pAresta->pVertice->nome, pAlvo->nome))
 			{
-				LIS_ExcluirElemento(pVertice->pSucessores);
+				LIS_ExcluirElemento(pSucessores);
 				break;
 			}
 
-			LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
+			LIS_AvancarElementoCorrente(pSucessores,1);
 			nElem--;
 		}
+      
+      #ifdef _DEBUG
+         LIS_TotalEspacoAlocado(pSucessores, &espacoAlocado);
+         pGrafo->totalEspacoAlocado += espacoAlocado;
+      #endif
+
 		LIS_AvancarElementoCorrente(pAlvo->pAntecessores,1);
 		numElemLista--;
 	}
+
+   
+   #ifdef _DEBUG
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado -= espacoAlocado;
+   #endif
 
 	//Exclui elemento corrente
 	LIS_IrInicioLista(pGrafo->pVertices);
 	LIS_ProcurarValor(pGrafo->pVertices, pAlvo->nome);
 	LIS_ExcluirElemento(pGrafo->pVertices);
    
+   #ifdef _DEBUG
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+   #endif
+
 	pGrafo->pCorrente = pVerticeOrigem;
 }
 
 #ifdef _DEBUG
-   // Det Grafo Lixo
-   void DET_GrafoEhEspacoLixo(tpGrafo *pGrafo)
-   {
-      free(pGrafo);
-   }
 
-   // Det Espaços
-   void DET_EspalharLixosPelaEstrutura(tpGrafo *pGrafo)
+
+/************************************************************************/
+/*Funcao de verificacao                                                 */
+/************************************************************************/
+/***********************************************************************
+*
+*  Função: GRA Verificação: Nenhum vértice foi liberado
+*
+*  Descrição:
+*    Função de instrumentação que verifica se nenhum vértice foi liberado
+*    sem ter sido devidamente destacado do grafo.
+*
+***********************************************************************/
+   GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalhas)
    {
-      tpVertice *pVertice;
-      tpAresta *pAresta;
-      LIS_AlterarValor(pGrafo->pOrigens, EspacoLixo);
-      LIS_AlterarValor(pGrafo->pVertices, EspacoLixo);
+      int numVerElem = 0;
+      int erroNaEstrutura = 0;
+
+      LIS_NumELementos(pGrafo->pVertices, &numVerElem);
       LIS_IrInicioLista(pGrafo->pVertices);
-      
-      LIS_AvancarElementoCorrente(pGrafo->pVertices, 1);
-      LIS_ObterValor(pGrafo->pVertices, (void**) &pVertice);
-      pVertice->pValor = EspacoLixo;
-      
-      LIS_AlterarValor(pVertice->pSucessores, EspacoLixo);
+
+      while(numVerElem > 0)
+      {
+         int numElem = 0;
+         tpVertice *pVertice = NULL;
+
+         CNT_CONTAR("ver01 percorrendo vertices");
+
+         LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
+
+         if (CED_ObterTipoEspaco(pVertice) != GRA_TipoEspacoVertice)
+         {
+            CNT_CONTAR("ver01 vertice foi liberado");
+            TST_NotificarFalha("Encontrado vertice que foi liberado.");
+            erroNaEstrutura = 1;
+            (*numFalhas)++;
+         }
+         else
+         {
+            CNT_CONTAR("ver01 vertice nao foi liberado");
+         }
+
+         LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+         numVerElem--;
+      }
+      CNT_CONTAR("ver01 percorreu todos os vertices");
+
+      if (erroNaEstrutura)
+      {
+         CNT_CONTAR("ver01 com erros na estrutura");
+         return GRA_CondRetErroNaEstrutura;
+      }
+      else
+      {
+         CNT_CONTAR("ver01 sem erros na estrutura");
+         return GRA_CondRetOK;
+      }
    }
 
-   // Det 05
-   void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Vértice sucessor não é nulo.
+*
+*  Descrição:
+*    Função de instrumentação que verifica se todos os vértices sucessores
+*    são não-nulos.
+*
+***********************************************************************/
+   GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
    {
-      LIS_AlterarValor(pGrafo->pCorrente->pAntecessores, EspacoLixo);
+      int numVerElem = 0;
+
+      LIS_NumELementos(pGrafo->pVertices, &numVerElem);
+      LIS_IrInicioLista(pGrafo->pVertices);
+
+      while(numVerElem > 0)
+      {
+         int numElem = 0;
+         tpVertice *pVertice = NULL;
+
+         CNT_CONTAR("ver02 percorrendo vertices");
+
+         LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
+
+         if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
+         {
+            CNT_CONTAR("ver02 vertice eh valido");
+            LIS_NumELementos(pVertice->pSucessores,&numElem);
+            LIS_IrInicioLista(pVertice->pSucessores);
+
+            while(numElem > 0)
+            {
+               tpAresta *pAresta = NULL;
+         
+               CNT_CONTAR("ver02 percorrendo sucessores");
+
+               LIS_ObterValor(pVertice->pSucessores, (void**)&pAresta);
+
+               if(CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
+                  pAresta->pVertice == NULL)
+               {
+                  CNT_CONTAR("ver02 vertice destino da aresta eh nulo");
+                  TST_NotificarFalha("Encontrado vertice sucessor nulo");
+                  (*numFalhas)++;
+                  return GRA_CondRetErroNaEstrutura;
+               }
+               else
+               {
+                  CNT_CONTAR("ver02 vertice destino da aresta nao eh nulo");
+               }
+               LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
+               numElem--;
+            }
+            CNT_CONTAR("ver02 percorreu todos os sucessores");
+         }
+         else
+         {
+            CNT_CONTAR("ver02 vertice nao eh valido");
+         }
+
+         LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+         numVerElem--;
+      }
+      CNT_CONTAR("ver02 percorreu todos os vertices");
+
+      return GRA_CondRetOK;
    }
 
-   // Det 06
-   void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo)
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Vértice predecessor não é nulo.
+*
+*  Descrição:
+*    Função de instrumentação que verifica se nenhum vértice predecessor
+*    é nulo.
+*
+***********************************************************************/
+   GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
    {
-      pGrafo->pCorrente->pValor = NULL;
+      int numVerElem = 0;
+      LIS_NumELementos(pGrafo->pVertices, &numVerElem);
+      LIS_IrInicioLista(pGrafo->pVertices);
+
+      while(numVerElem > 0)
+      {
+         int numElem = 0;
+         tpVertice *pVertice = NULL;
+
+         CNT_CONTAR("ver03 percorre vertices");
+
+         LIS_ObterValor(pGrafo->pVertices, (void**)&pVertice);
+      
+         if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
+         {
+            CNT_CONTAR("ver03 vertice eh valido");
+            LIS_NumELementos(pVertice->pAntecessores, &numElem);
+            LIS_IrInicioLista(pVertice->pAntecessores);
+            while(numElem > 0)
+            {
+               tpVertice *pVerticeAnt = NULL;
+
+               CNT_CONTAR("ver03 percorre antecessores");
+
+               LIS_ObterValor(pVertice->pAntecessores, (void**)&pVerticeAnt);
+
+               if(pVerticeAnt == NULL)
+               {
+                  CNT_CONTAR("ver03 antecessor eh nulo");
+                  TST_NotificarFalha("Encontrado vertice antecessor nulo");
+                  (*numFalhas)++;
+                  return GRA_CondRetErroNaEstrutura;
+               }
+               else
+               {
+                  CNT_CONTAR("ver03 antecessor nao eh nulo");
+               }
+
+               LIS_AvancarElementoCorrente(pVertice->pAntecessores,1);
+               numElem--;
+            }
+            CNT_CONTAR("ver03 percorreu todos os antecessores");
+         }
+         else
+         {
+            CNT_CONTAR("ver03 vertice nao eh valido");
+         }
+
+         LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+         numVerElem--;
+      }
+      CNT_CONTAR("ver03 percorreu todos os vertices");
+
+      return GRA_CondRetOK;
    }
 
-   // Ver 06
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Não existe lixo na referência para sucessor
+*
+*  Descrição:
+*    Função de instrumentação que verifica se não existe lixo na referência
+*    para nenhum sucessor.
+*
+***********************************************************************/
+   GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas)
+   {
+      int numVerElem = 0;
+      LIS_NumELementos(pGrafo->pVertices,&numVerElem);
+      LIS_IrInicioLista(pGrafo->pVertices);
+
+      while(numVerElem > 0)
+      {
+         tpVertice *pVertice = NULL;
+         int numElemSucces = 0;
+
+         CNT_CONTAR("ver04 percorre os vertices");
+
+         LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
+
+         if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
+         {
+            CNT_CONTAR("ver04 vertice eh valido");
+            LIS_NumELementos(pVertice->pSucessores,&numElemSucces);
+            LIS_IrInicioLista(pVertice->pSucessores);
+
+            while(numElemSucces > 0)
+            {
+               tpAresta *pAresta = NULL;
+               int numElem = 0;
+
+               CNT_CONTAR("ver04 percorre os sucessores");
+
+               LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
+         
+               if(CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
+                  !CED_VerificarEspaco(pAresta->pVertice,NULL))
+               {
+                  CNT_CONTAR("ver04 vertice da aresta eh um espaco invalido");
+                  TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+                  (*numFalhas)++;
+                  return GRA_CondRetErroNaEstrutura;
+               }
+               CNT_CONTAR("ver04 vertice da aresta nao eh um espaco invalido");
+
+               LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
+               numElemSucces--;
+            }
+            CNT_CONTAR("ver04 percorreu todos os sucessores");
+         }
+         else
+         {
+            CNT_CONTAR("ver04 vertice nao eh valido");
+         }
+
+         LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+         numVerElem--;
+      }
+      CNT_CONTAR("ver04 percorreu todos os vertices");
+
+      return GRA_CondRetOK;
+   }
+
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Não existe lixo na referência para antecessor.
+*
+*  Descrição:
+*    Função de instrumentação que verifica se não existe lixo na referência
+*    de nenhum antecessor.
+*
+***********************************************************************/
+   GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas)
+   {
+      int numVerElem = 0;
+      LIS_NumELementos(pGrafo->pVertices,&numVerElem);
+      LIS_IrInicioLista(pGrafo->pVertices);
+
+      while(numVerElem > 0)
+      {
+         int numElemAnt = 0;
+         tpVertice *pVertice = NULL;
+
+         CNT_CONTAR("ver05 percorre os vertices");
+      
+         LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
+
+         if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
+         {
+            CNT_CONTAR("ver05 vertice eh valido");
+            LIS_NumELementos(pVertice->pAntecessores,&numElemAnt);
+            LIS_IrInicioLista(pVertice->pAntecessores);
+
+            while(numElemAnt > 0)
+            {
+               tpVertice *pVerticeAnt = NULL;
+      
+               CNT_CONTAR("ver05 percorre os antecessores");
+
+               LIS_ObterValor(pVertice->pAntecessores,(void**)&pVerticeAnt);
+
+               if(!CED_VerificarEspaco(pVerticeAnt,NULL))
+               {
+                  CNT_CONTAR("ver05 espaco do antecessor nao eh valido");
+                  TST_NotificarFalha("Problema de tipo de espaço na referencia para vertice anterior");
+                  (*numFalhas)++;
+                  return GRA_CondRetErroNaEstrutura;
+               }
+               else
+               {
+                  CNT_CONTAR("ver05 espaco do antecessor eh valido");
+               }
+               LIS_AvancarElementoCorrente(pVertice->pAntecessores,1);
+               numElemAnt--;
+            }
+            CNT_CONTAR("ver05 percorreu todos os antecessores");
+         }
+         else
+         {
+            CNT_CONTAR("ver05 vertice nao eh valido");
+         }
+
+         LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
+         numVerElem--;
+      }
+      CNT_CONTAR("ver05 percorreu todos os vertices");
+
+      return GRA_CondRetOK;
+   }
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Vertices não possuem conteúdo nulo
+*
+*  Descrição:
+*    Função de instrumentação que verifica se não existem vértices que
+*    possuem conteúdo nulo.
+*
+***********************************************************************/
    GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo, int *numFalhas)
    {
       int numElem = 0;
@@ -1729,13 +1917,17 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       return GRA_CondRetOK;
    }
 
-   // Det 07
-   void DET_AlteraTipoDoValorDoVertice(tpGrafo *pGrafo)
-   {
-      CED_DefinirTipoEspaco(pGrafo->pCorrente->pValor, CED_ID_TIPO_VALOR_NULO);
-   }
+   
 
-   // Ver 07
+/***********************************************************************
+*
+*  Função: GRA Verificação: Nenhum vértice tem conteúdo com o tipo corrompido
+*
+*  Descrição:
+*    Função de instrumentação que verifica se nenhum vértice tem conteúdo com o
+*    tipo corrompido.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo, int *numFalhas)
    {
       int numElem = 0;
@@ -1777,13 +1969,17 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       return GRA_CondRetOK;
    }
 
-   // Det 08
-   void DET_DestacaVertice(tpGrafo *pGrafo)
-   {
-      DestacarVertice(pGrafo, pGrafo->pCorrente);
-   }
    
-   // Ver 08
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Nenhum vértice está destacado
+*
+*  Descrição:
+*    Função de instrumentação que verifica se nenhum vértice está destacado
+*    do grafo.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo, int *numFalhas)
    {
       int tamListaVertices;
@@ -1803,13 +1999,16 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       return GRA_CondRetOK;
    }
 
-   // Det 09
-   void DET_AtribuiNullAoCorrente(tpGrafo *pGrafo)
-   {
-      pGrafo->pCorrente = NULL;
-   }
    
-   // Ver 09
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Corrente não é nulo
+*
+*  Descrição:
+*    Função de instrumentação que verifica se o corrente é nulo.
+*
+***********************************************************************/
    GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
    {
       if (pGrafo->pCorrente == NULL)
@@ -1824,24 +2023,16 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
       return GRA_CondRetOK;
    }
+   
 
-   // Det 10
-   void DET_AtribuiNullParaUmaOrigem(tpGrafo *pGrafo)
-   {
-      int *pOrigem;
-      int numOrigens;
-      LIS_NumELementos(pGrafo->pOrigens, &numOrigens);
-      if (numOrigens == 0)
-      {
-         return;
-      }
-
-      LIS_IrFinalLista(pGrafo->pOrigens);
-      LIS_ObterValor(pGrafo->pOrigens, (void**) &pOrigem);
-      *pOrigem = NULL;
-   }
-
-   // Ver 10
+/***********************************************************************
+*
+*  Função: GRA Verificação: Nao existe origem nula
+*
+*  Descrição:
+*    Função de instrumentação que verifica se existe alguma origem nula.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo, int *numFalhas)
    {
       LIS_tpCondRet lisCondRet = LIS_CondRetOK;
@@ -1882,6 +2073,209 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
       return GRA_CondRetOK;
    }
+
+
+
+/************************************************************************/
+/* Funcoes deturpacao                                                   */
+/************************************************************************/
+   
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Elimina elemento corrente
+*
+*  Descrição:
+*    Função de instrumentação que elimina o elemento corrente da estrutura escolhida.
+*
+***********************************************************************/
+   void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
+   {
+     free(pGrafo->pCorrente);
+   }
+   
+   
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Atribui NULL para vertice sucessor
+*
+*  Descrição:
+*    Função de instrumentação que atribui NULL ao ponteiro para um vértice sucessor.
+*
+***********************************************************************/
+   void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
+   {
+      tpAresta *pAresta = NULL;
+      LIS_ObterValor(pGrafo->pCorrente->pSucessores,(void**)&pAresta);
+      pAresta->pVertice = NULL;
+   }
+   
+   
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Atribui NULL ao ponteiro do vertice precessor
+*
+*  Descrição:
+*    Função de instrumentação que atribui NULL ao ponteiro para um vértice predecessor.
+*
+***********************************************************************/
+   void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo)
+   {
+      LIS_AlterarValor(pGrafo->pCorrente->pAntecessores,NULL);
+   }
+   
+   
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Lixo na referência para sucessor
+*
+*  Descrição:
+*    Função de instrumentação que atribui lixo ao ponteiro para a referência a um vértice sucessor
+*
+***********************************************************************/
+   void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
+   {
+      tpAresta *pAresta;
+
+      LIS_ObterValor(pGrafo->pCorrente->pSucessores, (void **) &pAresta);
+
+      pAresta->pVertice = (tpVertice*)(EspacoLixo);
+   }
+   
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Lixo na referência para antecessor
+*
+*  Descrição:
+*    Função de instrumentação que atribui lixo ao ponteiro para a referência a um vértice predecessor.
+*
+***********************************************************************/
+   void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
+   {
+      LIS_AlterarValor(pGrafo->pCorrente->pAntecessores, EspacoLixo);
+   }
+   
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Conteudo do vértice para NULL
+*
+*  Descrição:
+*    Função de instrumentação que atribui NULL ao ponteiro para o conteúdo do vértice.
+*
+***********************************************************************/
+   void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo)
+   {
+      pGrafo->pCorrente->pValor = NULL;
+   }
+   
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Altera tipo do valor do vertice.
+*
+*  Descrição:
+*    Função de instrumentação que altera o tipo de estrutura apontado no vértice.
+*
+***********************************************************************/
+   void DET_AlteraTipoDoValorDoVertice(tpGrafo *pGrafo)
+   {
+      CED_DefinirTipoEspaco(pGrafo->pCorrente->pValor, CED_ID_TIPO_VALOR_NULO);
+   }
+   
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Destaca Vertice
+*
+*  Descrição:
+*    Função de instrumentação que destaca vértice do grafo sem liberá-lo com free.
+*
+***********************************************************************/
+   void DET_DestacaVertice(tpGrafo *pGrafo)
+   {
+      DestacarVertice(pGrafo, pGrafo->pCorrente);
+   }
+
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Atribui null ao corrente
+*
+*  Descrição:
+*    Função de instrumentação que atribui NULL ao ponteiro corrente.
+*
+***********************************************************************/
+   void DET_AtribuiNullAoCorrente(tpGrafo *pGrafo)
+   {
+      pGrafo->pCorrente = NULL;
+   }
+
+
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Atribui null para uma origem
+*
+*  Descrição:
+*    Função de instrumentação que atribui NULL a um ponteiro de origem.
+*
+***********************************************************************/
+   void DET_AtribuiNullParaUmaOrigem(tpGrafo *pGrafo)
+   {
+      int *pOrigem;
+      int numOrigens;
+      LIS_NumELementos(pGrafo->pOrigens, &numOrigens);
+      if (numOrigens == 0)
+      {
+         return;
+      }
+
+      LIS_IrFinalLista(pGrafo->pOrigens);
+      LIS_ObterValor(pGrafo->pOrigens, (void**) &pOrigem);
+      *pOrigem = NULL;
+   }
+
+   
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Grafo eh espaco lixo
+*
+*  Descrição:
+*    Função de instrumentação que torna a referencia do grafo inválida
+*
+***********************************************************************/
+   void DET_GrafoEhEspacoLixo(tpGrafo *pGrafo)
+   {
+      free(pGrafo);
+   }
+   
+   
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Espalha lixos pela estrutura
+*
+*  Descrição:
+*    Função de instrumentação que substitui algumas referências por lixo.
+*
+***********************************************************************/
+   void DET_EspalharLixosPelaEstrutura(tpGrafo *pGrafo)
+   {
+      tpVertice *pVertice;
+      LIS_AlterarValor(pGrafo->pOrigens, EspacoLixo);
+      LIS_AlterarValor(pGrafo->pVertices, EspacoLixo);
+      LIS_IrInicioLista(pGrafo->pVertices);
+      
+      LIS_AvancarElementoCorrente(pGrafo->pVertices, 1);
+      LIS_ObterValor(pGrafo->pVertices, (void**) &pVertice);
+      pVertice->pValor = EspacoLixo;
+      
+      LIS_AlterarValor(pVertice->pSucessores, EspacoLixo);
+   }
+
+   
 #endif
 
 /********** Fim do módulo de implementação: GRA Grafo direcionado **********/

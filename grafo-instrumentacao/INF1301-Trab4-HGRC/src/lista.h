@@ -16,6 +16,7 @@
 *     1.0     rc    12/set/2013 Adaptação da função CriarLista para ser testavel e inserção de somente valores char.
 *     2.0     rc    15/set/2013 Implementação e adaptação do restante das funções para trabalhar somente com o tipo char.
 *     3.0     hg    10/out/2013 Adaptação do módulo para trabalhar com uma lista cujos valores terão um tipo qualquer.
+*     4.0     hg    03/dez/2013 Instrumentação para a estrutura saber o total de espaço alocado por ela.
 *
 *  Descrição do módulo
 *     Implementa listas genéricas duplamente encadeadas com manipulação,
@@ -492,6 +493,35 @@ typedef struct LIS_stLista * LIS_tppLista ;
    *
    ***********************************************************************/
    LIS_tpCondRet LIS_AlterarValor(LIS_tppLista ppLista, void * pValor);
+
+#ifdef _DEBUG
+
+   /***********************************************************************
+   *
+   *  Função: LIS Total espaço alocado
+   *
+   *  Descrição
+   *     Pega o total de espaço alocado pela lista
+   *
+   *  Parâmetros
+   *     pLista              - ponteiro para a lista onde procura
+   *     pTotalEspacoAlocado - ponteiro que ira armazenar o total de espaço alocado
+   *
+   *  Retorno por referência
+   *     pTotalEspacoAlocado - O total de espaço alocado.
+   *
+   *  Condições de retorno
+   *     LIS_CondRetOK
+   *
+   *  Assertivas de entrada
+   *     - Valem as assertivas estruturais da lista duplamente encadeada com cabeça.
+   *
+   *  Assertivas de saída
+   *     - Valem as assertivas estruturais da lista duplamente encadeada com cabeça.
+   *
+   ***********************************************************************/
+   LIS_tpCondRet LIS_TotalEspacoAlocado(LIS_tppLista pLista, unsigned long *pTotalEspacoAlocado);
+#endif
 
 /***********************************************************************/
 #undef LISTA_EXT
