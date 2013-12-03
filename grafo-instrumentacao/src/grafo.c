@@ -1531,7 +1531,15 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 /************************************************************************/
 /*Funcao de verificacao                                                 */
 /************************************************************************/
-
+/***********************************************************************
+*
+*  Função: GRA Verificação: Nenhum vértice foi liberado
+*
+*  Descrição:
+*    Função de instrumentação que verifica se nenhum vértice foi liberado
+*    sem ter sido devidamente destacado do grafo.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalhas)
    {
       int numVerElem = 0;
@@ -1578,6 +1586,17 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       }
    }
 
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Vértice sucessor não é nulo.
+*
+*  Descrição:
+*    Função de instrumentação que verifica se todos os vértices sucessores
+*    são não-nulos.
+*
+***********************************************************************/
    GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
    {
       int numVerElem = 0;
@@ -1638,6 +1657,17 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       return GRA_CondRetOK;
    }
 
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Vértice predecessor não é nulo.
+*
+*  Descrição:
+*    Função de instrumentação que verifica se nenhum vértice predecessor
+*    é nulo.
+*
+***********************************************************************/
    GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
    {
       int numVerElem = 0;
@@ -1696,6 +1726,17 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       return GRA_CondRetOK;
    }
 
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Não existe lixo na referência para sucessor
+*
+*  Descrição:
+*    Função de instrumentação que verifica se não existe lixo na referência
+*    para nenhum sucessor.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas)
    {
       int numVerElem = 0;
@@ -1754,6 +1795,17 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       return GRA_CondRetOK;
    }
 
+   
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Não existe lixo na referência para antecessor.
+*
+*  Descrição:
+*    Função de instrumentação que verifica se não existe lixo na referência
+*    de nenhum antecessor.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas)
    {
       int numVerElem = 0;
@@ -1811,8 +1863,17 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
       return GRA_CondRetOK;
    }
+   
 
-   // Ver 06
+/***********************************************************************
+*
+*  Função: GRA Verificação: Vertices não possuem conteúdo nulo
+*
+*  Descrição:
+*    Função de instrumentação que verifica se não existem vértices que
+*    possuem conteúdo nulo.
+*
+***********************************************************************/
    GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo, int *numFalhas)
    {
       int numElem = 0;
@@ -1849,7 +1910,16 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
 
    
-   // Ver 07
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Nenhum vértice tem conteúdo com o tipo corrompido
+*
+*  Descrição:
+*    Função de instrumentação que verifica se nenhum vértice tem conteúdo com o
+*    tipo corrompido.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo, int *numFalhas)
    {
       int numElem = 0;
@@ -1892,7 +1962,16 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
 
    
-   // Ver 08
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Nenhum vértice está destacado
+*
+*  Descrição:
+*    Função de instrumentação que verifica se nenhum vértice está destacado
+*    do grafo.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo, int *numFalhas)
    {
       int tamListaVertices;
@@ -1913,7 +1992,15 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
 
    
-   // Ver 09
+
+/***********************************************************************
+*
+*  Função: GRA Verificação: Corrente não é nulo
+*
+*  Descrição:
+*    Função de instrumentação que verifica se o corrente é nulo.
+*
+***********************************************************************/
    GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
    {
       if (pGrafo->pCorrente == NULL)
@@ -1928,8 +2015,16 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
       return GRA_CondRetOK;
    }
+   
 
-   // Ver 10
+/***********************************************************************
+*
+*  Função: GRA Verificação: Nao existe origem nula
+*
+*  Descrição:
+*    Função de instrumentação que verifica se existe alguma origem nula.
+*
+***********************************************************************/
    GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo, int *numFalhas)
    {
       LIS_tpCondRet lisCondRet = LIS_CondRetOK;
@@ -1972,49 +2067,66 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
 
 
-   // Det Grafo Lixo
-   void DET_GrafoEhEspacoLixo(tpGrafo *pGrafo)
-   {
-      free(pGrafo);
-   }
-
-   // Det Espaços
-   void DET_EspalharLixosPelaEstrutura(tpGrafo *pGrafo)
-   {
-      tpVertice *pVertice;
-      LIS_AlterarValor(pGrafo->pOrigens, EspacoLixo);
-      LIS_AlterarValor(pGrafo->pVertices, EspacoLixo);
-      LIS_IrInicioLista(pGrafo->pVertices);
-      
-      LIS_AvancarElementoCorrente(pGrafo->pVertices, 1);
-      LIS_ObterValor(pGrafo->pVertices, (void**) &pVertice);
-      pVertice->pValor = EspacoLixo;
-      
-      LIS_AlterarValor(pVertice->pSucessores, EspacoLixo);
-   }
-
 
 /************************************************************************/
 /* Funcoes deturpacao                                                   */
 /************************************************************************/
-
+   
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Elimina elemento corrente
+*
+*  Descrição:
+*    Função de instrumentação que elimina o elemento corrente da estrutura escolhida.
+*
+***********************************************************************/
    void DET_EliminaElementoCorrente(tpGrafo *pGrafo)
    {
      free(pGrafo->pCorrente);
    }
+   
+   
 
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Atribui NULL para vertice sucessor
+*
+*  Descrição:
+*    Função de instrumentação que atribui NULL ao ponteiro para um vértice sucessor.
+*
+***********************************************************************/
    void DET_AtribuiNullParaVerticeSucessor(tpGrafo *pGrafo)
    {
       tpAresta *pAresta = NULL;
       LIS_ObterValor(pGrafo->pCorrente->pSucessores,(void**)&pAresta);
       pAresta->pVertice = NULL;
    }
+   
+   
 
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Atribui NULL ao ponteiro do vertice precessor
+*
+*  Descrição:
+*    Função de instrumentação que atribui NULL ao ponteiro para um vértice predecessor.
+*
+***********************************************************************/
    void DET_AtribuiNullAOPonteiroDoVerticePredecessor(tpGrafo *pGrafo)
    {
       LIS_AlterarValor(pGrafo->pCorrente->pAntecessores,NULL);
    }
+   
+   
 
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Lixo na referência para sucessor
+*
+*  Descrição:
+*    Função de instrumentação que atribui lixo ao ponteiro para a referência a um vértice sucessor
+*
+***********************************************************************/
    void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
    {
       tpAresta *pAresta;
@@ -2027,10 +2139,10 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
 /***********************************************************************
 *
-*  Função: GRA Deturpação: Atribui null ao corrente
+*  Função: GRA Deturpação: Lixo na referência para antecessor
 *
 *  Descrição:
-*    Função de instrumentação que atribui NULL ao ponteiro corrente.
+*    Função de instrumentação que atribui lixo ao ponteiro para a referência a um vértice predecessor.
 *
 ***********************************************************************/
    void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
@@ -2117,6 +2229,45 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       LIS_ObterValor(pGrafo->pOrigens, (void**) &pOrigem);
       *pOrigem = NULL;
    }
+
+   
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Grafo eh espaco lixo
+*
+*  Descrição:
+*    Função de instrumentação que torna a referencia do grafo inválida
+*
+***********************************************************************/
+   void DET_GrafoEhEspacoLixo(tpGrafo *pGrafo)
+   {
+      free(pGrafo);
+   }
+   
+   
+/***********************************************************************
+*
+*  Função: GRA Deturpação: Espalha lixos pela estrutura
+*
+*  Descrição:
+*    Função de instrumentação que substitui algumas referências por lixo.
+*
+***********************************************************************/
+   void DET_EspalharLixosPelaEstrutura(tpGrafo *pGrafo)
+   {
+      tpVertice *pVertice;
+      LIS_AlterarValor(pGrafo->pOrigens, EspacoLixo);
+      LIS_AlterarValor(pGrafo->pVertices, EspacoLixo);
+      LIS_IrInicioLista(pGrafo->pVertices);
+      
+      LIS_AvancarElementoCorrente(pGrafo->pVertices, 1);
+      LIS_ObterValor(pGrafo->pVertices, (void**) &pVertice);
+      pVertice->pValor = EspacoLixo;
+      
+      LIS_AlterarValor(pVertice->pSucessores, EspacoLixo);
+   }
+
+   
 #endif
 
 /********** Fim do módulo de implementação: GRA Grafo direcionado **********/
