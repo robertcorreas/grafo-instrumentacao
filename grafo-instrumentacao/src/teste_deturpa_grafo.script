@@ -14,9 +14,6 @@
 == Declarar outros parâmetros
 =declararparm   NULL           string "!N!"
 
-== Declarar condicoes de verificacao
-=declararparm   TesteOK             int 0
-=declararparm   TesteERRO           int 6
 //*********************************
 
 == Iniciar contagem
@@ -28,9 +25,9 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 1
-=verificar                          TesteERRO
+=verificar                          2
 =AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
 // Não destroi pois voa
 
@@ -42,9 +39,9 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 2
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
@@ -58,9 +55,9 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 3
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
@@ -73,9 +70,9 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 4
-=verificar                          TesteERRO
+=verificar                          2
 =AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
 =destruirGrafo                      OK
 
@@ -88,9 +85,9 @@
 =insAresta       "aa"   "A"   "A"   OK
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 5
-=verificar                          TesteERRO
+=verificar                          2
 =AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
 =destruirGrafo                      OK
 
@@ -99,9 +96,9 @@
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 6
-=verificar                          TesteERRO
+=verificar                          2
 =AceitaFalhasAcumuladas 2
 =destruirGrafo                      OK
 
@@ -110,9 +107,9 @@
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 7
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
@@ -128,18 +125,18 @@
 =insAresta       "bc"   "B"   "C"   OK
 =insAresta       "ca"   "C"   "A"   OK
 =insAresta       "cb"   "C"   "B"   OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 8
-=verificar TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 == Deturpação 09: Atribui null ao ponteiro corrente
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 9
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
@@ -147,9 +144,9 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 10
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 

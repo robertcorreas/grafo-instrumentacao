@@ -132,17 +132,17 @@ typedef struct stGrafo {
    static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo);
 
    //Verificacao
-   static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo);
-   static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo);
-   static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo);
-   static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas);
+   static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas);
+   static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas);
+   static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas);
 
-   static GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo);
-   static GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo);
-   static GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo);
-   static GRA_tpCondRet VER_ReferenciasDoVerticeEstaoCorretas(tpVertice *pVerticeVerificado);
-   static GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo);
-   static GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo);
+   static GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo, int *numFalhas);
+   static GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo, int *numFalhas);
+   static GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo, int *numFalhas);
+   static GRA_tpCondRet VER_ReferenciasDoVerticeEstaoCorretas(tpVertice *pVerticeVerificado, int *numFalhas);
+   static GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo, int *numFalhas);
+   static GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo, int *numFalhas);
 
    static void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo);
    static void DET_ConteudoDoVerticeNULL(tpGrafo *pGrafo);
@@ -614,18 +614,20 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 
 #ifdef _DEBUG
 
-static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo)
+static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo, int *numFalhas)
 {
    int numElemVer = 0, numElemOri = 0;
    if(!CED_VerificarEspaco(pGrafo,NULL))
    {
       TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+      (*numFalhas)++;
       return GRA_CondRetErroNaEstrutura;
    }
 
    if(!CED_VerificarEspaco(pGrafo->pCorrente,NULL))
    {
       TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+      (*numFalhas)++;
       return GRA_CondRetErroNaEstrutura;
    }
 
@@ -638,7 +640,7 @@ static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo)
       int numElemSuc = 0, numElemAnt = 0;
       LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
 
-      if(VerificaVertice(pVertice) == GRA_CondRetErroNaEstrutura)
+      if(VerificaVertice(pVertice,numFalhas) == GRA_CondRetErroNaEstrutura)
       {
          return GRA_CondRetErroNaEstrutura;
       }
@@ -659,6 +661,7 @@ static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo)
       if(!CED_VerificarEspaco(pVerticeOri,NULL))
       {
          TST_NotificarFalha( "Controle do espaço acusou erro no ponteiro vertice origem." ) ;
+         (*numFalhas)++;
          return GRA_CondRetErroNaEstrutura;
       }
       LIS_AvancarElementoCorrente(pGrafo->pOrigens,1);
@@ -669,18 +672,20 @@ static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo)
 }
 
 // Checa os espaços do vertice, das arestas + vertices apontados por elas e os vertices antecessores
-static GRA_tpCondRet VerificaVertice(tpVertice *pVertice)
+static GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int* numFalhas)
 {
    int numElemSuc = 0, numElemAnt = 0;
    if(!CED_VerificarEspaco(pVertice,NULL))
    {
       TST_NotificarFalha( "Controle do espaço acusou erro no vertice da lista de vertices." ) ;
+      (*numFalhas)++;
       return GRA_CondRetErroNaEstrutura;
    }
 
    if(!CED_VerificarEspaco(pVertice->pValor,NULL))
    {
       TST_NotificarFalha( "Controle do espaço acusou erro no valor do vertice." ) ;
+      (*numFalhas)++;
       return GRA_CondRetErroNaEstrutura;
    }
 
@@ -697,12 +702,14 @@ static GRA_tpCondRet VerificaVertice(tpVertice *pVertice)
       if(!CED_VerificarEspaco(pAresta,NULL))
       {
          TST_NotificarFalha( "Controle do espaço acusou erro na aresta." ) ;
+         (*numFalhas)++;
          return GRA_CondRetErroNaEstrutura;
       }
 
       if(!CED_VerificarEspaco(pAresta->pVertice,NULL))
       {
          TST_NotificarFalha( "Controle do espaço acusou erro no ponteiro vertice da aresta." ) ;
+         (*numFalhas)++;
          return GRA_CondRetErroNaEstrutura;
       }
       LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
@@ -721,6 +728,7 @@ static GRA_tpCondRet VerificaVertice(tpVertice *pVertice)
       if(!CED_VerificarEspaco(pVerticeAnt,NULL))
       {
          TST_NotificarFalha( "Controle do espaço acusou erro no ponteiro vertice antecessor." ) ;
+         (*numFalhas)++;
          return GRA_CondRetErroNaEstrutura;
       }
       LIS_AvancarElementoCorrente(pVertice->pAntecessores,1);
@@ -815,12 +823,12 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 *  Função: GRA  Verificar grafo
 *  ****/
 
-GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
+GRA_tpCondRet GRA_Verificar(void *pGrafoParm, int *numFalhas)
 {
    int erroNaEstrutura = 0;
    tpGrafo *pGrafo = NULL;
    GRA_tpCondRet ret;
-
+   
    if (pGrafoParm == NULL)
    {
       CNT_CONTAR("ver00 grafo nao existe");
@@ -832,7 +840,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    pGrafo = (tpGrafo*) pGrafoParm;
 
 
-    ret = VER_VerificaEspaçosDoGrafo(pGrafo);
+    ret = VER_VerificaEspaçosDoGrafo(pGrafo, numFalhas);
     if (ret == GRA_CondRetErroNaEstrutura)
     {
        //CNT_CONTAR("espaços do grafo estão invalidos");
@@ -840,7 +848,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
     }
     //CNT_CONTAR("espaços do grafo estão validos");
 
-   ret = VER_NenhumVerticeFoiLiberado(pGrafo);
+   ret = VER_NenhumVerticeFoiLiberado(pGrafo, numFalhas);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       CNT_CONTAR("ver00 existe vertice liberado");
@@ -848,7 +856,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    }
    CNT_CONTAR("ver00 nao existe vertice liberado");
 
-    ret = VER_VerticeSucessorNaoEhNulo(pGrafo);
+    ret = VER_VerticeSucessorNaoEhNulo(pGrafo, numFalhas);
     if (ret == GRA_CondRetErroNaEstrutura)
     {
        CNT_CONTAR("ver00 existe vertice cujo sucessor eh nulo");
@@ -856,13 +864,13 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
     }
     CNT_CONTAR("ver00 nao existe vertice cujo sucessor eh nulo");
 
-    ret = VER_VerticePredecessorNaoEhNulo(pGrafo);
+    ret = VER_VerticePredecessorNaoEhNulo(pGrafo, numFalhas);
     if (ret == GRA_CondRetErroNaEstrutura)
     {
        erroNaEstrutura = 1;
     }
 
-   ret = VER_NaoExisteLixoNaReferenciaParaSucessor(pGrafo);
+   ret = VER_NaoExisteLixoNaReferenciaParaSucessor(pGrafo, numFalhas);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       CNT_CONTAR("ver00 existe vertice que tem lixo como referencia para sucessor");
@@ -870,7 +878,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    }
    CNT_CONTAR("ver00 nao existe vertice que tem lixo como referencia para sucessor");
 
-   ret = VER_NaoExisteLixoNaReferenciaParaAntecessor(pGrafo);
+   ret = VER_NaoExisteLixoNaReferenciaParaAntecessor(pGrafo, numFalhas);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       CNT_CONTAR("ver00 existe vertice que tem lixo como referencia para antecessor");
@@ -878,7 +886,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    }
    CNT_CONTAR("ver00 nao existe vertice que tem lixo como referencia para antecessor");
 
-   ret = VER_VerticesNaoPossuemConteudoNulo(pGrafo);
+   ret = VER_VerticesNaoPossuemConteudoNulo(pGrafo, numFalhas);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       CNT_CONTAR("ver00 existe um vertice com conteudo nulo");
@@ -886,7 +894,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    }
    CNT_CONTAR("ver00 nao existe um vertice com conteudo nulo");
    
-   ret = VER_NenhumVerticeTemConteudoComOTipoCorrompido(pGrafo);
+   ret = VER_NenhumVerticeTemConteudoComOTipoCorrompido(pGrafo, numFalhas);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       erroNaEstrutura = 1;
@@ -894,7 +902,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    }
    CNT_CONTAR("ver00 nao existe vertice com conteudo de tipo errado");
 
-    ret = VER_NenhumVerticeEstaDestacado(pGrafo);
+    ret = VER_NenhumVerticeEstaDestacado(pGrafo, numFalhas);
     if (ret == GRA_CondRetErroNaEstrutura)
     {
       CNT_CONTAR("ver00 existe vertice destacado");
@@ -902,7 +910,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
     }
     CNT_CONTAR("ver00 nao existe vertice destacado");
    
-   ret = VER_CorrenteNaoEhNulo(pGrafo);
+   ret = VER_CorrenteNaoEhNulo(pGrafo, numFalhas);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       erroNaEstrutura = 1;
@@ -910,7 +918,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    }
    CNT_CONTAR("ver00 corrente nao eh nulo");
    
-   ret = VER_NaoExisteOrigemNula(pGrafo);
+   ret = VER_NaoExisteOrigemNula(pGrafo, numFalhas);
    if (ret == GRA_CondRetErroNaEstrutura)
    {
       CNT_CONTAR("ver00 existe origem nula");
@@ -968,7 +976,7 @@ static void DET_LixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
 /*Funcao de verificacao                                                 */
 /************************************************************************/
 
-static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo)
+static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
    int erroNaEstrutura = 0;
@@ -990,6 +998,7 @@ static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo)
          CNT_CONTAR("ver01 vertice foi liberado");
          TST_NotificarFalha("Encontrado vertice que foi liberado.");
          erroNaEstrutura = 1;
+         (*numFalhas)++;
       }
       else
       {
@@ -1013,7 +1022,7 @@ static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo)
    }
 }
 
-static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
+static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
 
@@ -1046,6 +1055,7 @@ static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
             {
                CNT_CONTAR("ver02 vertice destino da aresta eh nulo");
                TST_NotificarFalha("Encontrado vertice sucessor nulo");
+               (*numFalhas)++;
                return GRA_CondRetErroNaEstrutura;
             }
             else
@@ -1070,7 +1080,7 @@ static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
    return GRA_CondRetOK;
 }
 
-static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo)
+static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
    LIS_NumELementos(pGrafo->pVertices, &numVerElem);
@@ -1102,6 +1112,7 @@ static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo)
             {
                CNT_CONTAR("ver03 antecessor eh nulo");
                TST_NotificarFalha("Encontrado vertice antecessor nulo");
+               (*numFalhas)++;
                return GRA_CondRetErroNaEstrutura;
             }
             else
@@ -1128,7 +1139,7 @@ static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo)
 }
 
 //TODO [RCS] checar se soluciona o problema de checar espaçoLixo
-static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
+static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
    LIS_NumELementos(pGrafo->pVertices,&numVerElem);
@@ -1162,6 +1173,7 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
             {
                CNT_CONTAR("ver04 vertice da aresta eh um espaco invalido");
                TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+               (*numFalhas)++;
                return GRA_CondRetErroNaEstrutura;
             }
             CNT_CONTAR("ver04 vertice da aresta nao eh um espaco invalido");
@@ -1182,7 +1194,7 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
    CNT_CONTAR("ver04 percorreu todos os vertices");
 }
 
-static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
+static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo, int *numFalhas)
 {
    int numVerElem = 0;
    LIS_NumELementos(pGrafo->pVertices,&numVerElem);
@@ -1215,6 +1227,7 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo
             {
                CNT_CONTAR("ver05 espaco do antecessor nao eh valido");
                TST_NotificarFalha("Problema de tipo de espaço na referencia para vertice anterior");
+               (*numFalhas)++;
                return GRA_CondRetErroNaEstrutura;
             }
             else
@@ -1574,7 +1587,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
 
    // Ver 06
-   GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo)
+   GRA_tpCondRet VER_VerticesNaoPossuemConteudoNulo(tpGrafo *pGrafo, int *numFalhas)
    {
       int numElem = 0;
       LIS_NumELementos(pGrafo->pVertices,&numElem);
@@ -1592,6 +1605,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
          {
             CNT_CONTAR("ver06 valor do vertice eh null");
             TST_NotificarFalha("Encontrado valor NULL para conteudo do vertice");
+            (*numFalhas)++;
             return GRA_CondRetErroNaEstrutura;
          }
          else
@@ -1615,7 +1629,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
 
    // Ver 07
-   GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo)
+   GRA_tpCondRet VER_NenhumVerticeTemConteudoComOTipoCorrompido(tpGrafo *pGrafo, int *numFalhas)
    {
       int numElem = 0;
       LIS_NumELementos(pGrafo->pVertices,&numElem);
@@ -1636,6 +1650,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
             {
                CNT_CONTAR("ver07 tipo do valor esta correto");
                TST_NotificarFalha("Encontrado vértice cujo valor está com o tipo errado.");
+               (*numFalhas)++;
                return GRA_CondRetErroNaEstrutura;
             }
             else
@@ -1662,7 +1677,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
    
    // Ver 08
-   GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo)
+   GRA_tpCondRet VER_NenhumVerticeEstaDestacado(tpGrafo *pGrafo, int *numFalhas)
    {
       int tamListaVertices;
 
@@ -1672,6 +1687,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       {
          CNT_CONTAR("ver08 tamanho da lista de vertices diferente da quantidade de vertices");
          TST_NotificarFalha("Existem vertices destacados na estrutura.");
+         (*numFalhas)++;
          return GRA_CondRetErroNaEstrutura;
       }
       
@@ -1687,12 +1703,13 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
    
    // Ver 09
-   GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo)
+   GRA_tpCondRet VER_CorrenteNaoEhNulo(tpGrafo *pGrafo, int *numFalhas)
    {
       if (pGrafo->pCorrente == NULL)
       {
          CNT_CONTAR("ver09 se corrente nulo");
          TST_NotificarFalha("Corrente não existe.");
+         (*numFalhas)++;
          return GRA_CondRetErroNaEstrutura;
       }
       
@@ -1718,7 +1735,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
    }
 
    // Ver 10
-   GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo)
+   GRA_tpCondRet VER_NaoExisteOrigemNula(tpGrafo *pGrafo, int *numFalhas)
    {
       LIS_tpCondRet lisCondRet = LIS_CondRetOK;
       int estaVazia;
@@ -1744,6 +1761,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
          {
             CNT_CONTAR("ver10 valor origem eh nula");
             TST_NotificarFalha("Encontrada origem nula.");
+            (*numFalhas)++;
             return GRA_CondRetErroNaEstrutura;
          }
          else
