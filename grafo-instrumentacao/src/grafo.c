@@ -719,7 +719,7 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 
 #ifdef _DEBUG
 
-static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo, int *numFalhas)
+GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo, int *numFalhas)
 {
    int erroNaEstrutura = 0;
    int numElemVer = 0, numElemOri = 0;
@@ -803,7 +803,7 @@ static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo, int *numFalhas)
 }
 
 // Checa os espaços do vertice, das arestas + vertices apontados por elas e os vertices antecessores
-static GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int* numFalhas)
+GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int* numFalhas)
 {
    int erroNaEstrutura = 0;
    int numElemSuc = 0, numElemAnt = 0;
