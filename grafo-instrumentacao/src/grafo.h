@@ -520,7 +520,7 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
    *     - Valem as assertivas estruturais do grafo direcionado.
    *
    ***********************************************************************/
-   void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpa);
+   GRA_tpCondRet GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpa);
 
 
    

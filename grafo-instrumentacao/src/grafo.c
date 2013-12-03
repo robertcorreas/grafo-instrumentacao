@@ -917,7 +917,7 @@ static GRA_tpCondRet VerificaVertice(tpVertice *pVertice, int* numFalhas)
 *  Função: GRA  Deturpar grafo
 *  ****/
 
-void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
+GRA_tpCondRet GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
 {
 
    tpGrafo *pGrafo = NULL ;
@@ -1000,6 +1000,8 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
          break;
       }
    }
+
+   return GRA_CondRetOK;
 }
 
 /***************************************************************************
