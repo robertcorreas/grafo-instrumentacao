@@ -25,8 +25,8 @@
 =iniciarcontagem
 
 == Total de contadores
-=verificarcontagens    70
-=AceitaFalhasAcumuladas 70
+=verificarcontagens    80
+=AceitaFalhasAcumuladas 80
 
 == Deturpação 01: Elimina o elemento corrente da lista de vértices
 =criarGrafo                         OK

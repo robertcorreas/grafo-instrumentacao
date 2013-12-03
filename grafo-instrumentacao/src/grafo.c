@@ -902,6 +902,7 @@ static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
 
       if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
       {
+         CNT_CONTAR("ver02 vertice eh valido");
          LIS_NumELementos(pVertice->pSucessores,&numElem);
          LIS_IrInicioLista(pVertice->pSucessores);
 
@@ -926,6 +927,10 @@ static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
             numElem--;
          }
          CNT_CONTAR("ver02 percorreu todos os sucessores");
+      }
+      else
+      {
+         CNT_CONTAR("ver02 vertice nao eh valido");
       }
 
       LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
@@ -953,6 +958,7 @@ static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo)
       
       if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
       {
+         CNT_CONTAR("ver03 vertice eh valido");
          LIS_NumELementos(pVertice->pAntecessores, &numElem);
          LIS_IrInicioLista(pVertice->pAntecessores);
          while(numElem > 0)
@@ -978,6 +984,10 @@ static GRA_tpCondRet VER_VerticePredecessorNaoEhNulo(tpGrafo *pGrafo)
             numElem--;
          }
          CNT_CONTAR("ver03 percorreu todos os antecessores");
+      }
+      else
+      {
+         CNT_CONTAR("ver03 vertice nao eh valido");
       }
 
       LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
@@ -1006,6 +1016,7 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
 
       if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
       {
+         CNT_CONTAR("ver04 vertice eh valido");
          LIS_NumELementos(pVertice->pSucessores,&numElemSucces);
          LIS_IrInicioLista(pVertice->pSucessores);
 
@@ -1031,6 +1042,10 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
          }
          CNT_CONTAR("ver04 percorreu todos os sucessores");
       }
+      else
+      {
+         CNT_CONTAR("ver04 vertice nao eh valido");
+      }
 
       LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
       numVerElem--;
@@ -1055,6 +1070,7 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo
 
       if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
       {
+         CNT_CONTAR("ver05 vertice eh valido");
          LIS_NumELementos(pVertice->pAntecessores,&numElemAnt);
          LIS_IrInicioLista(pVertice->pAntecessores);
 
@@ -1080,6 +1096,10 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo
             numElemAnt--;
          }
          CNT_CONTAR("ver05 percorreu todos os antecessores");
+      }
+      else
+      {
+         CNT_CONTAR("ver05 vertice nao eh valido");
       }
 
       LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
@@ -1481,6 +1501,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
          if (CED_ObterTipoEspaco(pVertice) == GRA_TipoEspacoVertice)
          {
+            CNT_CONTAR("ver07 vertice eh valido");
             tipoValor = (CED_tpIdTipoEspaco) CED_ObterTipoEspaco(pVertice->pValor);
             if (tipoValor != GRA_TipoEspacoValorVertice)
             {
@@ -1492,6 +1513,10 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
             {
                CNT_CONTAR("ver07 tipo do valor nao esta correto");
             }
+         }
+         else
+         {
+            CNT_CONTAR("ver07 vertice nao eh valido");
          }
          LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
          numElem--;
