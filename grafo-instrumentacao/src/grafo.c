@@ -833,6 +833,7 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm, int *numFalhas)
    {
       CNT_CONTAR("ver00 grafo nao existe");
       TST_NotificarFalha("Tentou verificar um grafo que não existe.");
+      (*numFalhas)++;
       return GRA_CondRetErroNaEstrutura;
    }
    CNT_CONTAR("ver00 grafo existe");

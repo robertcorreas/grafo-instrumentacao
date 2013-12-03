@@ -14,9 +14,6 @@
 == Declarar outros parâmetros
 =declararparm   NULL           string "!N!"
 
-== Declarar condicoes de verificacao
-=declararparm   TesteOK             int 0
-=declararparm   TesteERRO           int 6
 //*********************************
 
 == Iniciar contagem
@@ -32,10 +29,10 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
-=verificar                          TesteOK
+=verificar                          0
 =deturpar 1
-=verificar                          TesteERRO
-=AceitaFalhasAcumuladas 1
+=verificar                          2
+=AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
 // Não destroi pois voa
 
 == Deturpação 02: Atribui NULL ao ponteiro para um vértice sucessor
@@ -46,10 +43,12 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
+=verificar                          0
 =deturpar 2
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
+
 
 
 == Deturpação 03: Atribui NULL ao ponteiro para um vértice predecessor
@@ -60,8 +59,9 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
+=verificar                          0
 =deturpar 3
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
@@ -74,10 +74,13 @@
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
 =insAresta       "bb"   "B"   "B"   OK
+=verificar                          0
 =deturpar 4
-=verificar                          TesteERRO
-=AceitaFalhasAcumuladas 1
+=verificar                          2
+=AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
 =destruirGrafo                      OK
+
+
 
 == Deturpação 05: Atribui lixo para a referência à um vértice antecessor
 =criarGrafo                         OK
@@ -86,9 +89,10 @@
 =insAresta       "aa"   "A"   "A"   OK
 =insAresta       "ab"   "A"   "B"   OK
 =insAresta       "ba"   "B"   "A"   OK
+=verificar                          0
 =deturpar 5
-=verificar                          TesteERRO
-=AceitaFalhasAcumuladas 1
+=verificar                          2
+=AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
 =destruirGrafo                      OK
 
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
@@ -96,8 +100,9 @@
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
+=verificar                          0
 =deturpar 6
-=verificar                          TesteERRO
+=verificar                          2
 =AceitaFalhasAcumuladas 2
 =destruirGrafo                      OK
 
@@ -106,8 +111,9 @@
 =insVertice      "A"    "vA"        OK
 =insVertice      "B"    "vB"        OK
 =insVertice      "C"    "vC"        OK
+=verificar                          0
 =deturpar 7
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
@@ -123,16 +129,18 @@
 =insAresta       "bc"   "B"   "C"   OK
 =insAresta       "ca"   "C"   "A"   OK
 =insAresta       "cb"   "C"   "B"   OK
+=verificar                          0
 =deturpar 8
-=verificar TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 == Deturpação 09: Atribui null ao ponteiro corrente
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
+=verificar                          0
 =deturpar 9
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
@@ -140,20 +148,21 @@
 =criarGrafo                         OK
 =insVertice      "A"    "vA"        OK
 =tornarOrigem                       OK
+=verificar                          0
 =deturpar 10
-=verificar                          TesteERRO
+=verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
 
 == Verificacao de um Grafo simples
 =criarGrafo                           OK
 =insVertice      "A"    "vA"          OK
-=verificar                            TesteOK
+=verificar                            0
 =destruirGrafo                        OK
 
 
 == Verificacao de um grafo nulo
-=verificar                            TesteERRO
+=verificar                            1
 =AceitaFalhasAcumuladas 1
 
 == Verificar se não sobrou contador zerado
