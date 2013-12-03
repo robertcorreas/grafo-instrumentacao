@@ -1,0 +1,128 @@
+////////////////////////////////////////////////
+//
+// Arquivo de declaração de contadores
+// para o módulo Grafo
+//
+///////////////////////////////////////////////
+
+    ver10 se origens vazia
+    ver10 se origens nao vazia
+    ver10 percorre origens
+    ver10 valor origem eh nula
+    ver10 valor origem nao eh nula
+    ver10 saiu do percorre origens
+    
+    ver09 se corrente nulo
+    ver09 se corrente nao-nulo
+
+    ver08 tamanho da lista de vertices diferente da quantidade de vertices
+    ver08 tamanho da lista de vertices igual ah quantidade de vertices
+
+    ver07 percorre vertices
+    ver07 tipo do valor esta correto
+    ver07 tipo do valor nao esta correto
+    ver07 percorreu todos os vertices
+    ver07 vertice eh valido
+    ver07 vertice nao eh valido
+    
+    ver06 percorre vertices
+    ver06 valor do vertice eh null
+    ver06 valor do vertice nao eh null
+    ver06 percorreu todos os vertices
+
+    ver05 percorre os vertices
+    ver05 percorre os antecessores
+    ver05 espaco do antecessor nao eh valido
+    ver05 espaco do antecessor eh valido
+    ver05 percorreu todos os antecessores
+    ver05 percorreu todos os vertices
+    ver05 vertice eh valido
+    ver05 vertice nao eh valido
+
+    ver04 percorre os vertices
+    ver04 percorre os sucessores
+    ver04 vertice da aresta eh um espaco invalido
+    ver04 vertice da aresta nao eh um espaco invalido
+    ver04 percorreu todos os sucessores
+    ver04 percorreu todos os vertices
+    ver04 vertice eh valido
+    ver04 vertice nao eh valido
+
+    ver03 percorre vertices
+    ver03 percorre antecessores
+    ver03 antecessor eh nulo
+    ver03 antecessor nao eh nulo
+    ver03 percorreu todos os antecessores
+    ver03 percorreu todos os vertices
+    ver03 vertice eh valido
+    ver03 vertice nao eh valido
+
+    ver02 percorrendo vertices
+    ver02 percorrendo sucessores
+    ver02 vertice destino da aresta eh nulo
+    ver02 vertice destino da aresta nao eh nulo
+    ver02 percorreu todos os sucessores
+    ver02 percorreu todos os vertices
+    ver02 vertice eh valido
+    ver02 vertice nao eh valido
+
+    ver01 percorrendo vertices
+    ver01 vertice foi liberado
+    ver01 vertice nao foi liberado
+    ver01 percorreu todos os vertices
+    ver01 com erros na estrutura
+    ver01 sem erros na estrutura
+
+    verEspacos corrente eh espaco valido
+    verEspacos corrente nao eh espaco valido
+    verEspacos percorre vertices
+    verEspacos erro encontrado em vertice
+    verEspacos sem erros encontrados em vertice
+    verEspacos percorreu todos os vertices
+    verEspacos percorre origens
+    verEspacos erro encontrado em origem
+    verEspacos sem erros encontrados em origem
+    verEspacos percorreu todas as origens
+    verEspacos vertice eh valido
+    verEspacos vertice nao eh valido
+    verEspacos valor vertice nao eh valido
+    verEspacos valor vertice eh valido
+    verEspacos percorrer sucessores
+    verEspacos aresta nao eh valida
+    verEspacos aresta eh valida
+    verEspacos sucessor nao eh valido
+    verEspacos sucessor eh valido
+    verEspacos percorreu todos os sucessores
+    verEspacos percorre antecessores
+    verEspacos antecessor nao eh valido
+    verEspacos antecessor eh valido
+    verEspacos percorreu todos os antecessores
+    verEspacos estrutura contem erros
+    verEspacos estrutura nao contem erros
+    verEspacos vertice contem erros
+    verEspacos vertice nao contem erros
+
+    ver00 foi encontrado algum espaco invalido
+    ver00 nao foi encontrado algum espaco invalido
+    ver00 existe vertice liberado
+    ver00 nao existe vertice liberado
+    ver00 existe vertice cujo sucessor eh nulo
+    ver00 nao existe vertice cujo sucessor eh nulo
+    ver00 existe vertice que tem lixo como referencia para sucessor
+    ver00 nao existe vertice que tem lixo como referencia para sucessor
+    ver00 existe vertice que tem lixo como referencia para antecessor
+    ver00 nao existe vertice que tem lixo como referencia para antecessor
+    ver00 existe um vertice com conteudo nulo
+    ver00 nao existe um vertice com conteudo nulo
+    ver00 grafo existe
+    ver00 grafo nao existe
+    ver00 existe vertice com conteudo de tipo errado
+    ver00 nao existe vertice com conteudo de tipo errado
+    ver00 existe vertice destacado
+    ver00 nao existe vertice destacado
+    ver00 corrente eh nulo
+    ver00 corrente nao eh nulo
+    ver00 existe origem nula
+    ver00 nao existe origem nula
+    ver00 sem erros na estrutura
+    ver00 com erros na estrutura
