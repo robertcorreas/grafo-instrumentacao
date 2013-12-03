@@ -67,6 +67,11 @@ static GRA_tppGrafo pGrafo = NULL;
 *    =irVertice                    nome CondRetEsp
 *    =irPelaAresta                 nome CondRetEsp
 *    =destruirCorr                 CondRetEsp
+*    =deturpar                     IdModoDeturpacao
+*    =verificar                    QntFalhasEsperadas
+*
+*    Em debug:
+*
 *    =destruirAresta               nome CondRetEsp
 *    =tornarOrigem                 CondRetEsp
 *
