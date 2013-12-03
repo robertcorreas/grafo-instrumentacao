@@ -273,7 +273,11 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafoParm, char *nomeVertice, voi
 	pVertice->nome = nomeVertice;
 	pVertice->pValor = pValor;
 	pVertice->destruirValor = pGrafo->destruirValor;
+
+#if _DEBUG
    pVertice->pGrafo = pGrafo;
+#endif
+   
 
 	LIS_CriarLista(&pVertice->pAntecessores, NULL, CompararVerticeENome);
 	LIS_CriarLista(&pVertice->pSucessores, DestruirAresta, CompararArestaENome);
@@ -380,7 +384,11 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
 
 	pAresta->nome = nomeAresta;
    pAresta->pVertice = pVerticeDestino;
+
+#if _DEBUG
    pAresta->pGrafo = pGrafo;
+#endif
+   
 
    #ifdef _DEBUG
       CED_DefinirTipoEspaco( pAresta , GRA_TipoEspacoAresta ) ;
