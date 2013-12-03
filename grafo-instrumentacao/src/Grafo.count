@@ -28,6 +28,34 @@
     ver06 valor do vertice nao eh null
     ver06 percorreu todos os vertices
 
+    ver05 percorre os vertices
+    ver05 percorre os antecessores
+    ver05 espaco do antecessor nao eh valido
+    ver05 espaco do antecessor eh valido
+    ver05 percorreu todos os antecessores
+    ver05 percorreu todos os vertices
+
+    ver04 percorre os vertices
+    ver04 percorre os sucessores
+    ver04 vertice da aresta eh um espaco invalido
+    ver04 vertice da aresta nao eh um espaco invalido
+    ver04 percorreu todos os sucessores
+    ver04 percorreu todos os vertices
+
+    ver03 percorre vertices
+    ver03 percorre antecessores
+    ver03 antecessor eh nulo
+    ver03 antecessor nao eh nulo
+    ver03 percorreu todos os antecessores
+    ver03 percorreu todos os vertices
+
+    ver02 percorrendo vertices
+    ver02 percorrendo sucessores
+    ver02 vertice destino da aresta eh nulo
+    ver02 vertice destino da aresta nao eh nulo
+    ver02 percorreu todos os sucessores
+    ver02 percorreu todos os vertices
+
     ver00 existe vertice cujo sucessor eh nulo
     ver00 nao existe vertice cujo sucessor eh nulo
     ver00 existe vertice que tem lixo como referencia para sucessor

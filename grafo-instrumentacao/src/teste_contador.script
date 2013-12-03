@@ -25,8 +25,8 @@
 =iniciarcontagem
 
 == Total de contadores
-=verificarcontagens    38
-=AceitaFalhasAcumuladas 38
+=verificarcontagens    62
+=AceitaFalhasAcumuladas 62
 
 == Deturpação 02: Atribui NULL ao ponteiro para um vértice sucessor
 =criarGrafo                         OK
