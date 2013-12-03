@@ -1,0 +1,44 @@
+== Apresentação == 
+
+Este texto descreve como estão organizados os arquivos deste trabalho.
+
+== Objetivo ==
+
+O objetivo é, dado o módulo grafo, utililzar ferramentas de instrumentação para torna-lo uma estrutura auto-verificável.
+
+== Arquivos e diretórios detalhados ==
+
+1 - batches: contem os arquivos .bat que efetuam os testes no módulo grafo. Tanto com instrumentação quanto sem.
+	- Instrumentação.bat: executa testes do executavel de instrumentação. Gera arquivos de log.
+	- Produção.bat: executa testes do executavel de produção. Gera arquivos de log.
+	- TestaTudo: Executa todos os testes, tanto de produção quanto de instrumentação. Gera arquivos de log.
+2 - DEBUG: esta pasta contém o executável com código de instrumentação.
+	- TRAB4-1.EXE: executável de instrumentação.
+3 - documentos: contém os relatórios, modelos e demais documentos.
+	
+4 - ferramentas: auxiliam na exibição de resultados dos testes.
+5 - RELEASE: contém o executável de produção.
+	- TRAB4-2.EXE: executável de produção.
+6 - src: esta pasta contém todos os arquivos fonte usado para o desenvolvimento deste trabalho (scripts, arquivos de .def, cabeçalho de contadores, arquivos de definição e implementação, etc).
+	- grafo.c: arquivo de implementação do grafo.
+	- Grafo.count: arquivo de declaração de contadores para o módulo Grafo.
+	- grafo.h: arquivo de definição do grafo.
+	- ldTiposEspaço.def: arquivo contendo as definições de tipo de espaços. Tais definições serão usadas pela parte de instrumentação.
+	- lista.c: arquivo de implementação da lista. É usada pelo grafo.
+	- lista.h: arquivo de definição da lista.
+	- test_gra.c: arquivo de implementação da parte especifica do framework arcabouço, responsavel por fazer a comunicação entre o script e o módulo a ser testado.
+	- teste_contador.script: script responsavel por fazer o teste de cobertura de arestas no módulo grafo.
+	- teste_controle_espaco.script: script responsável por verificar a condição da memoria e da integridade do módulo grafo.
+	- teste_deturpa_grafo.scritp: testa o grafo como uma estrutura auto-verificável.
+	- teste_grafo.script: teste realizado para o grafo de produção.
+	- TiposEspaçosGrafo.def: arquivo de definição contendo definições de tipos para as estruturas do módulo grafo.
+
+== Procedimento para testes ==
+
+1 - Abrir a pasta batches
+2 - Executar TestaTudo.bat, caso queira testar tudo de uma vez.
+3 - Executar Instrumentação.bat, caso queira testar apenas a parte de instrumentação.
+4 - Executar Producao.bat, caso queira testar apenas a parte de produção.
+
+
+
