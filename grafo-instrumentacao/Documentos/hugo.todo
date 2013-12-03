@@ -1,7 +1,4 @@
 - Falta definir o tipo do grafo em debug e alterar na verificacao 7
-- documentar o DestacarVertice
-- documentação do grafo TotalEspacoAlocado
-- doc pra verificação e deturpação
 
 
 - cade destruir aresta no DestruirArestaAdjacente?
