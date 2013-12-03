@@ -77,7 +77,7 @@
 =verificar                          TesteOK
 =deturpar 4
 =verificar                          TesteERRO
-=AceitaFalhasAcumuladas 1
+=AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
 =destruirGrafo                      OK
 
 
@@ -92,7 +92,7 @@
 =verificar                          TesteOK
 =deturpar 5
 =verificar                          TesteERRO
-=AceitaFalhasAcumuladas 1
+=AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
 =destruirGrafo                      OK
 
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
