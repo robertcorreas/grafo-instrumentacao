@@ -852,24 +852,34 @@ static GRA_tpCondRet VER_NenhumVerticeFoiLiberado(tpGrafo *pGrafo)
       int numElem = 0;
       tpVertice *pVertice = NULL;
 
+      CNT_CONTAR("ver01 percorrendo vertices");
+
       LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
 
       if (CED_ObterTipoEspaco(pVertice) != GRA_TipoEspacoVertice)
       {
+         CNT_CONTAR("ver01 vertice foi liberado");
          TST_NotificarFalha("Encontrado vertice que foi liberado.");
          erroNaEstrutura = 1;
+      }
+      else
+      {
+         CNT_CONTAR("ver01 vertice nao foi liberado");
       }
 
       LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
       numVerElem--;
    }
+   CNT_CONTAR("ver01 percorreu todos os vertices");
 
    if (erroNaEstrutura)
    {
+      CNT_CONTAR("ver01 com erros na estrutura");
       return GRA_CondRetErroNaEstrutura;
    }
    else
    {
+      CNT_CONTAR("ver01 sem erros na estrutura");
       return GRA_CondRetOK;
    }
 }

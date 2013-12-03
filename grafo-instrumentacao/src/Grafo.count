@@ -56,6 +56,13 @@
     ver02 percorreu todos os sucessores
     ver02 percorreu todos os vertices
 
+    ver01 percorrendo vertices
+    ver01 vertice foi liberado
+    ver01 vertice nao foi liberado
+    ver01 percorreu todos os vertices
+    ver01 com erros na estrutura
+    ver01 sem erros na estrutura
+
     ver00 existe vertice liberado
     ver00 nao existe vertice liberado
     ver00 existe vertice cujo sucessor eh nulo
