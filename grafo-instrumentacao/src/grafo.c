@@ -1722,6 +1722,15 @@ int ExisteOrigem(tpGrafo *pGrafo, char *nome)
 
 
 
+/***********************************************************************
+*
+*  Função: GRA Destacar Vértice
+*
+*  Descrição:
+*    Função responsável por destacar o vértice do resto do grafo.
+*    Operação realizada antes de excluir o vértice.
+*
+***********************************************************************/
 void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 {
    
