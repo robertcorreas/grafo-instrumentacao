@@ -73,6 +73,11 @@ typedef struct stVerticeGrafo {
 	void * pValor;
 	/* valor contido no vértice */
 
+#ifdef _DEBUG
+   struct stGrafo *pGrafo;
+   /* Ponteiro para o cabeça cujo vertice pertence */
+#endif
+
 } tpVertice;
 
 /***********************************************************************
@@ -86,6 +91,11 @@ typedef struct stArestaGrafo {
 
 	tpVertice * pVertice;
 	/* Ponteiro para o vértice destino da aresta */
+
+#ifdef _DEBUG
+   struct stGrafo *pGrafo;
+   /* Ponteiro para o cabeça cuja aresta pertence */
+#endif
 
 } tpAresta;
 
@@ -110,6 +120,11 @@ typedef struct stGrafo {
 
 #ifdef _DEBUG
    unsigned int qntVertices;
+   /* Quantidade de vértices que foram adicionados através da interface
+      exportada */
+
+   unsigned long totalEspacoAlocado;
+   /* Tamanho em bytes de todo espaço alocado para o armazenamento do grafo */
 #endif
 
 } tpGrafo;
@@ -120,6 +135,8 @@ typedef struct stGrafo {
    static char EspacoLixo[256] =
             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
          /* Espaço de dados lixo usado ao testar */
+   
+   static unsigned long espacoAlocado;
 #endif
 
 /***** Protótipos das funções encapuladas no módulo *****/
@@ -188,6 +205,15 @@ GRA_tpCondRet GRA_CriarGrafo(GRA_tppGrafo *ppGrafo,
    #ifdef _DEBUG
       CED_DefinirTipoEspaco(pGrafo, GRA_TipoEspacoCabeca);
       pGrafo->qntVertices = 0;
+      
+      pGrafo->totalEspacoAlocado = _msize(pGrafo);
+      
+      LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+      
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+      
       CED_MarcarEspacoAtivo(pGrafo);
    #endif
 
@@ -245,20 +271,37 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafoParm, char *nomeVertice, voi
 	pVertice->nome = nomeVertice;
 	pVertice->pValor = pValor;
 	pVertice->destruirValor = pGrafo->destruirValor;
+   pVertice->pGrafo = pGrafo;
 
 	LIS_CriarLista(&pVertice->pAntecessores, NULL, CompararVerticeENome);
 	LIS_CriarLista(&pVertice->pSucessores, DestruirAresta, CompararArestaENome);
 
+   #ifdef _DEBUG
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado -= espacoAlocado;
+   #endif
+
+	pGrafo->pCorrente = pVertice;
+	LIS_InserirElementoApos(pGrafo->pVertices, pVertice);
+   
    #ifdef _DEBUG
       CED_DefinirTipoEspaco(pVertice, GRA_TipoEspacoVertice);
       CED_DefinirTipoEspaco(pVertice->pValor, GRA_TipoEspacoValorVertice);
       pGrafo->qntVertices++;
       CED_MarcarEspacoAtivo(pVertice);
       CED_MarcarEspacoAtivo(pVertice->pValor);
-   #endif
 
-	pGrafo->pCorrente = pVertice;
-	LIS_InserirElementoApos(pGrafo->pVertices, pVertice);
+      pGrafo->totalEspacoAlocado += _msize(pVertice);
+
+      LIS_TotalEspacoAlocado(pVertice->pAntecessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+
+      LIS_TotalEspacoAlocado(pVertice->pSucessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+      
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+   #endif
 
 	return GRA_CondRetOK;
 }
@@ -311,6 +354,14 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
 		return GRA_CondRetFaltouMemoria;
 	}
 
+   #ifdef _DEBUG
+      LIS_TotalEspacoAlocado(pVerticeDestino->pAntecessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado -= espacoAlocado;
+
+      LIS_TotalEspacoAlocado(pVerticeOrigem->pSucessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado -= espacoAlocado;
+   #endif
+
    // Atualiza os antecessores do vértice destino
 	lisCondRet = LIS_InserirElementoApos(pVerticeDestino->pAntecessores, pVerticeOrigem);
 	if (lisCondRet == LIS_CondRetFaltouMemoria)
@@ -327,10 +378,19 @@ GRA_tpCondRet GRA_InserirAresta(GRA_tppGrafo pGrafoParm,
 
 	pAresta->nome = nomeAresta;
    pAresta->pVertice = pVerticeDestino;
+   pAresta->pGrafo = pGrafo;
 
    #ifdef _DEBUG
       CED_DefinirTipoEspaco( pAresta , GRA_TipoEspacoAresta ) ;
       CED_MarcarEspacoAtivo(pAresta);
+
+      pGrafo->totalEspacoAlocado += _msize(pAresta);
+      
+      LIS_TotalEspacoAlocado(pVerticeDestino->pAntecessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+
+      LIS_TotalEspacoAlocado(pVerticeOrigem->pSucessores, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
    #endif
 
 	return GRA_CondRetOK;
@@ -403,7 +463,18 @@ GRA_tpCondRet GRA_TornarCorrenteUmaOrigem(GRA_tppGrafo pGrafoParm)
       return GRA_CondRetJaExiste;
    }
 
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+   pGrafo->totalEspacoAlocado -= espacoAlocado;
+#endif
+
 	LIS_InserirElementoApos(pGrafo->pOrigens, pGrafo->pCorrente);
+
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+   pGrafo->totalEspacoAlocado += espacoAlocado;
+#endif
+
 	return GRA_CondRetOK;
 }
 
@@ -430,7 +501,17 @@ GRA_tpCondRet GRA_DeixarDeSerOrigem(GRA_tppGrafo pGrafoParm)
       return GRA_CondRetNaoAchou;
    }
 
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+   pGrafo->totalEspacoAlocado -= espacoAlocado;
+#endif
+
    LIS_ExcluirElemento(pGrafo->pOrigens);
+
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pGrafo->pOrigens, &espacoAlocado);
+   pGrafo->totalEspacoAlocado += espacoAlocado;
+#endif
 
    return GRA_CondRetOK;
 }
@@ -480,6 +561,7 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
 	tpGrafo *pGrafo = NULL;
 	tpAresta *pAresta = NULL;
 	GRA_tpCondRet graCondRet;
+   LIS_tppLista pAntecessores, pSucessores;
 
 	if (pGrafoParm == NULL)
 	{
@@ -500,12 +582,31 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
       return GRA_CondRetNaoAchou;
    }
 
-	// Remove referência do vértice corrente
-	LIS_IrInicioLista(pAresta->pVertice->pAntecessores);
-	LIS_ProcurarValor(pAresta->pVertice->pAntecessores,pGrafo->pCorrente->nome);
+   pAntecessores = pAresta->pVertice->pAntecessores;
+   pSucessores = pGrafo->pCorrente->pSucessores;
 
-	LIS_ExcluirElemento(pAresta->pVertice->pAntecessores);
-	LIS_ExcluirElemento(pGrafo->pCorrente->pSucessores);
+	// Remove referência do vértice corrente
+	LIS_IrInicioLista(pAntecessores);
+	LIS_ProcurarValor(pAntecessores, pGrafo->pCorrente->nome);
+
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pAntecessores, &espacoAlocado);
+   pGrafo->totalEspacoAlocado -= espacoAlocado;
+   
+   LIS_TotalEspacoAlocado(pSucessores, &espacoAlocado);
+   pGrafo->totalEspacoAlocado -= espacoAlocado;
+#endif
+
+	LIS_ExcluirElemento(pAntecessores);
+	LIS_ExcluirElemento(pSucessores);
+   
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pAntecessores, &espacoAlocado);
+   pGrafo->totalEspacoAlocado += espacoAlocado;
+   
+   LIS_TotalEspacoAlocado(pSucessores, &espacoAlocado);
+   pGrafo->totalEspacoAlocado += espacoAlocado;
+#endif
 
 	return GRA_CondRetOK;
 }
@@ -1018,6 +1119,19 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm, int *numFalhas)
    return GRA_CondRetOK;
 }
 
+
+
+/***************************************************************************
+*
+*  Função: GRA  Total espaço alocado
+*  ****/
+GRA_tpCondRet GRA_TotalEspacoAlocado(GRA_tppGrafo pGrafoParm, unsigned long *pTotalEspaco)
+{
+   tpGrafo *pGrafo = (tpGrafo*) pGrafoParm;
+   *pTotalEspaco = pGrafo->totalEspacoAlocado;
+   return GRA_CondRetOK;
+}
+
 #endif
 
 /*****  Código das funções encapsuladas no módulo  *****/
@@ -1336,7 +1450,6 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaAntecessor(tpGrafo *pGrafo
 
    return GRA_CondRetOK;
 }
-
 #endif
 
 /***********************************************************************
@@ -1351,16 +1464,32 @@ void DestruirVertice(void *pVazio)
 {
 	tpVertice *pVertice = (tpVertice*) pVazio;
 
+#ifdef _DEBUG
+   LIS_TotalEspacoAlocado(pVertice->pAntecessores, &espacoAlocado);
+   pVertice->pGrafo->totalEspacoAlocado -= espacoAlocado;
+   
+   LIS_TotalEspacoAlocado(pVertice->pSucessores, &espacoAlocado);
+   pVertice->pGrafo->totalEspacoAlocado -= espacoAlocado;
+#endif
+
 	LIS_DestruirLista(pVertice->pAntecessores);
 	LIS_DestruirLista(pVertice->pSucessores);
+   
+#ifdef _DEBUG
+   pVertice->pGrafo->totalEspacoAlocado -= _msize(pVertice);
+
+   LIS_TotalEspacoAlocado(pVertice->pAntecessores, &espacoAlocado);
+   pVertice->pGrafo->totalEspacoAlocado += espacoAlocado;
+   
+   LIS_TotalEspacoAlocado(pVertice->pSucessores, &espacoAlocado);
+   pVertice->pGrafo->totalEspacoAlocado += espacoAlocado;
+#endif
 
 	pVertice->destruirValor(pVertice->pValor);
 
 	free(pVertice->nome);
 
 	free(pVertice);
-
-	
 }
 
 /***********************************************************************
@@ -1374,6 +1503,10 @@ void DestruirVertice(void *pVazio)
 void DestruirAresta(void *pVazio)
 {
 	tpAresta *pAresta = (tpAresta*) pVazio;
+   
+#ifdef _DEBUG
+   pAresta->pGrafo->totalEspacoAlocado -= _msize(pAresta);
+#endif
 
 	free(pAresta->nome);
 	free(pAresta);
@@ -1595,6 +1728,7 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 	tpVertice *pVertice = NULL, *pVerticeOrigem = NULL;
 	tpAresta *pAresta = NULL;
    int numElemLista = 0;
+   LIS_tppLista pAntecessores;
    
    // remove corrente vai para origem
 	// Navega para o inicio da lista de origens
@@ -1611,11 +1745,23 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
       int numElems;
       tpAresta *pAresta;
       LIS_ObterValor(pAlvo->pSucessores, (void**) &pAresta);
+      
+      pAntecessores = pAresta->pVertice->pAntecessores;
 
-      LIS_NumELementos(pAresta->pVertice->pAntecessores, &numElems);
-      LIS_IrInicioLista(pAresta->pVertice->pAntecessores);
-      LIS_ProcurarValor(pAresta->pVertice->pAntecessores, pAlvo->nome);
-      LIS_ExcluirElemento(pAresta->pVertice->pAntecessores);
+      #ifdef _DEBUG
+         LIS_TotalEspacoAlocado(pAntecessores, &espacoAlocado);
+         pGrafo->totalEspacoAlocado -= espacoAlocado;
+      #endif
+
+      LIS_NumELementos(pAntecessores, &numElems);
+      LIS_IrInicioLista(pAntecessores);
+      LIS_ProcurarValor(pAntecessores, pAlvo->nome);
+      LIS_ExcluirElemento(pAntecessores);
+      
+      #ifdef _DEBUG
+         LIS_TotalEspacoAlocado(pAntecessores, &espacoAlocado);
+         pGrafo->totalEspacoAlocado += espacoAlocado;
+      #endif
 
       LIS_AvancarElementoCorrente(pAlvo->pSucessores, 1);
       numElemLista--;
@@ -1627,34 +1773,59 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 
 	while(numElemLista > 0)
 	{
+      LIS_tppLista pSucessores;
 		int nElem = 0;
 		LIS_ObterValor(pAlvo->pAntecessores,(void**)&pVertice);
 
-		LIS_NumELementos(pVertice->pSucessores, &nElem);
-		LIS_IrInicioLista(pVertice->pSucessores);
+      pSucessores = pVertice->pSucessores;
+
+		LIS_NumELementos(pSucessores, &nElem);
+		LIS_IrInicioLista(pSucessores);
+      
+      #ifdef _DEBUG
+         LIS_TotalEspacoAlocado(pSucessores, &espacoAlocado);
+         pGrafo->totalEspacoAlocado -= espacoAlocado;
+      #endif
 
 		while(nElem > 0)
 		{
-			LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
+			LIS_ObterValor(pSucessores,(void**)&pAresta);
 
 			if(!strcmp(pAresta->pVertice->nome, pAlvo->nome))
 			{
-				LIS_ExcluirElemento(pVertice->pSucessores);
+				LIS_ExcluirElemento(pSucessores);
 				break;
 			}
 
-			LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
+			LIS_AvancarElementoCorrente(pSucessores,1);
 			nElem--;
 		}
+      
+      #ifdef _DEBUG
+         LIS_TotalEspacoAlocado(pSucessores, &espacoAlocado);
+         pGrafo->totalEspacoAlocado += espacoAlocado;
+      #endif
+
 		LIS_AvancarElementoCorrente(pAlvo->pAntecessores,1);
 		numElemLista--;
 	}
+
+   
+   #ifdef _DEBUG
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado -= espacoAlocado;
+   #endif
 
 	//Exclui elemento corrente
 	LIS_IrInicioLista(pGrafo->pVertices);
 	LIS_ProcurarValor(pGrafo->pVertices, pAlvo->nome);
 	LIS_ExcluirElemento(pGrafo->pVertices);
    
+   #ifdef _DEBUG
+      LIS_TotalEspacoAlocado(pGrafo->pVertices, &espacoAlocado);
+      pGrafo->totalEspacoAlocado += espacoAlocado;
+   #endif
+
 	pGrafo->pCorrente = pVerticeOrigem;
 }
 
