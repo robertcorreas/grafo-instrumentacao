@@ -2,7 +2,9 @@
 // Autores:     Robert Correa e Hugo Roque
 // Data:      03/dez/2013
 // Propósito: Testar as deturpações disponíveis e a verificação
-// sobre elas.
+// sobre elas, utilizado principalmente durante o desenvolvimento,
+// pois ele ignora as contagens, possibilitando focar na funcionalidade
+// em questão.
 //
 
 == Declarar as condicoes de retorno
