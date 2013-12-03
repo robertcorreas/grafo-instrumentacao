@@ -1,0 +1,15 @@
+Data                Horas Trabalhadas    Tipo de Tarefa                                             Descrição
+24/nov/2013	        3                    estudar                                                    Estudo do uso de CESPDIN e CONTA.
+25/nov/2013	        3                    estudar                                                    Compilação do modulo de instrumentação (arvore) contido no arcabouço para fins de estudo
+31/nov/2013         2                    codificar modulo                                           Prepação do visual studio para trabalhar com os modulos de instrumentação do arcabouço
+31/nov/2013         5                    codificar modulo                                           Criação de funções de deturpação
+31/nov/2013         8                    codificar modulo                                           Criação de funções de verificação
+01/nov/2013         4                    testar modulo                                              Testar funções de deturpação
+01/nov/2013         5                    testar modulo                                              Testar funções de verificação
+01/nov/2013         3                    revisar código do modulo                                   Revisar código das funções de verificação e deturpação
+02/nov/2013         3                    codificar modulo                                           Corrigir problemas encotrado na revisão e testes
+02/nov/2013         0.5                  especificação do modulo                                    Adaptação do modelo físico para atender novos campos de instrumentação
+03/nov/2013         1                    testar modulos                                             Bateria de testes dos módulos através do programa principal
+03/nov/2013         1.5                  organizar codigo para entrega                              Criação da estrutura de diretórios e configuração de batches de testes + LEIA-ME
+
+
