@@ -1,18 +1,12 @@
-// Script:    teste_grafo.script
-// Autor:     Robert Correa
-// Data:      03/out/2013
-// Propósito: Testar completamente o módulo grafo genérico
+// Script:    teste_deturpa_grafo.script
+// Autores:     Robert Correa e Hugo Roque
+// Data:      03/dez/2013
+// Propósito: Testar as deturpações disponíveis e a verificação
+// sobre elas.
 //
 
 == Declarar as condicoes de retorno
 =declararparm   OK             int  0
-=declararparm   EstaVazio      int  1
-=declararparm   NaoExiste      int  2
-=declararparm   NaoAchou       int  3
-=declararparm   JaExiste       int  4
-
-== Declarar outros parâmetros
-=declararparm   NULL           string "!N!"
 
 //*********************************
 
@@ -149,6 +143,32 @@
 =verificar                          1
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
+
+
+== Deturpação 11: Espalha lixo
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=tornarOrigem                       OK
+=insVertice      "C"    "vC"        OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "bc"   "B"   "C"   OK
+=insAresta       "ca"   "C"   "A"   OK
+=verificar                          0
+=deturpar 11
+=verificar                          6
+=AceitaFalhasAcumuladas 6
+// não destroi para não voar
+
+
+== Deturpação 12: Cabeça eh lixo
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=verificar                          0
+=deturpar 12
+=verificar                          1
+=AceitaFalhasAcumuladas 1
+// não destroi para não voar
 
 == Terminar contagem
 =pararcontagem
