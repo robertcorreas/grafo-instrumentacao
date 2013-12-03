@@ -497,9 +497,59 @@ GRA_tpCondRet GRA_DestruirArestaAdjacente(GRA_tppGrafo pGrafoParm, char *nomeAre
 
 
 #ifdef _DEBUG
-   /* Função de deturpação */
+
+   /***********************************************************************
+   *
+   *  Função: GRA Verificar
+   *
+   *  Descrição
+   *     Função de instrumentação cujo objetivo é deturpar a estrutura do grafo
+   *     para testar as verificações.
+   *
+   *  Parâmetros
+   *     pGrafoParm     - ponteiro para a grafo onde procura
+   *     ModoDeturpa    - tipo de deturpação que será efetuada
+   *
+   *  Condições de retorno
+   *     GRA_CondRetOK
+   *
+   *  Assertivas de entrada
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   *  Assertivas de saída
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   ***********************************************************************/
    void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpa);
-   /* Funcao de verificação */
+
+
+   
+   /***********************************************************************
+   *
+   *  Função: GRA Verificar
+   *
+   *  Descrição
+   *     Função de instrumentação cujo objetivo é verificar a integridade da 
+   *     estrutura.
+   *
+   *  Parâmetros
+   *     pGrafoParm   - ponteiro para a grafo onde procura
+   *     numFalhas    - ponteiro que ira armazenar o numero de falhas encontradas
+   *
+   *  Retorno por referência
+   *     numFalhas - O total de falhas encontradas.
+   *
+   *  Condições de retorno
+   *     GRA_CondRetOK
+   *     GRA_CondRetErroNaEstrutura
+   *
+   *  Assertivas de entrada
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   *  Assertivas de saída
+   *     - Valem as assertivas estruturais do grafo direcionado.
+   *
+   ***********************************************************************/
    GRA_tpCondRet GRA_Verificar(void *pGrafoParm, int *numFalhas);
    
    /***********************************************************************
