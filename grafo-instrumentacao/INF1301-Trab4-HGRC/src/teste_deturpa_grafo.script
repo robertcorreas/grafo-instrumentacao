@@ -1,0 +1,155 @@
+// Script:    teste_grafo.script
+// Autor:     Robert Correa
+// Data:      03/out/2013
+// Propósito: Testar completamente o módulo grafo genérico
+//
+
+== Declarar as condicoes de retorno
+=declararparm   OK             int  0
+=declararparm   EstaVazio      int  1
+=declararparm   NaoExiste      int  2
+=declararparm   NaoAchou       int  3
+=declararparm   JaExiste       int  4
+
+== Declarar outros parâmetros
+=declararparm   NULL           string "!N!"
+
+//*********************************
+
+== Iniciar contagem
+=inicializarcontadores  ""
+=lercontadores          "..\\src\\Grafo"
+=iniciarcontagem
+
+== Deturpação 01: Elimina o elemento corrente da lista de vértices
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=verificar                          0
+=deturpar 1
+=verificar                          2
+=AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
+// Não destroi pois voa
+
+== Deturpação 02: Atribui NULL ao ponteiro para um vértice sucessor
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bb"   "B"   "B"   OK
+=verificar                          0
+=deturpar 2
+=verificar                          1
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+
+
+
+== Deturpação 03: Atribui NULL ao ponteiro para um vértice predecessor
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bb"   "B"   "B"   OK
+=verificar                          0
+=deturpar 3
+=verificar                          1
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+
+
+== Deturpação 04: Atribui lixo ao ponteiro para a referência a um vértice sucessor
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bb"   "B"   "B"   OK
+=verificar                          0
+=deturpar 4
+=verificar                          2
+=AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
+=destruirGrafo                      OK
+
+
+
+== Deturpação 05: Atribui lixo para a referência à um vértice antecessor
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insAresta       "aa"   "A"   "A"   OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=verificar                          0
+=deturpar 5
+=verificar                          2
+=AceitaFalhasAcumuladas 2           // deturpação + verificacao de espaço
+=destruirGrafo                      OK
+
+== Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
+=verificar                          0
+=deturpar 6
+=verificar                          2
+=AceitaFalhasAcumuladas 2
+=destruirGrafo                      OK
+
+== Deturpação 07: Altera o tipo da estrutura apontada no vértice
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
+=verificar                          0
+=deturpar 7
+=verificar                          1
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+
+== Deturpação 08: Destaca vértice do grafo
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=tornarOrigem                       OK
+=insVertice      "B"    "vB"        OK
+=insVertice      "C"    "vC"        OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "ac"   "A"   "C"   OK
+=insAresta       "ba"   "B"   "A"   OK
+=insAresta       "bc"   "B"   "C"   OK
+=insAresta       "ca"   "C"   "A"   OK
+=insAresta       "cb"   "C"   "B"   OK
+=verificar                          0
+=deturpar 8
+=verificar                          1
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+
+== Deturpação 09: Atribui null ao ponteiro corrente
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=verificar                          0
+=deturpar 9
+=verificar                          1
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+
+== Deturpação 10: Atribui null à um ponteiro de origem
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=tornarOrigem                       OK
+=verificar                          0
+=deturpar 10
+=verificar                          1
+=AceitaFalhasAcumuladas 1
+=destruirGrafo                      OK
+
+== Terminar contagem
+=pararcontagem
+=terminarcontadores
