@@ -150,6 +150,9 @@ typedef struct stGrafo {
    static void DET_DestacaVertice(tpGrafo *pGrafo);
    static void DET_AtribuiNullAoCorrente(tpGrafo *pGrafo);
    static void DET_AtribuiNullParaUmaOrigem(tpGrafo *pGrafo);
+
+   static void DET_EspalharLixosPelaEstrutura(tpGrafo *pGrafo);
+   static void DET_GrafoEhEspacoLixo(tpGrafo *pGrafo);
 #endif
 
 static void DestruirVertice(void *pVazio);
@@ -614,19 +617,20 @@ GRA_tpCondRet GRA_IrParaAOrigem(GRA_tppGrafo pGrafoParm, char *nomeVertice)
 
 #ifdef _DEBUG
 
-static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo)
+static GRA_tpCondRet VER_VerificaEspacosDoGrafo(tpGrafo *pGrafo)
 {
+   int erroNaEstrutura = 0;
    int numElemVer = 0, numElemOri = 0;
-   if(!CED_VerificarEspaco(pGrafo,NULL))
-   {
-      TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
-      return GRA_CondRetErroNaEstrutura;
-   }
 
    if(!CED_VerificarEspaco(pGrafo->pCorrente,NULL))
    {
+      CNT_CONTAR("verEspacos corrente nao eh espaco valido");
       TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
       return GRA_CondRetErroNaEstrutura;
+   }
+   else
+   {
+      CNT_CONTAR("verEspacos corrente eh espaco valido");
    }
 
    LIS_NumELementos(pGrafo->pVertices,&numElemVer);
@@ -636,16 +640,25 @@ static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo)
    {
       tpVertice *pVertice = NULL;
       int numElemSuc = 0, numElemAnt = 0;
+
+      CNT_CONTAR("verEspacos percorre vertices");
+
       LIS_ObterValor(pGrafo->pVertices,(void**)&pVertice);
 
       if(VerificaVertice(pVertice) == GRA_CondRetErroNaEstrutura)
       {
-         return GRA_CondRetErroNaEstrutura;
+         CNT_CONTAR("verEspacos erro encontrado em vertice");
+         erroNaEstrutura = 1;
+      }
+      else
+      {
+         CNT_CONTAR("verEspacos sem erros encontrados em vertice");
       }
 
       LIS_AvancarElementoCorrente(pGrafo->pVertices,1);
       numElemVer--;
    }
+   CNT_CONTAR("verEspacos percorreu todos os vertices");
 
    LIS_NumELementos(pGrafo->pOrigens,&numElemOri);
    LIS_IrInicioLista(pGrafo->pOrigens);
@@ -654,34 +667,62 @@ static GRA_tpCondRet VER_VerificaEspaçosDoGrafo(tpGrafo *pGrafo)
    {
       tpVertice *pVerticeOri = NULL;
 
+      CNT_CONTAR("verEspacos percorre origens");
+
       LIS_ObterValor(pGrafo->pOrigens,(void**)&pVerticeOri);
 
       if(!CED_VerificarEspaco(pVerticeOri,NULL))
       {
+         CNT_CONTAR("verEspacos erro encontrado em origem");
          TST_NotificarFalha( "Controle do espaço acusou erro no ponteiro vertice origem." ) ;
-         return GRA_CondRetErroNaEstrutura;
+         erroNaEstrutura = 1;
+      }
+      else
+      {
+         CNT_CONTAR("verEspacos sem erros encontrados em origem");
       }
       LIS_AvancarElementoCorrente(pGrafo->pOrigens,1);
       numElemOri--;
    }
+   CNT_CONTAR("verEspacos percorreu todas as origens");
 
-   return GRA_CondRetOK;
+   if (erroNaEstrutura)
+   {
+      CNT_CONTAR("verEspacos estrutura contem erros");
+      return GRA_CondRetErroNaEstrutura;
+   }
+   else
+   {
+      CNT_CONTAR("verEspacos estrutura nao contem erros");
+      return GRA_CondRetOK;
+   }
 }
 
 // Checa os espaços do vertice, das arestas + vertices apontados por elas e os vertices antecessores
 static GRA_tpCondRet VerificaVertice(tpVertice *pVertice)
 {
+   int erroNaEstrutura = 0;
    int numElemSuc = 0, numElemAnt = 0;
    if(!CED_VerificarEspaco(pVertice,NULL))
    {
+      CNT_CONTAR("verEspacos vertice nao eh valido");
       TST_NotificarFalha( "Controle do espaço acusou erro no vertice da lista de vertices." ) ;
       return GRA_CondRetErroNaEstrutura;
+   }
+   else
+   {
+      CNT_CONTAR("verEspacos vertice eh valido");
    }
 
    if(!CED_VerificarEspaco(pVertice->pValor,NULL))
    {
+      CNT_CONTAR("verEspacos valor vertice nao eh valido");
       TST_NotificarFalha( "Controle do espaço acusou erro no valor do vertice." ) ;
-      return GRA_CondRetErroNaEstrutura;
+      erroNaEstrutura = 1;
+   }
+   else
+   {
+      CNT_CONTAR("verEspacos valor vertice eh valido");
    }
 
    // Checa os espaços das arestas e vertices apontados por ela
@@ -692,22 +733,36 @@ static GRA_tpCondRet VerificaVertice(tpVertice *pVertice)
    while(numElemSuc > 0)
    {
       tpAresta *pAresta = NULL;
+    
+      CNT_CONTAR("verEspacos percorrer sucessores");
+      
       LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
 
       if(!CED_VerificarEspaco(pAresta,NULL))
       {
+         CNT_CONTAR("verEspacos aresta nao eh valida");
          TST_NotificarFalha( "Controle do espaço acusou erro na aresta." ) ;
-         return GRA_CondRetErroNaEstrutura;
+         erroNaEstrutura = 1;
       }
-
-      if(!CED_VerificarEspaco(pAresta->pVertice,NULL))
+      else
       {
-         TST_NotificarFalha( "Controle do espaço acusou erro no ponteiro vertice da aresta." ) ;
-         return GRA_CondRetErroNaEstrutura;
+         CNT_CONTAR("verEspacos aresta eh valida");
+         
+         if(!CED_VerificarEspaco(pAresta->pVertice,NULL))
+         {
+            CNT_CONTAR("verEspacos sucessor nao eh valido");
+            TST_NotificarFalha( "Controle do espaço acusou erro no ponteiro vertice da aresta." ) ;
+            erroNaEstrutura = 1;
+         }
+         else
+         {
+            CNT_CONTAR("verEspacos sucessor eh valido");
+         }
       }
       LIS_AvancarElementoCorrente(pVertice->pSucessores,1);
       numElemSuc--;
    }
+   CNT_CONTAR("verEspacos percorreu todos os sucessores");
 
    // Checa os espaços dos vertices antecessores
 
@@ -717,17 +772,35 @@ static GRA_tpCondRet VerificaVertice(tpVertice *pVertice)
    while(numElemAnt > 0)
    {
       tpVertice *pVerticeAnt = NULL;
+      
+      CNT_CONTAR("verEspacos percorre antecessores");
+
       LIS_ObterValor(pVertice->pAntecessores,(void**)&pVerticeAnt);
       if(!CED_VerificarEspaco(pVerticeAnt,NULL))
       {
+         CNT_CONTAR("verEspacos antecessor nao eh valido");
          TST_NotificarFalha( "Controle do espaço acusou erro no ponteiro vertice antecessor." ) ;
-         return GRA_CondRetErroNaEstrutura;
+         erroNaEstrutura = 1;
+      }
+      else
+      {
+         CNT_CONTAR("verEspacos antecessor eh valido");
       }
       LIS_AvancarElementoCorrente(pVertice->pAntecessores,1);
       numElemAnt--;
    }
+   CNT_CONTAR("verEspacos percorreu todos os antecessores");
 
-   return GRA_CondRetOK;
+   if (erroNaEstrutura)
+   {
+      CNT_CONTAR("verEspacos vertice contem erros");
+      return GRA_CondRetErroNaEstrutura;
+   }
+   else
+   {
+      CNT_CONTAR("verEspacos vertice nao contem erros");
+      return GRA_CondRetOK;
+   }
 }
 
 /***************************************************************************
@@ -807,6 +880,16 @@ void GRA_Deturpar(void *pGrafoParm, GRA_tpModosDeturpacao ModoDeturpar)
          DET_AtribuiNullParaUmaOrigem(pGrafo);
          break;
       }
+   case GRA_EspalhaLixoPelaEstrutura:
+      {
+         DET_EspalharLixosPelaEstrutura(pGrafo);
+         break;
+      }
+   case GRA_GrafoEhEspacoLixo:
+      {
+         DET_GrafoEhEspacoLixo(pGrafo);
+         break;
+      }
    }
 }
 
@@ -821,7 +904,8 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
    tpGrafo *pGrafo = NULL;
    GRA_tpCondRet ret;
 
-   if (pGrafoParm == NULL)
+   if (CED_ObterTipoEspaco(pGrafoParm) != GRA_TipoEspacoCabeca ||
+      !CED_VerificarEspaco(pGrafo,NULL))
    {
       CNT_CONTAR("ver00 grafo nao existe");
       TST_NotificarFalha("Tentou verificar um grafo que não existe.");
@@ -831,14 +915,13 @@ GRA_tpCondRet GRA_Verificar(void *pGrafoParm)
 
    pGrafo = (tpGrafo*) pGrafoParm;
 
-
-    ret = VER_VerificaEspaçosDoGrafo(pGrafo);
+    ret = VER_VerificaEspacosDoGrafo(pGrafo);
     if (ret == GRA_CondRetErroNaEstrutura)
     {
-       //CNT_CONTAR("espaços do grafo estão invalidos");
+       CNT_CONTAR("ver00 foi encontrado algum espaco invalido");
        erroNaEstrutura = 1;
     }
-    //CNT_CONTAR("espaços do grafo estão validos");
+    CNT_CONTAR("ver00 nao foi encontrado algum espaco invalido");
 
    ret = VER_NenhumVerticeFoiLiberado(pGrafo);
    if (ret == GRA_CondRetErroNaEstrutura)
@@ -1042,7 +1125,9 @@ static GRA_tpCondRet VER_VerticeSucessorNaoEhNulo(tpGrafo *pGrafo)
             CNT_CONTAR("ver02 percorrendo sucessores");
 
             LIS_ObterValor(pVertice->pSucessores, (void**)&pAresta);
-            if(pAresta->pVertice == NULL)
+
+            if(CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
+               pAresta->pVertice == NULL)
             {
                CNT_CONTAR("ver02 vertice destino da aresta eh nulo");
                TST_NotificarFalha("Encontrado vertice sucessor nulo");
@@ -1158,7 +1243,8 @@ static GRA_tpCondRet VER_NaoExisteLixoNaReferenciaParaSucessor(tpGrafo *pGrafo)
 
             LIS_ObterValor(pVertice->pSucessores,(void**)&pAresta);
          
-            if(!CED_VerificarEspaco(pAresta->pVertice,NULL))
+            if(CED_ObterTipoEspaco(pAresta) == GRA_TipoEspacoAresta &&
+               !CED_VerificarEspaco(pAresta->pVertice,NULL))
             {
                CNT_CONTAR("ver04 vertice da aresta eh um espaco invalido");
                TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
@@ -1561,6 +1647,28 @@ void DestacarVertice(tpGrafo *pGrafo, tpVertice *pAlvo)
 }
 
 #ifdef _DEBUG
+   // Det Grafo Lixo
+   void DET_GrafoEhEspacoLixo(tpGrafo *pGrafo)
+   {
+      free(pGrafo);
+   }
+
+   // Det Espaços
+   void DET_EspalharLixosPelaEstrutura(tpGrafo *pGrafo)
+   {
+      tpVertice *pVertice;
+      tpAresta *pAresta;
+      LIS_AlterarValor(pGrafo->pOrigens, EspacoLixo);
+      LIS_AlterarValor(pGrafo->pVertices, EspacoLixo);
+      LIS_IrInicioLista(pGrafo->pVertices);
+      
+      LIS_AvancarElementoCorrente(pGrafo->pVertices, 1);
+      LIS_ObterValor(pGrafo->pVertices, (void**) &pVertice);
+      pVertice->pValor = EspacoLixo;
+      
+      LIS_AlterarValor(pVertice->pSucessores, EspacoLixo);
+   }
+
    // Det 05
    void DET_LixoNaReferenciaParaAntecessor(tpGrafo *pGrafo)
    {

@@ -25,8 +25,8 @@
 =iniciarcontagem
 
 == Total de contadores
-=verificarcontagens    80
-=AceitaFalhasAcumuladas 80
+=verificarcontagens    110
+=AceitaFalhasAcumuladas 110
 
 == Deturpação 01: Elimina o elemento corrente da lista de vértices
 =criarGrafo                         OK
@@ -35,7 +35,7 @@
 =verificar                          TesteOK
 =deturpar 1
 =verificar                          TesteERRO
-=AceitaFalhasAcumuladas 1
+=AceitaFalhasAcumuladas 2
 // Não destroi pois voa
 
 == Deturpação 02: Atribui NULL ao ponteiro para um vértice sucessor
@@ -76,7 +76,7 @@
 =insAresta       "bb"   "B"   "B"   OK
 =deturpar 4
 =verificar                          TesteERRO
-=AceitaFalhasAcumuladas 1
+=AceitaFalhasAcumuladas 2
 =destruirGrafo                      OK
 
 == Deturpação 05: Atribui lixo para a referência à um vértice antecessor
@@ -88,7 +88,7 @@
 =insAresta       "ba"   "B"   "A"   OK
 =deturpar 5
 =verificar                          TesteERRO
-=AceitaFalhasAcumuladas 1
+=AceitaFalhasAcumuladas 2
 =destruirGrafo                      OK
 
 == Deturpação 06: Atribui null ao ponteiro para o conteúdo do vértice
@@ -144,6 +144,27 @@
 =verificar                          TesteERRO
 =AceitaFalhasAcumuladas 1
 =destruirGrafo                      OK
+
+== Deturpação 11: Espalha lixo
+=criarGrafo                         OK
+=insVertice      "A"    "vA"        OK
+=insVertice      "B"    "vB"        OK
+=tornarOrigem                       OK
+=insVertice      "C"    "vC"        OK
+=insAresta       "ab"   "A"   "B"   OK
+=insAresta       "bc"   "B"   "C"   OK
+=insAresta       "ca"   "C"   "A"   OK
+=deturpar 11
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 6
+// não destroi para não voar
+
+== Deturpação 12: Cabeça eh lixo
+=criarGrafo                         OK
+=deturpar 12
+=verificar                          TesteERRO
+=AceitaFalhasAcumuladas 1
+// não destroi para não voar
 
 == Verificacao de um Grafo simples
 =criarGrafo                           OK

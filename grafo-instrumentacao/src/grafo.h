@@ -116,8 +116,14 @@ typedef enum {
    GRA_AtribuiNullAoCorrente                 = 9,
       /* Atribui NULL ao ponteiro corrente. */
 
-   GRA_AtribuiNullParaUmaOrigem              = 10
+   GRA_AtribuiNullParaUmaOrigem              = 10,
       /* Atribui NULL a um ponteiro de origem. */
+
+   GRA_EspalhaLixoPelaEstrutura              = 11,
+      /* Espalha lixo pela estrutura */
+
+   GRA_GrafoEhEspacoLixo                     = 12
+      /* Altera cabeça para ser lixo */
 
 } GRA_tpModosDeturpacao;
 

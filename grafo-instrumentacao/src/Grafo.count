@@ -73,6 +73,37 @@
     ver01 com erros na estrutura
     ver01 sem erros na estrutura
 
+    verEspacos corrente eh espaco valido
+    verEspacos corrente nao eh espaco valido
+    verEspacos percorre vertices
+    verEspacos erro encontrado em vertice
+    verEspacos sem erros encontrados em vertice
+    verEspacos percorreu todos os vertices
+    verEspacos percorre origens
+    verEspacos erro encontrado em origem
+    verEspacos sem erros encontrados em origem
+    verEspacos percorreu todas as origens
+    verEspacos vertice eh valido
+    verEspacos vertice nao eh valido
+    verEspacos valor vertice nao eh valido
+    verEspacos valor vertice eh valido
+    verEspacos percorrer sucessores
+    verEspacos aresta nao eh valida
+    verEspacos aresta eh valida
+    verEspacos sucessor nao eh valido
+    verEspacos sucessor eh valido
+    verEspacos percorreu todos os sucessores
+    verEspacos percorre antecessores
+    verEspacos antecessor nao eh valido
+    verEspacos antecessor eh valido
+    verEspacos percorreu todos os antecessores
+    verEspacos estrutura contem erros
+    verEspacos estrutura nao contem erros
+    verEspacos vertice contem erros
+    verEspacos vertice nao contem erros
+
+    ver00 foi encontrado algum espaco invalido
+    ver00 nao foi encontrado algum espaco invalido
     ver00 existe vertice liberado
     ver00 nao existe vertice liberado
     ver00 existe vertice cujo sucessor eh nulo
